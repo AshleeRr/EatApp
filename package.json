@@ -1,0 +1,31 @@
+{
+  "name": "eatapp",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AshleeRr/EatApp.git"
+  },
+  "author": "Eva y Ashlee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AshleeRr/EatApp/issues"
+  },
+  "homepage": "https://github.com/AshleeRr/EatApp#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.3",
+    "mariadb": "^3.4.5",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7"
+  }
+}
