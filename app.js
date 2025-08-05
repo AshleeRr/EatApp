@@ -1,7 +1,11 @@
+import "./utils/LoadEnvConfig.js";
 import express from 'express';
 import { engine } from 'express-handlebars';
 import context from './context/AppContext.js'; 
 import path from 'path';
+import AuthenticationRoutes from './routes/AuthenticationRoutes.js';
+import HomeRoutes from './routes/HomeRoutes.js';
+import { projectRoot } from './utils/Paths.js';
 
 const app = express();
 
@@ -15,8 +19,12 @@ app.engine("hbs", engine({
 app.set("view engine", "hbs");
 app.set("views", "views");
 
-//Routes
+app.use(express.urlencoded());
+app.use(express.static(path.join(projectRoot, "public")));
 
+//Routes
+app.use(AuthenticationRoutes);
+app.use(HomeRoutes);
 
 //404
 

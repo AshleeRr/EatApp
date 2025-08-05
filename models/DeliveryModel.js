@@ -1,46 +1,47 @@
 import connection from "../utils/DbConnection.js";
+import { DataTypes } from "sequelize";
 
 const DeliveryModel = connection.define("Deliveries",{
     id:{
-        type: Datatypes.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true 
     },
     profilePhoto:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     name:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     lastName:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     userName:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     phoneNumber:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     email:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     password:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     resetToken:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true
     },
     resetTokenExp:{
-        type: Datatypes.STRING,
+        type: DataTypes.STRING,
         allowNull: true
     },
     userId:{

@@ -1,0 +1,41 @@
+<div class="container d-flex justify-content-center align-items-start" style="min-height: 100vh; padding-top: 80px;">
+  <form class="w-100" style="max-width: 400px;" action="/" method="POST">
+    <h2 class="text-center mb-4">Login</h2>
+
+    <div class="mb-3">
+      <label for="userName" class="form-label">Username/Mail</label>
+      <div class="input-group">
+        <span class="input-group-text">@</span>
+        <input type="text" class="form-control" id="userName" placeholder="Enter your username/mail" required="required" />
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="password" class="form-label">Password</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-eye-fill" id="togglePassword" style="cursor: pointer;"></i></span>
+        <input type="password" class="form-control" id="password" placeholder="Enter your password" required="required" />
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between gap-2 flex-wrap">
+      
+      <a href="/user/signUp-client-delivery" class="btn btn-outline-primary flex-fill">
+        <i class="bi bi-person-add"></i> Join as Costumer/Delivery
+      </a>
+      <a href="/user/signUp-bussiness" class="btn btn-outline-primary flex-fill">
+        <i class="bi bi-person-add"></i> Start Selling
+      </a>
+      <button type="submit" class="btn btn-outline-dark flex-fill">
+        <i class="bi bi-door-open"></i> Log In
+      </button>
+    </div>
+    
+    <div class="d-flex justify-content-between gap-2 flex-wrap mt-3">
+      <a href="/user/forgotPassword" class="h6 text-decoration-none text-danger">
+        <i class="bi bi-question-circle"></i> Forgot your password?
+      </a>
+    </div>
+  </form>
+</div>
+
