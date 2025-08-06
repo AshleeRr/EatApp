@@ -1,5 +1,6 @@
-import context from "../context/AppContext.js";
+import context from "../config/context/AppContext.js";
+
 export function GetIndex(req, res, next){
-    res.render("client/index", {"page-title": "Home/Client"});
+    res.render("client/home", {"page-title": "Home/Client", layout:"ClientLayout"});
 }
 

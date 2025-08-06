@@ -11,8 +11,11 @@ import { projectRoot } from "./utils/Paths.js";
 import UserMulter from "./config/multer/multer.js";
 import context from "./config/context/AppContext.js";
 
+
 import AuthenticationRoutes from './routes/AuthenticationRoutes.js';
 import HomeRoutes from './routes/HomeRoutes.js';
+import ClientRoutes from './routes/ClientRoutes.js';
+import DeliveryRoutes from './routes/DeliveryRoutes.js';
 
 const app = express();
 
@@ -42,39 +45,74 @@ app.use(express.static(path.join(projectRoot, "public")));
 app.use(session({
     secret:process.env.SESSION_SECRET  || "anything",
     resave: false, 
-    saveUninitialized: false }));
+    saveUninitialized: false }
+));
 
 //flash
 app.use(flash()); //inicializar flash
+
+app.use((req, res, next)=>{
+  if(!req.session){
+    return next();
+  }
+  if(!req.session.user){
+    return next();
+  }
+
+  if(!req.session.isAuthenticated){
+    return next();
+  }
+
+  req.user - req.session.user;
+  next();
+})
 
 //local variables
 app.use((req, res, next) => {
     const errors = req.flash("errors");
     const success = req.flash("success");
-    //const sucess = req.flash("success");
+
     res.locals.errors = errors;
     res.locals.hasErrors = errors.length > 0;
 
     res.locals.success = success;
     res.locals.hasSuccess = success.length > 0;
+
+    res.locals.user = req.user;
+    res.locals.hasUser =  !!req.user;
+    res.locals.isAuthenticated = req.session.isAuthenticated || false;
     next();
 });
 
 //Routes
 app.use(AuthenticationRoutes);
 app.use(HomeRoutes);
+app.use("/client", ClientRoutes);
+app.use("/delivery", DeliveryRoutes);
 
 
 //app.use(multer({ storage: UserMulter }).single("UserProfilePhoto"));
 
 //404
 app.use((req, res, next) => {
-  res.status(404).render("404", { "page-title": "Not found" });
+  if(req.seccion.isAuthenticated && req.session){
+    return res.status(404).render("404", { "page-title": "Not found" });
+  }
+  return res.status(404).render("404", { "page-title": "Not found", layout:"LogInLayout" });
 });
 
 //DB Configs
 try {
-  await context.Sequelize.sync({ alter: process.env.PORT || false });
+
+  const shoulfForce = process.env.DB_FORCE === "true";
+  const shoulfAlter = process.env.DB_ALTER === "true";
+
+  if(shoulfForce){
+    await context.Sequelize.sync({ force: true });
+  }else{
+    await context.Sequelize.sync({ alter: shoulfAlter || false });
+  }
+  
   app.listen(process.env.PORT || 8080);
   console.log(`The server is now running on port ${process.env.PORT || 5000}`);
 } catch (error) {
