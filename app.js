@@ -1,25 +1,30 @@
-import "./utils/LoadEnvConfig.js";
-import express from 'express';
-import { engine } from 'express-handlebars';
-import context from './context/AppContext.js'; 
-import path from 'path';
-import AuthenticationRoutes from './routes/AuthenticationRoutes.js';
-import HomeRoutes from './routes/HomeRoutes.js';
-import { projectRoot } from './utils/Paths.js';
+import "./config/ENV/config.js";
+import express from "express";
+import { engine } from "express-handlebars";
+import path from "path";
+import multer from "multer";
 import flash from 'connect-flash';
 import session from 'express-session';
 
-//import multer from "multer"; 
-//import { v4 as guidV4 } from "uuid";
+//Imports propios
+import { projectRoot } from "./utils/Paths.js";
+import UserMulter from "./config/multer/multer.js";
+import context from "./config/context/AppContext.js";
+
+import AuthenticationRoutes from './routes/AuthenticationRoutes.js';
+import HomeRoutes from './routes/HomeRoutes.js';
 
 const app = express();
 
-app.engine("hbs", engine({
+app.engine(
+  "hbs",
+  engine({
     layoutsDir: "views/layouts",
     defaultLayout: "MainLayout",
     extname: ".hbs",
     helpers: {},
-}));
+  })
+);
 
 //set view engine and views directory
 app.set("view engine", "hbs");
@@ -29,19 +34,11 @@ app.set("views", "views");
 app.use(express.urlencoded());
 app.use(express.static(path.join(projectRoot, "public")));
 
-//set multer para files
-// Set up multer for file uploads
-
-
-
-//export {imageStorageForBussinessLogo, imageStorageForProfilePhotos};
-/*
-app.use(multer({ storage: imageStorageForProfilePhotos }).single("ProfilePhoto"));
-app.use(multer({ storage: imageStorageForBussinessLogo }).single("BussinessLogo"));
-*/
 
 //Session config
-//resave true guarda las sesiones aunque no se modifiquen, save unitializaed, si hay ninguna seison creada el no la crea, la deja vacia(null), si es true aunque no se haya logueado ya se le habra creado, y debe crearse al loguearse y confirmar
+//resave true guarda las sesiones aunque no se modifiquen, 
+//save unitializaed, si hay ninguna seison creada el no la crea, la deja vacia(null), 
+//si es true aunque no se haya logueado ya se le habra creado, y debe crearse al loguearse y confirmar
 app.use(session({
     secret:process.env.SESSION_SECRET  || "anything",
     resave: false, 
@@ -68,14 +65,18 @@ app.use(AuthenticationRoutes);
 app.use(HomeRoutes);
 
 
-//404
+//app.use(multer({ storage: UserMulter }).single("UserProfilePhoto"));
 
+//404
+app.use((req, res, next) => {
+  res.status(404).render("404", { "page-title": "Not found" });
+});
 
 //DB Configs
-try{
-    await context.Sequelize.sync({alter: process.env.PORT || false});
-    app.listen(process.env.PORT || 8080);
-    console.log(`The server is now running on port ${(process.env.PORT || 5000)}`);
-}catch(error){
-    console.error("Error connecting to the database:", error);
+try {
+  await context.Sequelize.sync({ alter: process.env.PORT || false });
+  app.listen(process.env.PORT || 8080);
+  console.log(`The server is now running on port ${process.env.PORT || 5000}`);
+} catch (error) {
+  console.error("Error connecting to the database:", error);
 }

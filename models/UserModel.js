@@ -1,41 +1,39 @@
-import connection from "../utils/DbConnection.js";
+import connection from "../config/connection/DbConnection.js";
 import { DataTypes } from "sequelize";
 
-const UserModel = connection.define("Users",{
-    id:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true 
+const UserModel = connection.define(
+  "Users",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    role: {
-        type: DataTypes.ENUM("client", "delivery", "store", "admin"),
-        allowNull: false    
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    userName:{
-        type: DataTypes.STRING,
-        allowNull: false,
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    email:{
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    password:{
-        type: DataTypes.STRING,
-        allowNull: false
+    resetToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
-    resetToken:{
-        type: DataTypes.STRING,
-        allowNull: true
+    resetTokenExp: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
-    resetTokenExp:{
-        type: DataTypes.STRING,
-        allowNull: true
-    }
-},  {
-        tableName: "Users",
-    }
+  },
+  {
+    tableName: "Users",
+  }
 );
 
 export default UserModel;

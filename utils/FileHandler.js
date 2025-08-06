@@ -26,7 +26,7 @@ const imageStorageForBussinessLogo = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(
       null,
-      path.join(projectRoot, "public", "images", "bussiness-logos")
+      path.join(projectRoot, "public", "assets", "images","users-uploads", "bussiness-logos")
     );
   },
   filename: (req, file, cb) => {
@@ -39,7 +39,7 @@ const imageStorageForProfilePhotos = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(
       null,
-      path.join(projectRoot, "public", "images", "profiles-photos")
+      path.join(projectRoot, "public", "assets", "images","users-uploads", "profiles-photos")
     );
   },
   filename: (req, file, cb) => {

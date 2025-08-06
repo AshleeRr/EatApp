@@ -1,5 +1,5 @@
 import context from "../context/AppContext.js";
-import { sendEmail} from "../services/EmailService.js";
+import { mailer} from "../services/mailer.js";
 import bcrypt from "bcrypt";
 import path from "path";
 import {Op} from "sequelize";
@@ -99,7 +99,7 @@ export async function PostSignUpBussiness(req, res, next){
             userId: newUser.id
         });
         req.flash("success", "The account has been created successfully.");
-        await sendEmail({
+        await mailer({
             to: Email,
             subject: "Welcome to EatApp",
             html: `<p>Thank you for sign up your bussiness,</p>
@@ -162,7 +162,7 @@ export async function PostSignUpClient_Delivery(req, res, next){
             });
         }
         req.flash("success", "The account has been created successfully.");
-        await sendEmail({
+        await mailer({
             to: Email,
             subject: "Welcome to Assets App",
             html: `<p>Dear ${FirstName},</p>
