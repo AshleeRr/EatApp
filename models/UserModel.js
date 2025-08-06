@@ -1,16 +1,14 @@
 import connection from "../config/connection/DbConnection.js";
 import { DataTypes } from "sequelize";
 
-const UserModel = connection.define(
-  "Users",
-  {
+const UserModel = connection.define("Users",{
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    userName: {
       type: DataTypes.STRING,
       allowNull: false,
     },

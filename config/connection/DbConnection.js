@@ -25,9 +25,7 @@ if (process.env.DB_DIALECT === "sqlite") {
     }
   );
 } else {
-  throw new Error(
-    "Dialecto de base de datos no soportado: " + process.env.DB_DIALECT
-  );
+  throw new Error("Unsupported database dialect: " + process.env.DB_DIALECT);
 }
 
 export default connection;

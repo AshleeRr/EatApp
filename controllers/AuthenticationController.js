@@ -48,7 +48,7 @@ export async function PostLogIn(req, res, next) {
     });
   } catch (error) {
     console.log(error);
-    req.flash("errors", "An error ocurred while logging in");
+    req.flash("errors", `An error ocurred while logging in: ${error}`);
     return res.redirect("/");
   }
 }
