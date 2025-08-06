@@ -38,7 +38,7 @@ app.use(express.static(path.join(projectRoot, "public")));
 //Session config
 //resave true guarda las sesiones aunque no se modifiquen, 
 //save unitializaed, si hay ninguna seison creada el no la crea, la deja vacia(null), 
-//si es true aunque no se haya logueado ya se le habra creado, y debe crearse al loguearse y confirmar
+// si es true aunque no se haya logueado ya se le habra creado, y debe crearse al loguearse y confirmar
 app.use(session({
     secret:process.env.SESSION_SECRET  || "anything",
     resave: false, 
