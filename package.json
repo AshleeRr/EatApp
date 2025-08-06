@@ -23,14 +23,19 @@
     "nodemon": "^3.1.10"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-flash": "^0.1.1",
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
+    "express-session": "^1.18.2",
     "mariadb": "^3.4.5",
     "multer": "^2.0.2",
+    "start": "^5.1.0",
+    "uuid": "^11.1.0",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
-    "nodemailer": "^7.0.5",
-    "cross-env": "^7.0.3",
-    "dotenv": "^17.2.0"
+    "nodemailer": "^7.0.5"
   }
 }
