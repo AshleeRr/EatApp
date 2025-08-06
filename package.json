@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
+    "qa": "cross-env NODE_ENV=qa nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,7 +26,11 @@
     "express": "^5.1.0",
     "express-handlebars": "^8.0.3",
     "mariadb": "^3.4.5",
+    "multer": "^2.0.2",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "nodemailer": "^7.0.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^17.2.0"
   }
 }
