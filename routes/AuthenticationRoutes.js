@@ -3,25 +3,25 @@ import { GetLogIn, PostLogIn, LogOut, GetForgotPassword, GetSignUpBussiness, Pos
          PostSignUpClient_Delivery, PostForgotPassword, GetResetPassword} from "../controllers/AuthenticationController.js";
 
 import { saveProfilePhoto, saveBussinessLogo} from "../utils/handlers/FileHandler.js";
-
+import isAuthLogin from "../middlewares/isAuthLogIn.js"
 const router = express.Router();
 
-router.get("/", GetLogIn);
-router.post("/", PostLogIn);
+router.get("/", isAuthLogin, GetLogIn);
+router.post("/", isAuthLogin, PostLogIn);
 
 router.get("/user/logOut", LogOut);
 
-router.get("/user/signUp-client-delivery", GetSignUpClient_Delivery);
-router.post( "/user/signUp-client-delivery", saveProfilePhoto.single("ProfilePhoto"), PostSignUpClient_Delivery
+router.get("/user/signUp-client-delivery",isAuthLogin, GetSignUpClient_Delivery);
+router.post( "/user/signUp-client-delivery", isAuthLogin, saveProfilePhoto.single("ProfilePhoto"), PostSignUpClient_Delivery
 );
 
-router.get("/user/signUp-bussiness", GetSignUpBussiness);
-router.post("/user/signUp-bussiness", saveBussinessLogo.single("BussinessLogo"), PostSignUpBussiness);
+router.get("/user/signUp-bussiness", isAuthLogin, GetSignUpBussiness);
+router.post("/user/signUp-bussiness", isAuthLogin, saveBussinessLogo.single("BussinessLogo"), PostSignUpBussiness);
 
-router.get("/user/forgotPassword", GetForgotPassword);
-router.post("/user/forgotPassword", PostForgotPassword);
+router.get("/user/forgotPassword",isAuthLogin, GetForgotPassword);
+router.post("/user/forgotPassword", isAuthLogin, PostForgotPassword);
 
-router.get("/user/resetPassword", GetResetPassword);
-router.post("/user/resetPassword", GetResetPassword);
+router.get("/user/resetPassword", isAuthLogin, GetResetPassword);
+router.post("/user/resetPassword", isAuthLogin, GetResetPassword);
 
 export default router;
