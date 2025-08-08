@@ -13,8 +13,8 @@ import DetallePedidoModel from "../../models/detallePedido.js";
 import DireccionModel from "../../models/direccion.js";
 import ConfiguracionModel from "../../models/configuracion.js";
 import FavoritoModel from "../../models/favorito.js";
-import UserModel from "../../models/usuario.js";
-import ClientModel from "../../models/cliente.js";
+import UserModel from "../../models/user.js";
+import ClientModel from "../../models/client.js";
 import DeliveryModel from "../../models/delivery.js";
 
 const sequelize = new Sequelize({
