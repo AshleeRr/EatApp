@@ -14,6 +14,30 @@ export function GetLogIn(req, res, next) {
   });
 }
 
+export async function CreateAdmin(){
+  try{
+    const admin = await context.user.findOne({where:{role: "admin"}})
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASS || "contra123", 10);
+
+    if (!admin){
+      await context.user.create({
+        role: "admin",
+        userName: process.env.ADMIN_USERNAME,
+        email: process.env.ADMIN_EMAIL,
+        password: hashedPassword,
+        isActive: true,
+        activateToken: null,
+      });
+      console.log("Admin created");
+    }else{
+      console.log("An administrator already exists");
+    }
+    
+  }catch(error){
+    console.log("An error ocurred while creating the general admin");
+  }
+}
+
 export async function PostLogIn(req, res, next) {
   const { UserName_Mail, Password } = req.body;
   try {
@@ -26,6 +50,11 @@ export async function PostLogIn(req, res, next) {
       req.flash("errors", "No user was found with this credentials");
       return res.redirect("/");
     }
+    if(!user.isActive){
+      req.flash("errors", "This user is not active. Please check your email and activate it, or try again");
+      return res.redirect("/");
+    }
+
     const isPasswordValid = await bcrypt.compare(Password, user.password);
     if (!isPasswordValid) {
       req.flash("errors", "The password is not correct. Try again");
@@ -37,6 +66,7 @@ export async function PostLogIn(req, res, next) {
       id: user.id,
       userName: user.userName,
       email: user.email,
+      role: user.role
     };
 
     req.session.save((error) => {
@@ -45,7 +75,6 @@ export async function PostLogIn(req, res, next) {
         req.flash("errors", "An error ocurred while saving the session");
         res.redirect("/");
       }
-      req.flash("success", "Logged in successfully");
       return res.redirect("/home");
     });
   } catch (error) {
@@ -75,8 +104,7 @@ export function GetSignUpBussiness(req, res, next) {
 }
 export async function PostSignUpBussiness(req, res, next) {
   try {
-    const {
-      BussinessName, PhoneNumber, Email, Opening, Closing, Password, ConfirmPassword} = req.body;
+    const {BussinessName, PhoneNumber, Email, Opening, Closing, Password, ConfirmPassword} = req.body;
     const BussinessLogo = req.file;
     const LogoPath = "\\" + path.resolve("public", BussinessLogo.path);
 
@@ -89,12 +117,18 @@ export async function PostSignUpBussiness(req, res, next) {
       req.flash("errors", "A user with this email already exists.");
       return res.redirect("/user/signUp-bussiness");
     }
+    const randomBytesAsync = promisify(randomBytes);
+    const buffer = await randomBytesAsync(32);
+    const token = buffer.toString("hex");
     const hashedPassword = await bcrypt.hash(Password, 10);
+
     const newUser = await context.user.create({
       role: "store",
       userName: BussinessName,
       email: Email,
       password: hashedPassword,
+      isActive: false,
+      activateToken: token
     });
 
     await context.comercio.create({
@@ -144,12 +178,17 @@ export async function PostSignUpClient_Delivery(req, res, next) {
       req.flash("errors", "A user with this email already exists.");
       return res.redirect("/user/signUp-client-delivery");
     }
+    const randomBytesAsync = promisify(randomBytes);
+    const buffer = await randomBytesAsync(32);
+    const token = buffer.toString("hex");
     const hashedPassword = await bcrypt.hash(Password, 10);
     const newUser = await context.user.create({
       role: UserType,
       userName: UserName,
       email: Email,
       password: hashedPassword,
+      isActive: false,
+      activateToken: token
     });
     if (UserType === "client") {
       await context.client.create({
@@ -175,9 +214,9 @@ export async function PostSignUpClient_Delivery(req, res, next) {
       to: Email,
       subject: "Welcome to Assets App",
       html: `<p>Dear ${FirstName},</p>
-                    <p>Thank you for registering. Now you can enjoy the magnitud of bussiness in your area without going out of your home</p>
-                    <p> Please click the link below so you can activate your account:</p>`,
-      //<p><a href="${process.env.APP_URL}/user/activate/${token}">Activate Account</a></p>`
+                <p>Thank you for registering. Now you can enjoy the magnitud of bussiness in your area without going out of your home</p>
+                <p> Please click the link below so you can activate your account:</p>,
+                <p><a href="${process.env.APP_URL}/user/activate/${token}">Activate Account</a></p>`
     });
     res.redirect("/");
   } catch (error) {
@@ -228,12 +267,81 @@ export async function PostForgotPassword(req, res, next) {
   }
 }
 
-export function GetResetPassword(req, res, next) {
-  res.render("AuthenticationViews/resetPassword", {
-    "page-title": "Reset Password",
-    layout: "LogInLayout",
-  });
+export async function GetResetPassword(req, res, next) {
+  const {token} = req.params;
+  if(!token){
+    req.flash("errors", "Invalid or expired token.Try again");
+    return res.redirect("/user/forgotPassword");
+  }
+  try{
+    const user = await context.user.findOne({
+      where:{
+        resetToken: token, resetTokenExpiration: {
+          [Op.gte]: Date.now()}
+        }});
+
+      if(!user){
+        req.flash("errors", "Invalid or expired token.Try again");
+        return res.redirect("/user/forgotPassword");
+      }
+
+      res.render("AuthenticationViews/resetPassword", {"page-title": "Reset Password", layout: "LogInLayout",
+        passwordToken: token, userId: user.Id});
+
+  }catch(error){
+    req.flash("errors", "");
+    return res.redirect("");
+  }
 }
+
 export async function PostResetPassword(req, res, next) {
+  const {passwordToken, userId, NewPassword, ConfirmNewPassword} = req.body;
+  if(NewPassword !== ConfirmNewPassword){
+    req.flash("errors", "The passwords do not match")
+    return res.redirect(`/user/reset/${passwordToken}`);
+  }
+
+  const user = await context.user.findOne({
+    where:{
+      id: userId,
+      resetToken: passwordToken,
+      resetTokenExpiration: {[Op.gte]: Date.now()}
+    }});
+    if(!user){
+      req.flash("errors", "Invalid or expired token. Please try again");
+      return res.redirect("/user/forgotPassword")
+    }
+    const hashedPassword = await bcrypt.hash(NewPassword, 10);
+    user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpiration = null;
+    await user.save();
+    req.flah("success", "Password reset successfully");
+    return res.redirect("/");
+}
+
+export async function GetActivate(req, res, next){
+  const {token} = req.body;
+  if(!token){
+    req.flash("errors", "Invalid or expired token. Please try again");
+    req.redirect("/");
+  }
+  try{
+    const user = await context.user.findOne({where:{activateToken: token}});
+    if(!user){
+      req.flash("errors", "Invalid activation token. Try again.");
+      res.redirect("/");
+    }
+    user.isActive = true;
+    user.activateToken = null;
+    await user.save();
+    req.flash("success", "Your account was activated successfully. Log in and enjoy.");
+    return res.redirect("/");
+
+  }catch(error){
+    console,log(error);
+    req.flash("errors", "An error ocurred while trying to active yout account. Try again");
+    return res.redirect("/");
+  }
 
 }

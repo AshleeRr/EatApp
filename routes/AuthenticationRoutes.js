@@ -1,5 +1,5 @@
 import express from "express";
-import { GetLogIn, PostLogIn, LogOut, GetForgotPassword, GetSignUpBussiness, PostSignUpBussiness, GetSignUpClient_Delivery, 
+import { GetLogIn, GetActivate, PostLogIn, LogOut, GetForgotPassword, GetSignUpBussiness, PostSignUpBussiness, GetSignUpClient_Delivery, 
          PostSignUpClient_Delivery, PostForgotPassword, GetResetPassword, PostResetPassword} from "../controllers/AuthenticationController.js";
 
 import { saveProfilePhoto, saveBussinessLogo} from "../utils/handlers/FileHandler.js";
@@ -24,6 +24,6 @@ router.post("/user/forgotPassword", isAuthLogin, PostForgotPassword);
 router.get("/user/resetPassword/:token", isAuthLogin, GetResetPassword);
 router.post("/user/resetPassword", isAuthLogin, PostResetPassword);
 
-
+router.get("/user/activate/:token", isAuthLogin, GetActivate);
 
 export default router;

@@ -10,6 +10,7 @@ import session from 'express-session';
 import { projectRoot } from "./utils/Paths.js";
 import UserMulter from "./config/multer/multer.js";
 import context from "./config/context/AppContext.js";
+import { CreateAdmin } from "./controllers/AuthenticationController.js";
 
 
 import AuthenticationRoutes from './routes/AuthenticationRoutes.js';
@@ -112,8 +113,9 @@ try {
   }else{
     await context.Sequelize.sync({ alter: shoulfAlter || false });
   }
-  
+  await CreateAdmin();
   app.listen(process.env.PORT || 8080);
+  
   console.log(`The server is now running on port ${process.env.PORT || 5000}`);
 } catch (error) {
   console.error("Error connecting to the database:", error);

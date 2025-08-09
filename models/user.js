@@ -8,6 +8,10 @@ const UserModel = connection.define("Users",{
       primaryKey: true,
       autoIncrement: true,
     },
+    role: {
+        type: DataTypes.ENUM("client", "delivery", "store", "admin"),
+        allowNull: false    
+    },
     userName: {
       type: DataTypes.STRING,
       allowNull: false,
