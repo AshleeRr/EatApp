@@ -8,6 +8,10 @@ const UserModel = connection.define("Users",{
       primaryKey: true,
       autoIncrement: true,
     },
+    role: {
+        type: DataTypes.ENUM("client", "delivery", "store", "admin"),
+        allowNull: false    
+    },
     userName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -28,6 +32,15 @@ const UserModel = connection.define("Users",{
       type: DataTypes.STRING,
       allowNull: true,
     },
+    activateToken:{
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    isActive:{
+      type: DataTypes.STRING,
+      defaultValue: false,
+      allowNull: true
+    }
   },
   {
     tableName: "Users",
