@@ -31,6 +31,7 @@ const imageStorageForBussinessLogo = multer.diskStorage({
         "public",
         "assets",
         "imgs",
+        "uploads",
         "users-uploads",
         "bussiness-logos"
       )
@@ -51,6 +52,7 @@ const imageStorageForProfilePhotos = multer.diskStorage({
         "public",
         "assets",
         "imgs",
+        "uploads",
         "users-uploads",
         "profiles-photos"
       )
