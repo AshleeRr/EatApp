@@ -52,7 +52,7 @@ User.hasMany(Comercio, { foreignKey: "userId" });
 Comercio.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Delivery, { foreignKey: "userId" });
-DeliveryModel.belongsTo(User, { foreignKey: "userId" });
+Delivery.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Direccion, { foreignKey: "usuarioId", as: "direcciones" });
 Direccion.belongsTo(User, { foreignKey: "usuarioId", as: "usuario" });

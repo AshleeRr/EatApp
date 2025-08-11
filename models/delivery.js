@@ -1,4 +1,4 @@
-import { DataType} from "sequelize";
+import { DataTypes} from "sequelize";
 
 export default (sequelize) =>{
     const DeliveryModel = sequelize.define("Deliveries",{
