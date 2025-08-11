@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { GetIndex } from '../controllers/ClientController.js';
+//import { GetIndex } from '../controllers/ClientController.js';
 
 import isAuth from "../middlewares/isAuthenticated.js";
 
