@@ -137,7 +137,7 @@ export async function PostSignUpBussiness(req, res, next) {
     req.flash("success", "The account has been created successfully. Please check your email.");
     await mailer({
       to: Email,
-      subject: "Welcome to EatApp",
+      subject: "Welcome to Zipy",
       html: `<p>Thank you for sign up your bussiness,</p>
              <p>We are so excited to work with you! Please click the link below to activate your account:</p>
              <p><a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
@@ -206,7 +206,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
     req.flash("success", "The account has been created successfully. Please check your email.");
     await mailer({
       to: Email,
-      subject: "Welcome to Assets App",
+      subject: "Welcome to Zipy",
       html: `<p>Dear ${FirstName},</p>
                 <p>Thank you for registering.</p>
                 <p>
