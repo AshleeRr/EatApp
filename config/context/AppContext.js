@@ -40,26 +40,32 @@ const DetallePedido = DetallePedidoModel(sequelize);
 const Direccion = DireccionModel(sequelize);
 const Configuracion = ConfiguracionModel(sequelize);
 const Favorito = FavoritoModel(sequelize);
+const Delivery = DeliveryModel(sequelize);
+const Client = ClientModel(sequelize);
+const User = UserModel(sequelize);
 
 //relations
-UserModel.hasMany(ClientModel, { foreignKey: "userId" });
-ClientModel.belongsTo(UserModel, { foreignKey: "userId" });
+User.hasMany(Client, { foreignKey: "userId" });
+Client.belongsTo(User, { foreignKey: "userId" });
 
-UserModel.hasMany(DeliveryModel, { foreignKey: "userId" });
-DeliveryModel.belongsTo(UserModel, { foreignKey: "userId" });
+User.hasMany(Comercio, { foreignKey: "userId" });
+Comercio.belongsTo(User, { foreignKey: "userId" });
 
-UserModel.hasMany(Direccion, { foreignKey: "usuarioId", as: "direcciones" });
-Direccion.belongsTo(UserModel, { foreignKey: "usuarioId", as: "usuario" });
+User.hasMany(Delivery, { foreignKey: "userId" });
+DeliveryModel.belongsTo(User, { foreignKey: "userId" });
 
-UserModel.hasMany(Pedido, { foreignKey: "clienteId", as: "pedidosCliente" });
-Pedido.belongsTo(UserModel, { foreignKey: "clienteId", as: "cliente" });
+User.hasMany(Direccion, { foreignKey: "usuarioId", as: "direcciones" });
+Direccion.belongsTo(User, { foreignKey: "usuarioId", as: "usuario" });
 
-UserModel.hasMany(Pedido, { foreignKey: "deliveryId", as: "pedidosDelivery" });
-Pedido.belongsTo(UserModel, { foreignKey: "deliveryId", as: "delivery" });
+User.hasMany(Pedido, { foreignKey: "clienteId", as: "pedidosCliente" });
+Pedido.belongsTo(User, { foreignKey: "clienteId", as: "cliente" });
+
+User.hasMany(Pedido, { foreignKey: "deliveryId", as: "pedidosDelivery" });
+Pedido.belongsTo(User, { foreignKey: "deliveryId", as: "delivery" });
 
 TipoComercio.hasMany(Comercio, {
   foreignKey: "tipoComercioId",
-  as: "comercios",
+  as: "comercio",
 });
 Comercio.belongsTo(TipoComercio, {
   foreignKey: "tipoComercioId",
@@ -87,14 +93,14 @@ DetallePedido.belongsTo(Pedido, { foreignKey: "pedidoId", as: "pedido" });
 Producto.hasMany(DetallePedido, { foreignKey: "productoId", as: "detalles" });
 DetallePedido.belongsTo(Producto, { foreignKey: "productoId", as: "producto" });
 
-UserModel.hasMany(Favorito, {
+User.hasMany(Favorito, {
   foreignKey: "clienteId",
   as: "favoritos",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 
-Favorito.belongsTo(UserModel, {
+Favorito.belongsTo(User, {
   foreignKey: "clienteId",
   as: "cliente",
   onDelete: "CASCADE",
@@ -127,7 +133,7 @@ export default {
   Favorito,
   sequelize,
   Sequelize: connection,
-  UserModel,
-  ClientModel,
-  DeliveryModel,
+  User,
+  Client,
+  Delivery,
 };

@@ -1,7 +1,7 @@
-import connection from "../config/connection/DbConnection.js";
 import { DataTypes } from "sequelize";
 
-const UserModel = connection.define("Users",{
+export default (sequelize) =>{
+  const UserModel = sequelize.define("Users", {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -45,6 +45,7 @@ const UserModel = connection.define("Users",{
   {
     tableName: "Users",
   }
-);
-
-export default UserModel;
+)
+  return UserModel;
+}
+  

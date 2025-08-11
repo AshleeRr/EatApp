@@ -96,7 +96,7 @@ app.use("/delivery", DeliveryRoutes);
 
 //404
 app.use((req, res, next) => {
-  if(req.seccion.isAuthenticated && req.session){
+  if(req.session.isAuthenticated && req.session){
     return res.status(404).render("404", { "page-title": "Not found" });
   }
   return res.status(404).render("404", { "page-title": "Not found", layout:"LogInLayout" });
@@ -106,12 +106,12 @@ app.use((req, res, next) => {
 try {
 
   const shoulfForce = process.env.DB_FORCE === "true";
-  const shoulfAlter = process.env.DB_ALTER === "true";
+  const shouldAlter = process.env.DB_ALTER === "true";
 
   if(shoulfForce){
-    await context.Sequelize.sync({ force: true });
+    await context.sequelize.sync({ force: true });
   }else{
-    await context.Sequelize.sync({ alter: shoulfAlter || false });
+    await context.sequelize.sync({ alter: shouldAlter || false });
   }
   await CreateAdmin();
   app.listen(process.env.PORT || 8080);

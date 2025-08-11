@@ -1,7 +1,7 @@
-import connection from "../config/connection/DbConnection.js";
-import { DataTypes } from "sequelize";
+import { DataType} from "sequelize";
 
-const DeliveryModel = connection.define("Deliveries",{
+export default (sequelize) =>{
+    const DeliveryModel = sequelize.define("Deliveries",{
     id:{
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -38,9 +38,11 @@ const DeliveryModel = connection.define("Deliveries",{
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
     }
-},  {
+    },  {
         tableName: 'Deliveries',
     }
-);
+)
+    return DeliveryModel;
+}
 
-export default DeliveryModel;
+

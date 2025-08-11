@@ -15,12 +15,12 @@ export function GetLogIn(req, res, next) {
 }
 
 export async function CreateAdmin(){
-  try{
-    const admin = await context.user.findOne({where:{role: "admin"}})
+  const admin = await context.User.findOne({where:{role: "admin"}});
     const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASS || "contra123", 10);
+  try{
 
     if (!admin){
-      await context.user.create({
+      await context.User.create({
         role: "admin",
         userName: process.env.ADMIN_USERNAME,
         email: process.env.ADMIN_EMAIL,
@@ -41,7 +41,7 @@ export async function CreateAdmin(){
 export async function PostLogIn(req, res, next) {
   const { UserName_Mail, Password } = req.body;
   try {
-    const user = await context.user.findOne({
+    const user = await context.User.findOne({
       where: {
         [Op.or]: [{ email: UserName_Mail }, { userName: UserName_Mail }],
       },
@@ -112,7 +112,7 @@ export async function PostSignUpBussiness(req, res, next) {
       req.flash("errors", "Passwords do not match.");
       return res.redirect("/user/signUp-bussiness");
     }
-    const user = await context.user.findOne({ where: { email: Email } });
+    const user = await context.User.findOne({ where: { email: Email } });
     if (user) {
       req.flash("errors", "A user with this email already exists.");
       return res.redirect("/user/signUp-bussiness");
@@ -122,7 +122,7 @@ export async function PostSignUpBussiness(req, res, next) {
     const token = buffer.toString("hex");
     const hashedPassword = await bcrypt.hash(Password, 10);
 
-    const newUser = await context.user.create({
+    const newUser = await context.User.create({
       role: "store",
       userName: BussinessName,
       email: Email,
@@ -131,7 +131,7 @@ export async function PostSignUpBussiness(req, res, next) {
       activateToken: token
     });
 
-    await context.comercio.create({
+    await context.Comercio.create({
       name: BussinessName,
       logo: LogoPath,
       phoneNumber: PhoneNumber,
@@ -140,7 +140,10 @@ export async function PostSignUpBussiness(req, res, next) {
       closing: Closing,
       password: hashedPassword,
       userId: newUser.id,
-    });
+    },
+    console.log("se creo en comercio")
+  
+  );
     req.flash("success", "The account has been created successfully.");
     await mailer({
       to: Email,
@@ -149,6 +152,7 @@ export async function PostSignUpBussiness(req, res, next) {
              <p>We are so excited to work with you! Please click the link below to activate your account:</p>
              <p><a href="${process.env.APP_URL}/user/activate/${token}">Activate Account</a></p>`,
     });
+    console.log("paso")
     res.redirect("/");
   } catch (error) {
     console.log(error);
@@ -173,7 +177,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
       req.flash("errors", "Passwords do not match.");
       return res.redirect("/user/signUp-client-delivery");
     }
-    const user = await context.user.findOne({ where: { email: Email } });
+    const user = await context.User.findOne({ where: { email: Email } });
     if (user) {
       req.flash("errors", "A user with this email already exists.");
       return res.redirect("/user/signUp-client-delivery");
@@ -182,7 +186,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
     const buffer = await randomBytesAsync(32);
     const token = buffer.toString("hex");
     const hashedPassword = await bcrypt.hash(Password, 10);
-    const newUser = await context.user.create({
+    const newUser = await context.User.create({
       role: UserType,
       userName: UserName,
       email: Email,
@@ -191,7 +195,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
       activateToken: token
     });
     if (UserType === "client") {
-      await context.client.create({
+      await context.Client.create({
         profilePhoto: LogoPath,
         name: FirstName,
         lastName: LastName,
@@ -200,7 +204,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
         userId: newUser.id,
       });
     } else {
-      await context.delivery.create({
+      await context.Delivery.create({
         profilePhoto: LogoPath,
         name: FirstName,
         lastName: LastName,
@@ -233,7 +237,7 @@ export function GetForgotPassword(req, res, next) {
 export async function PostForgotPassword(req, res, next) {
   try{
     const {UserName_Mail } = req.body;
-    const user = await context.user.findOne({where: 
+    const user = await context.User.findOne({where: 
       {[Op.or]: [{email: UserName_Mail}, {userName: UserName_Mail}]}});
     if(!user){
       req.flash("errors", "There is no user with this credentials");
@@ -274,7 +278,7 @@ export async function GetResetPassword(req, res, next) {
     return res.redirect("/user/forgotPassword");
   }
   try{
-    const user = await context.user.findOne({
+    const user = await context.User.findOne({
       where:{
         resetToken: token, resetTokenExpiration: {
           [Op.gte]: Date.now()}
@@ -301,7 +305,7 @@ export async function PostResetPassword(req, res, next) {
     return res.redirect(`/user/reset/${passwordToken}`);
   }
 
-  const user = await context.user.findOne({
+  const user = await context.User.findOne({
     where:{
       id: userId,
       resetToken: passwordToken,
@@ -327,7 +331,7 @@ export async function GetActivate(req, res, next){
     req.redirect("/");
   }
   try{
-    const user = await context.user.findOne({where:{activateToken: token}});
+    const user = await context.User.findOne({where:{activateToken: token}});
     if(!user){
       req.flash("errors", "Invalid activation token. Try again.");
       res.redirect("/");
@@ -343,5 +347,4 @@ export async function GetActivate(req, res, next){
     req.flash("errors", "An error ocurred while trying to active yout account. Try again");
     return res.redirect("/");
   }
-
 }
