@@ -10,32 +10,28 @@ export default (sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      nombre: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      telefono: {
+      phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      correo: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
       },
       logo: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      horaApertura: {
+      opening: {
         type: DataTypes.TIME,
         allowNull: false,
       },
-      horaCierre: {
+      closing: {
         type: DataTypes.TIME,
         allowNull: false,
       },
@@ -43,10 +39,18 @@ export default (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      token: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
+       userId:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: "Users",
+            key: "id"
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+    },
+    },{
+      tableName: "Comercio"
     },
     {
       hooks: {

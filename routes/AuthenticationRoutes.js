@@ -3,7 +3,8 @@ import { GetLogIn, GetActivate, PostLogIn, LogOut, GetForgotPassword, GetSignUpB
          PostSignUpClient_Delivery, PostForgotPassword, GetResetPassword, PostResetPassword} from "../controllers/AuthenticationController.js";
 
 import { saveProfilePhoto, saveBussinessLogo} from "../utils/handlers/FileHandler.js";
-import isAuthLogin from "../middlewares/isAuthLogIn.js"
+import isAuthLogin from "../middlewares/isAuthForLogin.js"
+
 const router = express.Router();
 
 router.get("/", isAuthLogin, GetLogIn);
@@ -24,6 +25,6 @@ router.post("/user/forgotPassword", isAuthLogin, PostForgotPassword);
 router.get("/user/resetPassword/:token", isAuthLogin, GetResetPassword);
 router.post("/user/resetPassword", isAuthLogin, PostResetPassword);
 
-router.get("/user/activate/:token", isAuthLogin, GetActivate);
+router.get("/user/activate/:token", GetActivate);
 
 export default router;

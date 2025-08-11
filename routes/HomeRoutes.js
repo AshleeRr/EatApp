@@ -1,8 +1,9 @@
 import express from 'express';
 import { GetIndex } from '../controllers/HomeController.js';
-import isAuthLogin from "../middlewares/isAuthLogIn.js"
+import isAuthenticated from "../middlewares/isAuthenticated.js";
+import loadUser from "../middlewares/loadUserLogin.js";
 const router = express.Router();
 
-router.get('/home',isAuthLogin, GetIndex);
+router.get('/home',isAuthenticated, loadUser, GetIndex);
 
 export default router;
