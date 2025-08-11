@@ -24,7 +24,7 @@ app.engine(
   "hbs",
   engine({
     layoutsDir: "views/layouts",
-    defaultLayout: "MainLayout",
+    defaultLayout: "LogInLayout",
     extname: ".hbs",
     helpers: {},
   })
