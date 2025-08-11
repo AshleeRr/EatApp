@@ -12,6 +12,7 @@ export function GetLogIn(req, res, next) {
     "page-title": "Log In",
     layout: "LogInLayout",
   });
+
 }
 
 export async function CreateAdmin(){
@@ -50,8 +51,8 @@ export async function PostLogIn(req, res, next) {
       req.flash("errors", "No user was found with this credentials");
       return res.redirect("/");
     }
-    if(!user.isActive){
-      req.flash("errors", "This user is not active. Please check your email and activate it, or try again");
+    if(user.isActive == false){
+      req.flash("errors", "This user is not active. Please check your email");
       return res.redirect("/");
     }
 
@@ -68,12 +69,11 @@ export async function PostLogIn(req, res, next) {
       email: user.email,
       role: user.role
     };
-
     req.session.save((error) => {
       if (error) {
         console.log("Session save error:", error);
         req.flash("errors", "An error ocurred while saving the session");
-        res.redirect("/");
+        return res.redirect("/");
       }
       return res.redirect("/home");
     });
@@ -89,10 +89,10 @@ export function LogOut(req, res, next) {
     if (error) {
       console.log("An error ocurred while loggging out:", error);
       req.flash("errors", "An error ocurred while trying to log out");
-      res.redirect("/home");
+      return res.redirect("/home");
     }
   });
-  res.redirect("/");
+  return res.redirect("/");
 }
 
 // comercio
@@ -141,10 +141,8 @@ export async function PostSignUpBussiness(req, res, next) {
       password: hashedPassword,
       userId: newUser.id,
     },
-    console.log("se creo en comercio")
-  
   );
-    req.flash("success", "The account has been created successfully.");
+    req.flash("success", "The account has been created successfully. Please check your email.");
     await mailer({
       to: Email,
       subject: "Welcome to EatApp",
@@ -152,10 +150,11 @@ export async function PostSignUpBussiness(req, res, next) {
              <p>We are so excited to work with you! Please click the link below to activate your account:</p>
              <p><a href="${process.env.APP_URL}/user/activate/${token}">Activate Account</a></p>`,
     });
-    console.log("paso")
-    res.redirect("/");
+    return res.redirect("/");
   } catch (error) {
     console.log(error);
+    req.flash("erros", "An error ocurred while signing you up");
+    return res.redirect("/");
   }
 }
 
@@ -222,9 +221,11 @@ export async function PostSignUpClient_Delivery(req, res, next) {
                 <p> Please click the link below so you can activate your account:</p>,
                 <p><a href="${process.env.APP_URL}/user/activate/${token}">Activate Account</a></p>`
     });
-    res.redirect("/");
+    return res.redirect("/");
   } catch (error) {
     console.log(error);
+    req.flash("errors", "An error ocurred while signing you up");
+    return res.redirect("/");
   }
 }
 
@@ -261,7 +262,7 @@ export async function PostForgotPassword(req, res, next) {
       subject: "Password Reset Request",
       html: `<p>Dear ${user.userName},</p>
              <p>You requested a password reset. Please click the link below to reset your password:</p>
-             <p><a href="${process.env.APP_URL}/user/resetPassword/${token}">Reset Password HERE</a></p>`
+             <p><a href="${process.env.APP_URL,process.env.PORT}/user/resetPassword/${token}">Reset Password HERE</a></p>`
     });
 
     req.flash("success", "The link has been sent to your email successfully");
@@ -325,16 +326,16 @@ export async function PostResetPassword(req, res, next) {
 }
 
 export async function GetActivate(req, res, next){
-  const {token} = req.body;
+  const {token} = req.params;
   if(!token){
     req.flash("errors", "Invalid or expired token. Please try again");
-    req.redirect("/");
+    return res.redirect("/");
   }
   try{
     const user = await context.User.findOne({where:{activateToken: token}});
     if(!user){
       req.flash("errors", "Invalid activation token. Try again.");
-      res.redirect("/");
+      return res.redirect("/");
     }
     user.isActive = true;
     user.activateToken = null;
