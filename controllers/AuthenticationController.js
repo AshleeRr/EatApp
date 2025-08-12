@@ -63,6 +63,7 @@ export async function PostLogIn(req, res, next) {
       email: user.email,
       role: user.role
     };
+
     req.session.save((error) => {
       if (error) {
         console.log("Session save error:", error);
