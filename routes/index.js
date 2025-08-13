@@ -3,6 +3,7 @@ import ClientRoutes from "./ClientRoutes.js";
 import StoreRoutes from "./StoreRoutes.js";
 import AuthenticationRoutes from "./AuthenticationRoutes.js";
 import DeliveryRoutes from "./DeliveryRoutes.js";
+import ProductRoutes from "./ProductRoutes.js";
 
 export const routes = (app) => {
   app.use(AuthenticationRoutes);
@@ -10,4 +11,5 @@ export const routes = (app) => {
   app.use("/client", ClientRoutes);
   app.use("/store", StoreRoutes);
   app.use("/delivery", DeliveryRoutes);
+  app.use("/product", ProductRoutes);
 };

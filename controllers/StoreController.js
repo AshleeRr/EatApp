@@ -1,10 +1,8 @@
-import {
-  StoreRepository,
-  CategoryRepository,
-  ProductsRepository,
-} from "../repository/index.js";
-
+import { StoreRepository } from "../repository/index.js";
 import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
+
+import { HandError } from "../utils/handlers/handlerError.js";
+import path from "path";
 
 export const index = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
@@ -13,11 +11,7 @@ export const index = HandControllersAsync(async (req, res) => {
 
   const store = await StoreRepository.getStoreByUserId(userId);
 
-  if (!store) {
-    return res.status(404).json({
-      message: "Comercio no encontrado",
-    });
-  }
+  if (!store) HandError(404, "Comercio no encontrado");
 
   const pedidos = await StoreRepository.getPedidoByStore(userId);
 

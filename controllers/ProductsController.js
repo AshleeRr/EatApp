@@ -12,7 +12,7 @@ export const index = HandControllersAsync(async (req, res) => {
 
   const products = await ProductsRepository.getProductsByStore(store.id);
 
-  return res.render("storeViews/products/index", {
+  return res.render("storeViews/product/index", {
     title: "My Products",
     user: req.user,
     store,
@@ -27,8 +27,8 @@ export const createProductForm = HandControllersAsync(async (req, res) => {
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  return res.render("storeViews/products/create", {
-    title: "Crear producto",
+  return res.render("storeViews/product/create", {
+    title: "Create Product",
     user: req.user,
     store,
   });
@@ -72,7 +72,7 @@ export const editProductForm = HandControllersAsync(async (req, res) => {
 
   if (!product) HandError(404, "Producto no encontrado");
 
-  return res.render("store/product/create", {
+  return res.render("storeViews/product/create", {
     title: "Editar Producto",
     user: req.user,
     store,
