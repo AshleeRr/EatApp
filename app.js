@@ -17,7 +17,7 @@ import AuthenticationRoutes from './routes/AuthenticationRoutes.js';
 import HomeRoutes from './routes/HomeRoutes.js';
 import ClientRoutes from './routes/ClientRoutes.js';
 import DeliveryRoutes from './routes/DeliveryRoutes.js';
-
+import AdminRoutes from './routes/AdminRoutes.js';
 const app = express();
 
 app.engine(
@@ -90,6 +90,7 @@ app.use(AuthenticationRoutes);
 app.use(HomeRoutes);
 app.use("/client", ClientRoutes);
 app.use("/delivery", DeliveryRoutes);
+app.use("/admin", AdminRoutes);
 
 
 //app.use(multer({ storage: UserMulter }).single("UserProfilePhoto"));

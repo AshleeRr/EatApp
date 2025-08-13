@@ -17,3 +17,8 @@
     color: white;
     background-color: rgb(220, 136, 46);
 }
+
+.btn-client-style{
+    width: 150px; 
+    height: 150px;
+}
