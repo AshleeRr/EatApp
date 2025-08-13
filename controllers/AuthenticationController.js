@@ -38,7 +38,6 @@ export async function CreateAdmin(){
 export async function PostLogIn(req, res, next) {
   const { UserName_Mail, Password } = req.body;
   try {
-
     const user = await context.User.findOne({
       where: {
         [Op.or]: [{ email: UserName_Mail }, { userName: UserName_Mail }],
@@ -71,26 +70,7 @@ export async function PostLogIn(req, res, next) {
         req.flash("errors", "An error ocurred while saving the session");
         return res.redirect("/");
       }
-      switch(user.role){
-        case "client": res.redirect("/client/home")
-          break;
-        case "admin": res.redirect("/admin/home")
-          break;
-        case "store": res.redirect("/store/store/index")
-          break;
-        case "delivery": res.redirect("/delivery/home")
-          break;
-        default:
-          req.flash("errors", "That role does not exist yet. Contact and admin");
-          return res.redirect("/");
-      }
-
-
-
-
-
-
-      //return res.redirect("/home");
+      return res.redirect("/home");
     });
   } catch (error) {
     console.log(error);
@@ -153,7 +133,7 @@ export async function PostSignUpBusiness(req, res, next) {
       isActive: false,
       activateToken: token
     });
-    console.log(BusinessTypeId);
+
     await context.Comercio.create({
       name: BusinessName,
       logo: LogoPath,

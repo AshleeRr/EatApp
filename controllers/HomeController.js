@@ -3,7 +3,19 @@ import context from "../config/context/AppContext.js";
 export async function GetIndex(req, res, next){
 
   //cliente
-  /*
+  /*const result = await context.Comercio.findAll({
+    include: [{
+      model: tipoComercio,
+      as: tipoComercio
+    }]
+  });
+
+  const resultPlain = result.map((r)=>r.get({plain:true}));
+  const businessTypes = resultPlain.map((r) => r.tipoComercio);
+  const businesses = resultPlain.map((r)=>{
+    const {tipoComercio, ...rest} = r;
+    return rest;
+  });
   
 
   //
