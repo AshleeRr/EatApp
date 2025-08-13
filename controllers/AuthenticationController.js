@@ -74,17 +74,24 @@ export async function PostLogIn(req, res, next) {
         req.flash("errors", "An error ocurred while saving the session");
         return res.redirect("/");
       }
-      switch(user.role){
-        case "client": res.redirect("/client/home")
+      switch (user.role) {
+        case "client":
+          res.redirect("/client/home");
           break;
-        case "admin": res.redirect("/admin/home")
+        case "admin":
+          res.redirect("/admin/home");
           break;
-        case "store": res.redirect("/store/store/index")
+        case "store":
+          res.redirect("/store/index");
           break;
-        case "delivery": res.redirect("/delivery/home")
+        case "delivery":
+          res.redirect("/delivery/home");
           break;
         default:
-          req.flash("errors", "That role does not exist yet. Contact and admin");
+          req.flash(
+            "errors",
+            "That role does not exist yet. Contact and admin"
+          );
           return res.redirect("/");
       }
       //return res.redirect("/home");

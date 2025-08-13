@@ -1,5 +1,7 @@
-import { ProductsRepository, StoreRepository } from "../repository/index.js";
+import path from "path";
 
+import { ProductsRepository, StoreRepository } from "../repository/index.js";
+import { HandError } from "../utils/handlers/handlerError.js";
 import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
 
 export const index = HandControllersAsync(async (req, res) => {
@@ -38,64 +40,81 @@ export const createProduct = HandControllersAsync(async (req, res) => {
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const { name, description } = req.body;
-  await CategoryRepository.createCategory({
-    name,
-    description,
+  const { nombre, descripcion, precio, categoria } = req.body;
+  const Logo = req.file ? req.file.filename : null;
+
+  if (!nombre || !descripcion || !precio || !categoria || !imagen) {
+    HandError(400, "Todos los campos son obligatorios");
+  }
+  const ImgRoute = "\\" + path.resolve("public", Logo.path);
+
+  const newP = await ProductsRepository.createProduct({
+    nombre,
+    descripcion,
+    precio,
+    ImgRoute,
     comercioId: store.id,
+    categoriaId: categoria.id,
   });
 
-  return res.redirect("/storeViews/categories/index");
+  if (!newP) HandError(500, "Error al crear el producto");
+  return res.redirect("/storeViews/product/index");
 });
 
 export const editProductForm = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await ProductsRepository.getStoreByUserId(userId);
+  const store = await StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const categoryId = req.params.id;
-  const category = await CategoryRepository.getCategoryById(categoryId);
+  const productId = req.params.id;
+  const product = await ProductsRepository.getProductById(productId);
 
-  if (!category) HandError(404, "Categoria no encontrado");
+  if (!product) HandError(404, "Producto no encontrado");
 
-  return res.render("store/catgories/create", {
-    title: "Editar Categoría",
+  return res.render("store/product/create", {
+    title: "Editar Producto",
     user: req.user,
     store,
-    category,
+    product,
   });
 });
 
 export const editProduct = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await ProductsRepository.getStoreByUserId(userId);
+  const store = await StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const categoryId = req.params.id;
-  const category = await CategoryRepository.getCategoryById(categoryId);
-  if (!category) HandError(404, "Categoria no encontrado");
+  const productId = req.params.id;
+  const product = await ProductsRepository.getProductById(productId);
 
-  const { name, description } = req.body;
-  await CategoryRepository.updateCategory(categoryId, {
-    name,
-    description,
+  if (!product) HandError(404, "Producto no encontrado");
+
+  const newP = await ProductsRepository.updateProduct({
+    nombre,
+    descripcion,
+    precio,
+    ImgRoute,
+    comercioId: store.id,
+    categoriaId: categoria.id,
   });
 
-  return res.redirect("/storeViews/categories/index");
+  if (!newP) HandError(500, "Error al editar el producto");
+  return res.redirect("/storeViews/product/index");
 });
 
 export const deleteProduct = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await ProductsRepository.getStoreByUserId(userId);
+  const store = await StoreRepository.getStoreByUserId(userId);
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const categoryId = req.params.id;
-  const category = await CategoryRepository.getCategoryById(categoryId);
-  if (!category) HandError(404, "Categoria no encontrado");
+  const productId = req.params.id;
+  const product = await ProductsRepository.getProductById(productId);
 
-  await CategoryRepository.deleteCategory(categoryId);
+  if (!product) HandError(404, "Producto no encontrado");
 
-  return res.redirect("/storeViews/categories/index");
+  await ProductsRepository.deleteProduct(productId);
+
+  return res.redirect("/storeViews/product/index");
 });
