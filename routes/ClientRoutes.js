@@ -1,5 +1,7 @@
 import express from "express";
 //import { GetIndex } from '../controllers/ClientController.js';
+import express from "express";
+// import { GetProfile, GetDirections } from "../controllers/ClientController.js";
 
 import isAuth from "../middlewares/isAuthenticated.js";
 
