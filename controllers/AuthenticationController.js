@@ -76,7 +76,7 @@ export async function PostLogIn(req, res, next) {
           break;
         case "admin": res.redirect("/admin/home")
           break;
-        case "store": res.redirect("/comercio/home")
+        case "store": res.redirect("/store/store/index")
           break;
         case "delivery": res.redirect("/delivery/home")
           break;
@@ -153,7 +153,7 @@ export async function PostSignUpBusiness(req, res, next) {
       isActive: false,
       activateToken: token
     });
-
+    console.log(BusinessTypeId);
     await context.Comercio.create({
       name: BusinessName,
       logo: LogoPath,

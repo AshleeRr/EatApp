@@ -15,6 +15,7 @@ import { CreateAdmin } from "./controllers/AuthenticationController.js";
 
 //routes
 import { routes } from "./routes/index.js";
+import { Equals } from "./utils/helpers/Compare.js";
 const app = express();
 
 app.engine(
@@ -23,7 +24,9 @@ app.engine(
     layoutsDir: "views/layouts",
     defaultLayout: "LogInLayout",
     extname: ".hbs",
-    helpers: {},
+    helpers: {
+      eq: Equals
+    },
   })
 );
 
