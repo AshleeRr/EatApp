@@ -2,5 +2,26 @@
     <h4 class="text-center"> What's your mood for?</h4>
 </div>
 
-
-
+{{#if hasBusinessTypes}}
+<div class="row">
+    {{#each businessTypeList}}
+    <form method="GET" action="/client/home">
+        <div class="col-12 col-sm-3">
+            <btn type="submit" name="type" value="{{this.nombre}}">
+                <img src="{{this.icono}}" alt="{{this.nombre}} logo" class="btn-client-style">
+                <p class="p-style">{{this.name}}</p>
+            </btn>
+        </div>
+    </form>
+    {{/each}}
+</div>
+{{else}}
+<div class="row d-flex justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="alert alert-dark text-center shadow-sm p-4 rounded" role="alert" style="font-size: 1.1rem;">
+      <i class="bi bi-info-circle me-2 fs-4"></i>
+      There are no business types registered yet. Contact an admin.
+    </div>
+  </div>
+</div>
+{{/if}}

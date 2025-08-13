@@ -12,13 +12,10 @@ import UserMulter from "./config/multer/multer.js";
 import context from "./config/context/AppContext.js";
 import { CreateAdmin } from "./controllers/AuthenticationController.js";
 
+
 //routes
 import { routes } from "./routes/index.js";
-import AuthenticationRoutes from "./routes/AuthenticationRoutes.js";
-import HomeRoutes from "./routes/HomeRoutes.js";
-import ClientRoutes from "./routes/ClientRoutes.js";
-import DeliveryRoutes from "./routes/DeliveryRoutes.js";
-
+import { Equals } from "./utils/helpers/Compare.js";
 const app = express();
 
 app.engine(
@@ -27,7 +24,9 @@ app.engine(
     layoutsDir: "views/layouts",
     defaultLayout: "LogInLayout",
     extname: ".hbs",
-    helpers: {},
+    helpers: {
+      eq: Equals
+    },
   })
 );
 
