@@ -1,18 +1,20 @@
+{{#if hasBusinessTypes}}
 <div class="container d-flex justify-content-center align-items-start" style="min-height: 100vh; padding-top: 80px;">
-  <form class="w-100" style="max-width: 600px;" action="/user/signUp-bussiness" method="POST" enctype="multipart/form-data">
+
+  <form class="w-100" style="max-width: 600px;" action="/user/signUp-business" method="POST" enctype="multipart/form-data">
     <h2 class="text-center mb-4">Start Working With Us!</h2>
 
     <div class="row mb-3">
       <div class="col-md-6">
-        <label for="bussinessName" class="form-label">Bussiness Name</label>
+        <label for="businessName" class="form-label">Business Name</label>
         <div class="input-group">
           <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" class="form-control" id="bussinessName" name="BussinessName" placeholder="Enter your bussiness name" required>
+          <input type="text" class="form-control" id="businessName" name="BusinessName" placeholder="Enter your business name" required>
         </div>
       </div>
       <div class="col-md-6">
-        <label for="photo" class="form-label">Bussiness Logo</label>
-        <input type="file" class="form-control" id="photo" name="BussinessLogo" required="required">
+        <label for="photo" class="form-label">Business Logo</label>
+        <input type="file" class="form-control" id="photo" name="BusinessLogo" required="required">
       </div>
     </div>
 
@@ -46,6 +48,16 @@
     </div>
 
     <div class="mb-4">
+      <label for="businessTypes" class="form-label">Business Type</label>
+      <select id="businessTypes" name="BusinessTypeId" class="form-select">
+      <option value="" disabled>Select yours</option>
+      {{#each businessTypeList}}
+        <option value="{{this.id}}" {{#if (eq this.id ../comercio.tipoComercioId)}}selected{{/if}}>{{this.name}}</option>
+      {{/each}}
+      </select>
+    </div>
+
+    <div class="mb-4">
       <label for="password" class="form-label">Password</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
@@ -72,3 +84,4 @@
   </form>
 </div>
 
+{{/if}}

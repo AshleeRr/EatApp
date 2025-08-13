@@ -22,7 +22,7 @@ export function SaveDataInFile(dataPath, data) {
   });
 }
 
-const imageStorageForBussinessLogo = multer.diskStorage({
+const imageStorageForBusinessLogo = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(
       null,
@@ -67,6 +67,6 @@ const imageStorageForProfilePhotos = multer.diskStorage({
 export const saveProfilePhoto = multer({
   storage: imageStorageForProfilePhotos,
 });
-export const saveBussinessLogo = multer({
-  storage: imageStorageForBussinessLogo,
+export const saveBusinessLogo = multer({
+  storage: imageStorageForBusinessLogo,
 });

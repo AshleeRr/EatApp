@@ -1,18 +1,36 @@
 import context from "../config/context/AppContext.js";
 
 export async function GetIndex(req, res, next){
-  const result = await context.TipoComercio.findAll();
-  const bussinessTypes = result.map((r)=>r.get({plain:true}));
-  const role = req.user.role;
 
+  //cliente
+  /*const result = await context.Comercio.findAll({
+    include: [{
+      model: tipoComercio,
+      as: tipoComercio
+    }]
+  });
+
+  const resultPlain = result.map((r)=>r.get({plain:true}));
+  const businessTypes = resultPlain.map((r) => r.tipoComercio);
+  const businesses = resultPlain.map((r)=>{
+    const {tipoComercio, ...rest} = r;
+    return rest;
+  });
+  
+
+  //
+*/
+  const role = req.user.role;
   try{
     switch(role){
       case "client": return res.render(
         "clientViews/home", { 
         "page-title": "Home/Client", 
         layout: "ClientLayout",
-        bussinessTypeList: bussinessTypes,
-        hasBussinessTypes: bussinessTypes.length > 0 
+       /* businessesList: businesses,
+        hasbusinesses: businesses.length > 0,
+        businessTypeList: businessTypes,
+        hasBusinessTypes: businessTypes.length > 0 */
       });
       case "delivery": return res.render("deliveryViews/home", { "page-title": "Home/Delivery", layout: "DeliveryLayout" });
       case "store": return res.render("storeViews/home", { "page-title": "Home/Store", layout: "StoreLayout" });

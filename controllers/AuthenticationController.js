@@ -90,26 +90,35 @@ export function LogOut(req, res, next) {
   return res.redirect("/");
 }
 
-export function GetSignUpBussiness(req, res, next) {
-  res.render("AuthenticationViews/signUp-bussiness", {
+export async function GetSignUpBusiness(req, res, next) {
+  
+  const result = await context.TipoComercio.findAll();
+  const businessTypes = result.map((r) => r.get({plain: true}));
+  if(!businessTypes.length > 0){
+    req.flash("success", "We're sorry, there are no types of business yet. Try later or contact an admin");
+    return res.redirect("/");
+  }
+  res.render("AuthenticationViews/signUp-business", {
     "page-title": "Sign Up",
     layout: "LogInLayout",
+    businessTypeList: businessTypes,
+    hasBusinessTypes: businessTypes.length > 0 
   });
 }
-export async function PostSignUpBussiness(req, res, next) {
+export async function PostSignUpBusiness(req, res, next) {
   try {
-    const {BussinessName, PhoneNumber, Email, Opening, Closing, Password, ConfirmPassword} = req.body;
-    const BussinessLogo = req.file;
-    const LogoPath = "\\" + path.resolve("public", BussinessLogo.path);
+    const {BusinessName, PhoneNumber, Email, Opening, Closing, Password, ConfirmPassword, BusinessTypeId} = req.body;
+    const BusinessLogo = req.file;
+    const LogoPath = "\\" + path.resolve("public", BusinessLogo.path);
 
     if (Password !== ConfirmPassword) {
       req.flash("errors", "Passwords do not match.");
-      return res.redirect("/user/signUp-bussiness");
+      return res.redirect("/user/signUp-business");
     }
     const user = await context.User.findOne({ where: { email: Email } });
     if (user) {
       req.flash("errors", "A user with this email already exists.");
-      return res.redirect("/user/signUp-bussiness");
+      return res.redirect("/user/signUp-business");
     }
     const randomBytesAsync = promisify(randomBytes);
     const buffer = await randomBytesAsync(32);
@@ -118,7 +127,7 @@ export async function PostSignUpBussiness(req, res, next) {
 
     const newUser = await context.User.create({
       role: "store",
-      userName: BussinessName,
+      userName: BusinessName,
       email: Email,
       password: hashedPassword,
       isActive: false,
@@ -126,7 +135,7 @@ export async function PostSignUpBussiness(req, res, next) {
     });
 
     await context.Comercio.create({
-      name: BussinessName,
+      name: BusinessName,
       logo: LogoPath,
       phoneNumber: PhoneNumber,
       email: Email,
@@ -134,12 +143,13 @@ export async function PostSignUpBussiness(req, res, next) {
       closing: Closing,
       password: hashedPassword,
       userId: newUser.id,
+      tipoComercioId: BusinessTypeId
     });
     req.flash("success", "The account has been created successfully. Please check your email.");
     await mailer({
       to: Email,
       subject: "Welcome to Zipy",
-      html: `<p>Thank you for sign up your bussiness,</p>
+      html: `<p>Thank you for sign up your business,</p>
              <p>We are so excited to work with you! Please click the link below to activate your account:</p>
              <p><a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
     });
@@ -211,7 +221,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
       html: `<p>Dear ${FirstName},</p>
                 <p>Thank you for registering.</p>
                 <p>
-                ${user.role === "client" ? "Now you can enjoy the magnitud of bussiness in your area without going out of your home!" :
+                ${UserType === "client" ? "Now you can enjoy the magnitud of business in your area without going out of your home!" :
                   "We are excited to work with you. Welcome to the Zipy family!"}
                 </p>
                 <p> Please click the link below so you can activate your account and enjoy:</p>
