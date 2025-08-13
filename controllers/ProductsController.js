@@ -1,4 +1,4 @@
-import { ProductsRepository } from "../repository/index.js";
+import { ProductsRepository, StoreRepository } from "../repository/index.js";
 
 import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
 
@@ -8,21 +8,20 @@ export const index = HandControllersAsync(async (req, res) => {
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const CategoriesAndProducts =
-    await CategoryRepository.getCategoriesWithMostProducts(store.id);
+  const products = await ProductsRepository.getProductsByStore(store.id);
 
-  return res.render("storeViews/categories/index", {
-    title: "Categorías",
+  return res.render("storeViews/products/index", {
+    title: "My Products",
     user: req.user,
     store,
-    hasCategories: CategoriesAndProducts.length > 0,
-    categories: CategoriesAndProducts,
+    hasProducts: products.length > 0,
+    products,
   });
 });
 
-export const createCategoryForm = HandControllersAsync(async (req, res) => {
+export const createProductForm = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await ProductsRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -33,9 +32,9 @@ export const createCategoryForm = HandControllersAsync(async (req, res) => {
   });
 });
 
-export const createCategory = HandControllersAsync(async (req, res) => {
+export const createProduct = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await ProductsRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -49,9 +48,9 @@ export const createCategory = HandControllersAsync(async (req, res) => {
   return res.redirect("/storeViews/categories/index");
 });
 
-export const editCategoryForm = HandControllersAsync(async (req, res) => {
+export const editProductForm = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await ProductsRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -68,9 +67,9 @@ export const editCategoryForm = HandControllersAsync(async (req, res) => {
   });
 });
 
-export const editCategory = HandControllersAsync(async (req, res) => {
+export const editProduct = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await ProductsRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -87,9 +86,9 @@ export const editCategory = HandControllersAsync(async (req, res) => {
   return res.redirect("/storeViews/categories/index");
 });
 
-export const deleteCategory = HandControllersAsync(async (req, res) => {
+export const deleteProduct = HandControllersAsync(async (req, res) => {
   const userId = req.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await ProductsRepository.getStoreByUserId(userId);
   if (!store) HandError(404, "Comercio no encontrado");
 
   const categoryId = req.params.id;
