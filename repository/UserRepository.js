@@ -1,4 +1,4 @@
-import db from "../config/DB/Connection.js";
+import db from "../config/context/AppContext.js";
 import { HandRepositoriesAsync } from "../utils/handlers/handlerAsync.js";
 
 const {
