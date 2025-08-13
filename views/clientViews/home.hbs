@@ -1,16 +1,29 @@
-<div class="row">
-    <h4 class="text-center"> What's your mood for?</h4>
+<div class="row mb-3 align-items-center">
+  <div class="col-md-6">
+    <h4 class="text-center">What can we get for you for?</h4>
+  </div>
+  
+  <div class="col-md-6">
+    <form method="GET" action="/client/home">
+      <div class="input-group">
+        <input type="text" name="typeFilter" class="form-control" placeholder="fast food"/>
+        <button type="submit" class="btn btn-danger">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 {{#if hasBusinessTypes}}
-<div class="row">
+<div class="row justify-content-center gap-3">
     {{#each businessTypeList}}
-    <form method="GET" action="/client/home">
+    <form method="GET" action="/client/home" class="col-auto">
         <div class="col-12 col-sm-3">
-            <btn type="submit" name="type" value="{{this.nombre}}">
-                <img src="{{this.icono}}" alt="{{this.nombre}} logo" class="btn-client-style">
-                <p class="p-style">{{this.name}}</p>
-            </btn>
+            <button type="submit" name="Type" value="{{this.nombre}}" class="btn-client-style">
+                <img src="/assets/imgs/site/logo.jpg" alt="{{this.nombre}} logo" class="btn-img-style">
+                <div class="btn-name-style">{{this.nombre}}</div>
+            </button>
         </div>
     </form>
     {{/each}}

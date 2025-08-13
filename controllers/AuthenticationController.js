@@ -84,12 +84,6 @@ export async function PostLogIn(req, res, next) {
           req.flash("errors", "That role does not exist yet. Contact and admin");
           return res.redirect("/");
       }
-
-
-
-
-
-
       //return res.redirect("/home");
     });
   } catch (error) {

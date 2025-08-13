@@ -18,9 +18,40 @@
     background-color: rgb(220, 136, 46);
 }
 
-.btn-client-style{
-    width: 150px; 
-    height: 150px;
+.btn-client-style {
+  width: 140px;
+  height: 100px;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.btn-client-style:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.btn-img-style {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-name-style {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 body {
