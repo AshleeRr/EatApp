@@ -22,3 +22,34 @@
     width: 150px; 
     height: 150px;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/imgs/site/fondoApp.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); 
+  backdrop-filter: blur(4px); 
+}

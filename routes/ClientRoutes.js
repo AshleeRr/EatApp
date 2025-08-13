@@ -1,6 +1,6 @@
-
 import express from 'express';
 import { GetProfile, GetDirections, GetHome } from '../controllers/ClientController.js';
+
 
 import isAuth from "../middlewares/isAuthenticated.js";
 
