@@ -1,4 +1,4 @@
-import { StoreRepository } from "../repository/index.js";
+import { StoreRepository } from "../repositories/index.js";
 import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
 import { HandError } from "../utils/handlers/handlerError.js";
 
@@ -27,8 +27,7 @@ export const index = HandControllersAsync(async (req, res) => {
 });
 
 export const StorePerfil = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
-
+  const userId = req.session.user.id;
   const store = await StoreRepository.getStoreByUserId(userId);
   if (!store) HandError(404, "Comercio no encontrado");
 
