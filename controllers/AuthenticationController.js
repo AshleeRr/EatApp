@@ -82,7 +82,7 @@ export async function PostLogIn(req, res, next) {
           res.redirect("/admin/home");
           break;
         case "store":
-          res.redirect("/store/index");
+          res.redirect("/store/store/index");
           break;
         case "delivery":
           res.redirect("/delivery/home");

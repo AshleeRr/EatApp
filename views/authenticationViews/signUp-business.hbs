@@ -52,7 +52,7 @@
       <select id="businessTypes" name="BusinessTypeId" class="form-select">
       <option value="" disabled>Select yours</option>
       {{#each businessTypeList}}
-        <option value="{{this.id}}" {{#if (eq this.id ../comercio.tipoComercioId)}}selected{{/if}}>{{this.name}}</option>
+        <option value="{{this.id}}" {{#if (eq this.id ../comercio.tipoComercioId)}}selected{{/if}}>{{this.nombre}}</option>
       {{/each}}
       </select>
     </div>

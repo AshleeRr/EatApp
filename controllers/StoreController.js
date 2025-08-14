@@ -3,7 +3,7 @@ import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
 import { HandError } from "../utils/handlers/handlerError.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.session.user.id;
 
   console.log("userId :>> ", userId);
 
@@ -15,13 +15,14 @@ export const index = HandControllersAsync(async (req, res) => {
 
   const hasAsignedDelivery = pedidos.some((pedido) => pedido.deliveryId);
 
-  return res.render("store/index", {
+  return res.render("storeViews/home", {
     title: "My store",
     user: req.user,
     store,
     hasPedidos: pedidos.length > 0,
     pedidos,
     hasAsignedDelivery,
+    layout: "StoreLayout",
   });
 });
 
