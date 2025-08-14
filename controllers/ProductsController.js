@@ -5,7 +5,7 @@ import { HandError } from "../utils/handlers/handlerError.js";
 import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.session.user.id;
   const store = await StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
@@ -22,7 +22,7 @@ export const index = HandControllersAsync(async (req, res) => {
 });
 
 export const createProductForm = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.session.user.id;
   const store = await StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
@@ -35,7 +35,7 @@ export const createProductForm = HandControllersAsync(async (req, res) => {
 });
 
 export const createProduct = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.session.user.id;
   const store = await StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
@@ -62,7 +62,7 @@ export const createProduct = HandControllersAsync(async (req, res) => {
 });
 
 export const editProductForm = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.session.user.id;
   const store = await StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
@@ -81,7 +81,7 @@ export const editProductForm = HandControllersAsync(async (req, res) => {
 });
 
 export const editProduct = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.session.user.id;
   const store = await StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
@@ -105,7 +105,7 @@ export const editProduct = HandControllersAsync(async (req, res) => {
 });
 
 export const deleteProduct = HandControllersAsync(async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.session.user.id;
   const store = await StoreRepository.getStoreByUserId(userId);
   if (!store) HandError(404, "Comercio no encontrado");
 
