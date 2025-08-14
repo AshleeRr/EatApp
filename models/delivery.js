@@ -1,48 +1,67 @@
-import { DataTypes} from "sequelize";
+import { DataTypes } from "sequelize";
 
-export default (sequelize) =>{
-    const DeliveryModel = sequelize.define("Deliveries",{
-    id:{
+export default (sequelize) => {
+  const DeliveryModel = sequelize.define(
+    "Deliveries",
+    {
+      id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true 
-    },
-    profilePhoto:{
+        autoIncrement: true,
+      },
+      profilePhoto: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    name:{
+        allowNull: false,
+      },
+      name: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    lastName:{
+        allowNull: false,
+      },
+      lastName: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    userName:{
+        allowNull: false,
+      },
+      userName: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    phoneNumber:{
+        allowNull: false,
+      },
+      phoneNumber: {
         type: DataTypes.STRING,
-        allowNull: false
-    },
-    userId:{
+        allowNull: false,
+      },
+      estado: {
+        type: DataTypes.ENUM("disponible", "ocupado"),
+        allowNull: false,
+        defaultValue: "disponible",
+      },
+      userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: "Users",
-            key: "id"
+          model: "Users",
+          key: "id",
         },
         onDelete: "CASCADE",
-        onUpdate: "CASCADE"
+        onUpdate: "CASCADE",
+      },
+    },
+    {
+      tableName: "Deliveries",
     }
-    },  {
-        tableName: 'Deliveries',
-    }
-)
-    return DeliveryModel;
-}
+  );
 
+  DeliveryModel.associate = (models) => {
+    DeliveryModel.belongsTo(models.User, {
+      foreignKey: "userId",
+      as: "user",
+    });
 
+    DeliveryModel.hasMany(models.Pedido, {
+      foreignKey: "deliveryId",
+      as: "pedidos",
+    });
+  };
+
+  return DeliveryModel;
+};

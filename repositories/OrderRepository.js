@@ -1,9 +1,8 @@
 import db from "../config/context/AppContext.js";
 import { HandRepositoriesAsync } from "../utils/handlers/handlerAsync.js";
 import GenericRepository from "./genericRepository.js";
-import { Op } from "sequelize";
 
-const { Pedido, DetallePedido } = db;
+const { Pedido } = db;
 const PedidoRepo = new GenericRepository(Pedido);
 
 class OrderRespository {
@@ -46,12 +45,19 @@ class OrderRespository {
     return await PedidoRepo.create(data);
   });
 
-  updateOrder = HandRepositoriesAsync(async (id, data) => {
-    return await PedidoRepo.update(id, data);
+  updateOrder = HandRepositoriesAsync(async (id, data, options = {}) => {
+    return await PedidoRepo.update(data, {
+      where: { id },
+      ...options,
+    });
   });
 
   deleteOrder = HandRepositoriesAsync(async (id) => {
     return await PedidoRepo.delete(id);
+  });
+
+  startTransaction = HandRepositoriesAsync(async () => {
+    return await db.sequelize.transaction();
   });
 }
 

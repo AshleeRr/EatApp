@@ -3,14 +3,7 @@ import OrderRepository from "./OrderRepository.js";
 import StoreRepository from "./StoreRepository.js";
 import UserRepository from "./userRepository.js";
 import ProductsRepository from "./ProductsRepository.js";
-
-const repositories = {
-  CategoryRepository,
-  StoreRepository,
-  UserRepository,
-  OrderRepository,
-  ProductsRepository,
-};
+import DeliveryRepository from "./deliveryRepository.js";
 
 export {
   CategoryRepository,
@@ -18,4 +11,5 @@ export {
   StoreRepository,
   UserRepository,
   ProductsRepository,
+  DeliveryRepository,
 };

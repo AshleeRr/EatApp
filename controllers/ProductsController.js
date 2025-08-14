@@ -1,6 +1,6 @@
 import path from "path";
 
-import { ProductsRepository, StoreRepository } from "../repository/index.js";
+import { ProductsRepository, StoreRepository } from "../repositories/index.js";
 import { HandError } from "../utils/handlers/handlerError.js";
 import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
 

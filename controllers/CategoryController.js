@@ -1,4 +1,4 @@
-import { CategoryRepository, StoreRepository } from "../repository/index.js";
+import { CategoryRepository, StoreRepository } from "../repositories/index.js";
 
 import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
 
