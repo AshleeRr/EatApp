@@ -10,7 +10,7 @@ import isAuth from "../middlewares/isAuthenticated.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import loadUser from "../middlewares/loadUserLogin.js";
 
-export const routes = (app, req) => {
+export const routes = (app) => {
   app.use(AuthenticationRoutes);
 
   app.use("/", isAuthenticated, loadUser, HomeRoute);
