@@ -5,7 +5,7 @@ import DeliveryRoutes from "./DeliveryRoutes.js";
 import StoreRoutes from "./WholeStoreRoutes.js";
 
 //midlewares
-import { setLayout } from "../middlewares/setLayout.js";
+import setLayout from "../middlewares/setLayout.js";
 import isAuth from "../middlewares/isAuthenticated.js";
 
 export const routes = (app) => {

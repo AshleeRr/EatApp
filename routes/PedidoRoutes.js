@@ -4,6 +4,6 @@ import isAuth from "../middlewares/isAuthenticated.js";
 
 const router = express.Router();
 
-router.get("pedido/index/:id", index);
+router.get("/index/:id", index);
 
 export default router;
