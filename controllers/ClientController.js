@@ -1,21 +1,24 @@
 import context from "../config/context/AppContext.js";
+import {Op} from "sequelize";
 
 export async function GetHome(req,res,next){
 
+  console.log("query", req.query)
   const typeFilter = req.query.typeFilter || '';
   const result = {};
-
-  if(typeFilter.trim()){
-    const businessTypeId = Array.isArray(typeFilter) 
-      ? typeFilter.map(Number) : [Number(typeFilter)];
-      result.businessTypesId = {[Op.in]: businessTypeId}
+  console.log("filter", typeFilter);
+  if(typeFilter.trim()){  
+    result.nombre = {[Op.like]: `%${typeFilter}%`};
   }
 
-  const businesses = await context.Comercio.findAll();
-  const businessTypes = await context.TipoComercio.findAll();
+  /* const businessTypeId = Array.isArray(typeFilter) 
+      ? typeFilter.map(Number) : [Number(typeFilter)];
+      result.businessTypesId = {[Op.in]: businessTypeId}*/ 
+  //const businesses = await context.Comercio.findAll();
+  const businessTypes = await context.TipoComercio.findAll({where: result});
   
   //const businessTypesPlain = businessTypes.map((bt) => bt.get({plain: true}));
-  const businessesPlain = businesses.map((b)=> b.get({plain: true}));
+  //const businessesPlain = businesses.map((b)=> b.get({plain: true}));
 
     return res.render(
         "clientViews/home", { 
@@ -23,7 +26,7 @@ export async function GetHome(req,res,next){
         layout: "ClientLayout",
       //  businessesList: businesses,
         //hasbusinesses: businesses.length > 0,
-        businessTypeList: businessTypes,
+        businessTypeList: businessTypes.map(bt => bt.get({plain:true})),
         hasBusinessTypes: businessTypes.length > 0 
       });
 }
