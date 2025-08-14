@@ -22,7 +22,7 @@ app.engine(
     layoutsDir: "views/layouts",
     defaultLayout: "LogInLayout",
     extname: ".hbs",
-    helpers: {eq: Equals},
+    helpers: { eq: Equals },
   })
 );
 
@@ -83,7 +83,9 @@ app.use((req, res, next) => {
 });
 
 //Routes
-routes(app);
+app.use((req, res, next) => {
+  routes(app, req);
+});
 
 //app.use(multer({ storage: UserMulter }).single("UserProfilePhoto"));
 
