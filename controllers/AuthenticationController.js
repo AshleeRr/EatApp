@@ -189,6 +189,7 @@ export async function PostSignUpBusiness(req, res, next) {
       subject: "Welcome to Zipy",
       html: `<p>Thank you for sign up your business,</p>
              <p>We are so excited to work with you! Please click the link below to activate your account:</p>
+             <img src="https://i5.walmartimages.com/seo/Avanti-Press-Kitten-Rainbow-Funny-Humorous-Cat-Congratulations-Card_1d585531-d998-40f6-b245-fcfb3e29aca2.87e2f0022e73ba3e4fd26995970c829f.jpeg" alt="gato con arcoiris" width="200px" height="200px">
              <p><a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
     });
     return res.redirect("/");
