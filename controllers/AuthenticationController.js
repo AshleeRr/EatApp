@@ -6,6 +6,8 @@ import { Op } from "sequelize";
 import { promisify } from "util";
 import { randomBytes } from "crypto";
 
+import { HandError } from "../utils/handlers/handlerError.js";
+
 export function GetLogIn(req, res, next) {
   res.render("AuthenticationViews/login", {
     "page-title": "Log In",
@@ -21,7 +23,7 @@ export async function CreateAdmin() {
   );
   try {
     if (!admin) {
-      await context.User.create({
+      const nuevoAdmin = await context.User.create({
         role: "admin",
         userName: process.env.ADMIN_USERNAME,
         email: process.env.ADMIN_EMAIL,
@@ -29,6 +31,12 @@ export async function CreateAdmin() {
         isActive: true,
         activateToken: null,
       });
+
+      console.log("nuevoAdmin :>> ", nuevoAdmin);
+
+      if (!nuevoAdmin)
+        HandError(500, "An error ocurred while creating the admin");
+
       console.log("Admin created");
     } else {
       console.log("An administrator already exists");
