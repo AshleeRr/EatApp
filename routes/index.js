@@ -11,7 +11,7 @@ import isAuth from "../middlewares/isAuthenticated.js";
 export const routes = (app) => {
   app.use(AuthenticationRoutes);
 
-  app.use("/", isAuth, setLayout("HomeLayout"), HomeRoute);
+  app.use("/", isAuth, HomeRoute);
 
   app.use("/client", isAuth, setLayout("ClientLayout"), ClientRoutes);
 
