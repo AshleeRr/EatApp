@@ -10,7 +10,7 @@ import session from "express-session";
 import { projectRoot } from "./utils/Paths.js";
 import context from "./config/context/AppContext.js";
 import { CreateAdmin } from "./controllers/AuthenticationController.js";
-
+import { Equals } from "./utils/helpers/Compare.js";
 //routes
 import { routes } from "./routes/index.js";
 
@@ -22,7 +22,7 @@ app.engine(
     layoutsDir: "views/layouts",
     defaultLayout: "LogInLayout",
     extname: ".hbs",
-    helpers: {},
+    helpers: {eq: Equals},
   })
 );
 

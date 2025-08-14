@@ -33,7 +33,7 @@ const imageStorageForBusinessLogo = multer.diskStorage({
         "imgs",
         "uploads",
         "users-uploads",
-        "bussiness-logos"
+        "business-logos"
       )
     );
   },
