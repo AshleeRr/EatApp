@@ -7,11 +7,13 @@ import StoreRoutes from "./WholeStoreRoutes.js";
 //midlewares
 import setLayout from "../middlewares/setLayout.js";
 import isAuth from "../middlewares/isAuthenticated.js";
+import isAuthenticated from "../middlewares/isAuthenticated.js";
+import loadUser from "../middlewares/loadUserLogin.js";
 
 export const routes = (app, req) => {
   app.use(AuthenticationRoutes);
 
-  app.use("/", isAuth, HomeRoute);
+  app.use("/", isAuthenticated, loadUser, HomeRoute);
 
   app.use("/client", isAuth, setLayout("ClientLayout"), ClientRoutes);
 

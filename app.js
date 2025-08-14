@@ -83,9 +83,7 @@ app.use((req, res, next) => {
 });
 
 //Routes
-app.use((req, res, next) => {
-  routes(app, req);
-});
+routes(app);
 
 //app.use(multer({ storage: UserMulter }).single("UserProfilePhoto"));
 
