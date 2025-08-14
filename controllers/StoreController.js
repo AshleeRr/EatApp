@@ -22,7 +22,7 @@ export const index = HandControllersAsync(async (req, res) => {
     hasPedidos: pedidos.length > 0,
     pedidos,
     hasAsignedDelivery,
-    layout: "StoreLayout",
+  //  layout: "StoreLayout",
   });
 });
 
