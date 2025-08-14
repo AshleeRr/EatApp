@@ -3,18 +3,19 @@ import {Op} from "sequelize";
 
 export async function GetHome(req,res,next){
 
-  console.log("query", req.query)
+  //console.log("query", req.query)
   const typeFilter = req.query.typeFilter || '';
+  const typeBtn = req.query.Type || '';
   const result = {};
-  console.log("filter", typeFilter);
+
+  //console.log("filter", typeFilter);
   if(typeFilter.trim()){  
     result.nombre = {[Op.like]: `%${typeFilter}%`};
   }
 
-  /* const businessTypeId = Array.isArray(typeFilter) 
-      ? typeFilter.map(Number) : [Number(typeFilter)];
-      result.businessTypesId = {[Op.in]: businessTypeId}*/ 
-  //const businesses = await context.Comercio.findAll();
+  if(typeBtn.trim()){
+    result.nombre = {[Op.eq]: typeBtn};
+  }
   const businessTypes = await context.TipoComercio.findAll({where: result});
   
   //const businessTypesPlain = businessTypes.map((bt) => bt.get({plain: true}));
