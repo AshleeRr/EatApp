@@ -1,8 +1,8 @@
-import express from 'express';
+import express from "express";
 //import { GetIndex } from '../controllers/DeliveryController.js';
-import isAuth from "../middlewares/isAuthenticated.js"
+
 const router = express.Router();
 
-//router.get('/home',isAuth, GetIndex);
+//router.get('/home', GetIndex);
 
 export default router;

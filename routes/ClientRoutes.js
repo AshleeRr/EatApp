@@ -1,12 +1,14 @@
 import express from "express";
-import { GetProfile, GetDirections, GetHome } from "../controllers/ClientController.js";
-
-import isAuth from "../middlewares/isAuthenticated.js";
+import {
+  GetProfile,
+  GetDirections,
+  GetHome,
+} from "../controllers/ClientController.js";
 
 const router = express.Router();
 
-router.get("/home", isAuth, GetHome);
-router.get("/profile", isAuth, GetProfile);
-router.get("/directions", isAuth, GetDirections);
+router.get("/home", GetHome);
+router.get("/profile", GetProfile);
+router.get("/directions", GetDirections);
 
 export default router;

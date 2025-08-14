@@ -1,19 +1,21 @@
 import HomeRoute from "./HomeRoutes.js";
 import ClientRoutes from "./ClientRoutes.js";
-import StoreRoutes from "./StoreRoutes.js";
 import AuthenticationRoutes from "./AuthenticationRoutes.js";
 import DeliveryRoutes from "./DeliveryRoutes.js";
-import ProductRoutes from "./ProductRoutes.js";
-import CategoryRoutes from "./CategoryRoutes.js";
-import PedidoRoutes from "./PedidoRoutes.js";
+import StoreRoutes from "./WholeStoreRoutes.js";
+
+//midlewares
+import { setLayout } from "../middlewares/setLayout.js";
+import isAuth from "../middlewares/isAuthenticated.js";
 
 export const routes = (app) => {
   app.use(AuthenticationRoutes);
-  app.use("/", HomeRoute);
-  app.use("/client", ClientRoutes);
-  app.use("/store", StoreRoutes);
-  app.use("/store/product", ProductRoutes);
-  app.use("/store/category", CategoryRoutes);
-  app.use("/store/pedido", PedidoRoutes);
-  app.use("/delivery", DeliveryRoutes);
+
+  app.use("/", isAuth, setLayout("HomeLayout"), HomeRoute);
+
+  app.use("/client", isAuth, setLayout("ClientLayout"), ClientRoutes);
+
+  app.use("/store", isAuth, setLayout("StoreLayout"), StoreRoutes);
+
+  app.use("/delivery", isAuth, setLayout("DeliveryLayout"), DeliveryRoutes);
 };
