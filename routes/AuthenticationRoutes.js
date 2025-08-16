@@ -11,7 +11,7 @@ import {
   PostSignUpClient_Delivery,
   PostForgotPassword,
   GetResetPassword,
-  PostResetPassword,
+  PostResetPassword, PostDisableAccount, UpdatePassword, GetLogInWithoutAuth
 } from "../controllers/AuthenticationController.js";
 
 //middlewares
@@ -25,7 +25,7 @@ const router = express.Router();
 
 router.get("/", isAuthLogin, GetLogIn);
 router.post("/", isAuthLogin, PostLogIn);
-
+router.get("/user/logOutWithoutAuth", GetLogInWithoutAuth)
 router.get("/user/logOut", LogOut);
 
 router.get(
@@ -48,6 +48,8 @@ router.post(
   PostSignUpBusiness
 );
 
+router.post("/user/disableAccount", isAuthLogin, PostDisableAccount);
+
 router.get("/user/forgotPassword", isAuthLogin, GetForgotPassword);
 router.post("/user/forgotPassword", isAuthLogin, PostForgotPassword);
 
@@ -56,4 +58,5 @@ router.post("/user/resetPassword", isAuthLogin, PostResetPassword);
 
 router.get("/user/activate/:token", GetActivate);
 
+router.post("/user/changePassword", UpdatePassword);
 export default router;
