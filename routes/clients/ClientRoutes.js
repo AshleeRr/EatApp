@@ -4,7 +4,7 @@ import {
   GetHome,
   GetStoresList,
   PostProfile,
-} from "../../controllers/client/ClientController.js";
+} from "../../controllers/clients/ClientController.js";
 
 import { saveProfilePhoto } from "../../utils/handlers/FileHandler.js";
 

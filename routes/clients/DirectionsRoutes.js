@@ -1,12 +1,23 @@
 import express from "express";
 import {
-  GetDirections,
-  PostDirections,
-} from "../../controllers/DirectionsController.js";
+  GetAdresses,
+  GetCreateAdress,
+  PostCreateAdress,
+  GetEditAdress,
+  PostEditAdress,
+  Delete,
+} from "../../controllers/clients/DirectionsController.js";
 
 const router = express.Router();
 
-router.get("/adresses", GetDirections);
-router.post("/adresses", PostDirections);
+router.get("/home", GetAdresses);
+
+router.get("/create", GetCreateAdress);
+router.post("/create", PostCreateAdress);
+
+router.get("/edit/:adressId", GetEditAdress);
+router.post("/edit", PostEditAdress);
+
+router.post("/delete", Delete);
 
 export default router;
