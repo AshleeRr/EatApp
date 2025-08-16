@@ -1,14 +1,18 @@
 import express from "express";
 import {
   GetProfile,
-  GetDirections,
   GetHome,
+  GetStoresList,
+  PostProfile,
 } from "../controllers/ClientController.js";
 
-const router = express.Router();
+import { saveProfilePhoto } from "../utils/handlers/FileHandler.js";
 
+const router = express.Router();
+router.get("/storesList", GetStoresList);
 router.get("/home", GetHome);
+
 router.get("/profile", GetProfile);
-router.get("/directions", GetDirections);
+router.post("/profile", saveProfilePhoto.single("ProfilePhoto"), PostProfile);
 
 export default router;

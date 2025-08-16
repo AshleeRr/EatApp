@@ -1,0 +1,130 @@
+<div class="container mt-5" style="max-width: 700px;">
+  <h3>My Profile</h3>
+  <div class="accordion" id="profileAccordion">
+    <div class="accordion-item">
+      <h3 class="accordion-header" id="headingProfile">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfile" aria-expanded="false" aria-controls="collapseProfile">
+          Update Profile
+        </button>
+      </h3>
+      <div id="collapseProfile" class="accordion-collapse collapse" aria-labelledby="headingPorfile" data-bs-parent="#profileAccordion">
+        <div class="accordion-body">
+          <form action="/client/profile" method="POST" enctype="multipart/form-data">
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="firstName" class="form-label">Name</label>
+                <div class="input-group">
+                  <span class="input-group-text  mb-3"><i class="bi bi-person"></i></span>
+                  <input type="text" class="form-control mb-3" name="FirstName" id="firstName" value="{{user.name}}">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="lastName" class="form-label">Last Name</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                  <input type="text" class="form-control" id="lastName" name="LastName" value="{{user.lastName}}">
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <div class="input-group">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control" id="username" name="UserName" value="{{user.userName}}">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <div class="input-group">
+                  <span class="input-group-text  mb-3"><i class="bi bi-envelope"></i></span>
+                  <input type="email" class="form-control mb-3" id="email" name="Email" value="{{uEmail.email}}">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="phone" class="form-label">Phone Number</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                  <input type="tel" class="form-control" id="phone" name="PhoneNumber" value="{{user.phoneNumber}}">
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="photo" class="form-label">Profile Photo</label>
+              <input type="file" class="form-control" id="photo" name="ProfilePhoto">
+            </div>
+
+            <button type="submit" class="btn btn-dark w-100">
+              <i class="bi bi-person-check"></i> Update
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h3 class="accordion-header" id="headingPassword">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePassword" aria-expanded="false" aria-controls="collapsePassword">
+          Update Password
+        </button>
+      </h3>
+      <div id="collapsePassword" class="accordion-collapse collapse" aria-labelledby="headingPasswrod" data-bs-parent="#profileAccordion">
+        <div class="accordion-body">
+          <form action="/user/changePassword" method="POST">
+            <div class="mb-3">
+              <label for="password" class="form-label">Current Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" class="form-control" id="password" name="CurrentPassword" placeholder="Enter your password" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">New Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" class="form-control" id="confirmPassword" name="NewPassword" placeholder="Confirm your password" required>
+              </div>
+            </div>
+
+             <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm New Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" class="form-control" id="confirmPassword" name="ConfirmNewPassword" placeholder="Confirm your password" required>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between gap-2 flex-wrap mt-4">
+              <a href="/user/forgotPassword" class="h6 text-decoration-none text-danger">
+                <i class="bi bi-question-circle"></i> Forgot your password?
+              </a>
+            </div>
+            
+            <button type="submit" class="btn btn-dark w-100">
+              <i class="bi bi-person-check"></i> Update
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between gap-2 flex-wrap mt-4">
+      <a href="/client/home" class="btn btn-outline-secondary w-100">
+        <i class="bi bi-box-arrow-left"></i> Go back to home
+      </a>
+      <form action="/user/disableAccount" method="POST" class="flex-fill">
+        <button type="submit" class="btn btn-danger w-100 disable-account">
+          <i class="bi bi-trash3"></i> Disable Account
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{{#section "scripts"}}
+  <script src="/assets/JavaScript/accounts.js"></script>
+{{/section}}

@@ -1,0 +1,56 @@
+<div class="row justify-content-center mb-4">
+  <div class="col-auto">
+    <h4 class="text-center">What are you looking for?</h4>
+  </div>
+</div>
+
+<div class="row justify-content-center mb-3">
+  <div class="col-md-6 col-lg-4">
+    <form method="GET" action="/client/storesList">
+      <div class="input-group">
+        <input type="hidden" name="TypeBtn" value="{{typeId}}" />
+        <input type="text" name="BusinessFilter" class="form-control" placeholder="dominos pizza..."/>
+        <button type="submit" class="btn btn-danger">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row justify-content-center mb-4">
+  <div class="col-auto">
+    <h6 class="text-center text-muted">({{quantity}}) local/s found</h6>
+  </div>
+</div>
+
+
+{{#if hasBusinesses}}
+<div class="row justify-content-center gap-3">
+  {{#each businessesList}}
+        <div class="card mb-2 px-3 py-2" style="max-width: 700px;">
+      <div class="d-flex align-items-center">
+        <img src="{{this.logo}}" 
+             alt="{{this.name}} logo" 
+             class="rounded" 
+             style="width: 60px; height: 60px; object-fit: cover;">
+        <div class="d-flex align-items-center ms-3 w-100">
+          <span class="fw-semibold">{{this.name}}</span>
+          <button class="btn btn-link text-dark ms-2 p-0">
+            <i class="bi bi-heart"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+</div>
+{{else}}
+<div class="row d-flex justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="alert alert-dark text-center shadow-sm p-4 rounded" role="alert" style="font-size: 1.1rem;">
+      <i class="bi bi-info-circle me-2 fs-4"></i>
+      There are no businesses of this type registered yet.
+    </div>
+  </div>
+</div>
+{{/if}}

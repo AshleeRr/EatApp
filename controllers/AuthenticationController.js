@@ -81,18 +81,10 @@ export async function PostLogIn(req, res, next) {
         return res.redirect("/");
       }
       switch (user.role) {
-        case "client":
-          res.redirect("/client/home");
-          break;
-        case "admin":
-          res.redirect("/admin/home");
-          break;
-        case "store":
-          res.redirect("/store/index");
-          break;
-        case "delivery":
-          res.redirect("/delivery/home");
-          break;
+        case "client": res.redirect("/client/home"); break;
+        case "admin": res.redirect("/admin/home"); break;
+        case "store": res.redirect("/store/index"); break;
+        case "delivery": res.redirect("/delivery/home"); break;
         default:
           req.flash(
             "errors",
@@ -150,7 +142,7 @@ export async function PostSignUpBusiness(req, res, next) {
       BusinessTypeId,
     } = req.body;
     const BusinessLogo = req.file;
-    const LogoPath = "\\" + path.resolve("public", BusinessLogo.path);
+    const LogoPath = "\\" + path.relative("public", BusinessLogo.path);
 
     if (Password !== ConfirmPassword) {
       req.flash("errors", "Passwords do not match.");
@@ -226,7 +218,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
     } = req.body;
 
     const ProfilePhoto = req.file;
-    const LogoPath = "\\" + path.resolve("public", ProfilePhoto.path);
+    const LogoPath = "\\" + path.relative("public", ProfilePhoto.path);
 
     if (Password !== ConfirmPassword) {
       req.flash("errors", "Passwords do not match.");
@@ -401,6 +393,52 @@ export async function PostResetPassword(req, res, next) {
   return res.redirect("/");
 }
 
+export async function UpdatePassword(req, res, next) {
+  try {
+    req.user = req.session.user;
+    const { CurrentPassword, NewPassword, ConfirmNewPassword } = req.body;
+
+    const user = await context.User.findOne({
+      where: { id: req.user.id }
+    });
+
+    if (!user) {
+      req.flash("errors", "User not found");
+      return res.redirect("/client/profile");
+    }
+
+    const match = await bcrypt.compare(CurrentPassword, user.password);
+    if (!match) {
+      req.flash("errors", "The current password does not match");
+      return res.redirect("/client/profile");
+    }
+
+    if (CurrentPassword === NewPassword) {
+      req.flash("errors", "The new password can not be the same as the current.");
+      return res.redirect("/client/profile");
+    }
+
+     if (NewPassword !== ConfirmNewPassword) {
+      req.flash("errors", "The new passwords do not match.");
+      return res.redirect("/client/profile");
+    }
+
+    const hashedPassword = await bcrypt.hash(NewPassword, 10);
+
+    await context.User.update(
+      { password: hashedPassword },
+      { where: { id: req.user.id } }
+    );
+
+    req.flash("success", "Your password has been updated successfully");
+    return res.redirect("/user/logOutWithoutAuth");
+  } catch (error) {
+    console.log(error);
+    req.flash("errors", "An error occurred while updating your password");
+    return res.redirect("/client/profile");
+  }
+}
+
 export async function GetActivate(req, res, next) {
   const { token } = req.params;
   if (!token) {
@@ -432,3 +470,28 @@ export async function GetActivate(req, res, next) {
     return res.redirect("/");
   }
 }
+
+export async function PostDisableAccount(req, res, next) {
+ try{
+  req.user = req.session.user;
+  const user = await context.User.findOne({where:{id:req.user.id}});
+  if(!user){
+    return res.redirect(`/${req.user.role}/home`); //check this
+  }
+  await context.User.update({
+    isActive: false,
+  },{where:{id:req.user.id}});
+  req.flash("success", "Your account was disabled");
+  return res.redirect("/user/logOutWithoutAuth");
+ }catch(error){
+  req.flash("errors", "An error ocurred trying to disable your account");
+  //return res.redirect("/home"); //revisar que este este good
+ }
+}
+
+export function GetLogInWithoutAuth(req, res, next) {
+  res.render("AuthenticationViews/login", {
+    "page-title": "Log In"
+  });
+}
+
