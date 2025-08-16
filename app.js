@@ -9,7 +9,7 @@ import session from "express-session";
 //Imports propios
 import { projectRoot } from "./utils/Paths.js";
 import context from "./config/context/AppContext.js";
-import { CreateAdmin } from "./controllers/AuthenticationController.js";
+import { CreateAdmin } from "./controllers/authentification/AuthenticationController.js";
 import { Equals } from "./utils/helpers/Compare.js";
 //routes
 import { routes } from "./routes/index.js";
