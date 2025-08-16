@@ -6,12 +6,9 @@ import { Op } from "sequelize";
 import { promisify } from "util";
 import { randomBytes } from "crypto";
 
-import { HandError } from "../utils/handlers/handlerError.js";
-
 export function GetLogIn(req, res, next) {
   res.render("AuthenticationViews/login", {
     "page-title": "Log In",
-    // layout: "LogInLayout",
   });
 }
 
@@ -23,7 +20,6 @@ export async function CreateAdmin() {
   );
   try {
     if (!admin) {
-      //const nuevoAdmin =
       await context.User.create({
         role: "admin",
         userName: process.env.ADMIN_USERNAME,
@@ -32,12 +28,6 @@ export async function CreateAdmin() {
         isActive: true,
         activateToken: null,
       });
-
-      //console.log("nuevoAdmin :>> ", nuevoAdmin);
-
-      /* if (!nuevoAdmin)
-        HandError(500, "An error ocurred while creating the admin");*/
-
       console.log("Admin created");
     } else {
       console.log("An administrator already exists");
@@ -103,7 +93,6 @@ export async function PostLogIn(req, res, next) {
           );
           return res.redirect("/");
       }
-      //return res.redirect("/home");
     });
   } catch (error) {
     console.log(error);
@@ -135,7 +124,6 @@ export async function GetSignUpBusiness(req, res, next) {
   }
   res.render("AuthenticationViews/signUp-business", {
     "page-title": "Sign Up",
-    // layout: "LogInLayout",
     businessTypeList: businessTypes,
     hasBusinessTypes: businessTypes.length > 0,
   });
@@ -303,7 +291,6 @@ export async function PostSignUpClient_Delivery(req, res, next) {
 export function GetForgotPassword(req, res, next) {
   res.render("AuthenticationViews/forgotPassword", {
     "page-title": "Forgot Password",
-    // layout: "LogInLayout",
   });
 }
 export async function PostForgotPassword(req, res, next) {
@@ -371,7 +358,6 @@ export async function GetResetPassword(req, res, next) {
     }
     res.render("AuthenticationViews/resetPassword", {
       "page-title": "Reset Password",
-      // layout: "LogInLayout",
       passwordToken: token,
       userId: user.id,
     });
@@ -501,7 +487,6 @@ export async function PostDisableAccount(req, res, next) {
   return res.redirect("/user/logOutWithoutAuth");
  }catch(error){
   req.flash("errors", "An error ocurred trying to disable your account");
-  //return res.redirect("/home"); //revisar que este este good
  }
 }
 
