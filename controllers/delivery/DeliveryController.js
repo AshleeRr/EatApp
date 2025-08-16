@@ -1,4 +1,4 @@
-import context from "../config/context/AppContext.js";
+import context from "../../config/context/AppContext.js";
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 import {

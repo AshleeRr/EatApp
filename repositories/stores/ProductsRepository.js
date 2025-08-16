@@ -2,6 +2,7 @@ import db from "../../config/context/AppContext.js";
 import { Op } from "sequelize";
 import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 import GenericRepository from "../GenericRepository.js";
+import context from "../../config/context/AppContext.js"; //me estaba dando error y agregue esto
 
 const { Categoria, Comercio, DetallePedido } = db;
 

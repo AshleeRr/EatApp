@@ -4,11 +4,12 @@ import {
   GetHome,
   GetStoresList,
   PostProfile,
-} from "../controllers/ClientController.js";
+} from "../../controllers/client/ClientController.js";
 
-import { saveProfilePhoto } from "../utils/handlers/FileHandler.js";
+import { saveProfilePhoto } from "../../utils/handlers/FileHandler.js";
 
 const router = express.Router();
+
 router.get("/storesList", GetStoresList);
 router.get("/home", GetHome);
 

@@ -11,15 +11,18 @@ import {
   PostSignUpClient_Delivery,
   PostForgotPassword,
   GetResetPassword,
-  PostResetPassword, PostDisableAccount, UpdatePassword, GetLogInWithoutAuth
-} from "../controllers/AuthenticationController.js";
+  PostResetPassword, 
+  //PostDisableAccount, 
+  UpdatePassword,
+   GetLogInWithoutAuth
+} from "../../controllers/authentification/AuthenticationController.js";
 
 //middlewares
 import {
   saveProfilePhoto,
   saveBusinessLogo,
-} from "../utils/handlers/FileHandler.js";
-import isAuthLogin from "../middlewares/isAuthForLogin.js";
+} from "../../utils/handlers/FileHandler.js";
+import isAuthLogin from "../../middlewares/isAuthForLogin.js";
 
 const router = express.Router();
 
@@ -41,14 +44,9 @@ router.post(
 );
 
 router.get("/user/signUp-business", isAuthLogin, GetSignUpBusiness);
-router.post(
-  "/user/signUp-business",
-  isAuthLogin,
-  saveBusinessLogo.single("BusinessLogo"),
-  PostSignUpBusiness
-);
+router.post("/user/signUp-business", isAuthLogin, saveBusinessLogo.single("BusinessLogo"), PostSignUpBusiness);
 
-router.post("/user/disableAccount", isAuthLogin, PostDisableAccount);
+//router.post("/user/disableAccount", isAuthLogin, PostDisableAccount);
 
 router.get("/user/forgotPassword", isAuthLogin, GetForgotPassword);
 router.post("/user/forgotPassword", isAuthLogin, PostForgotPassword);
@@ -59,4 +57,5 @@ router.post("/user/resetPassword", isAuthLogin, PostResetPassword);
 router.get("/user/activate/:token", GetActivate);
 
 router.post("/user/changePassword", UpdatePassword);
+
 export default router;
