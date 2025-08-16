@@ -73,7 +73,6 @@ export async function PostProfile(req, res, next){
     let LogoPath = null;
 
     const userCheck = await context.Client.findOne({ where : {userId: req.user.id} });
-    const user = userCheck.dataValues;
 
     const existsUser = await context.User.findOne({where: {
       [Op.and]: [{email: Email}, {id: {[Op.ne]: req.user.id}}] 
@@ -98,18 +97,12 @@ export async function PostProfile(req, res, next){
         email: Email
       },{where:{id: req.user.id}});
     }
-    // si hay email. update en user
-    // la contrase;a va aparte
-    // si el rol es cliente se queda en cliente,
-    // si el rol es delivery, se borra el cliente, y se crea en delivery
-    
       await context.Client.update({
         profilePhoto: LogoPath,
         name: FirstName,
         lastName: LastName,
         userName: UserName,
         phoneNumber: PhoneNumber,
-       // userId: req.user.id
       },{where:{userId: req.user.id}});
 
       req.flash("success", "Your profile was updated successfully");
