@@ -1,14 +1,16 @@
-import db from "../config/context/AppContext.js";
-import GenericRepository from "./genericRepository.js";
-import { HandRepositoriesAsync } from "../utils/handlers/handlerAsync.js";
+import context from "../../config/context/AppContext.js";
+import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
+import GenericRepository from "../GenericRepository.js";
 
-const { Comercio, TipoComercio, User, Categoria, Producto, Pedido, Favorito } =
-  db;
-const storeRepository = new GenericRepository(Comercio);
+const { TipoComercio, User, Categoria, Producto, Pedido, Favorito } = context;
 
-class StoreRepository {
+class StoreRepository extends GenericRepository {
+  constructor() {
+    super(context.Comercio);
+  }
+
   getStoreByUserId = HandRepositoriesAsync(async (userId) => {
-    return await Comercio.findOne({
+    return await super.findOne({
       where: { userId },
       include: [
         {
@@ -23,9 +25,8 @@ class StoreRepository {
       ],
     });
   });
-
   getStore = HandRepositoriesAsync(async (userId) => {
-    return await Comercio.findOne({
+    return await super.findOne({
       where: { userId },
       include: [
         {
@@ -59,7 +60,6 @@ class StoreRepository {
       ],
     });
   });
-
   getPedidoByStore = HandRepositoriesAsync(async (userId, estado = null) => {
     const comercio = await this.getStoreByUserId(userId);
     if (!comercio) throw new Error("Comercio no encontrado");
@@ -84,13 +84,6 @@ class StoreRepository {
       order: [["createdAt", "DESC"]],
     });
   });
-
-  updateStore = HandRepositoriesAsync(async (userId, data) => {
-    const comercio = await this.getStoreByUserId(userId);
-    if (!comercio) throw new Error("Comercio no encontrado");
-    return await storeRepository.update(comercio.id, data);
-  });
-
   getDashBoardStadistic = HandRepositoriesAsync(async (userId) => {
     const comercio = await this.getStoreByUserId(userId);
     if (!comercio) throw new Error("Comercio no encontrado");
@@ -120,24 +113,6 @@ class StoreRepository {
       pedidosPendientes,
       totalFavoritos,
     };
-  });
-
-  createProduct = HandRepositoriesAsync(async (userId, datosProducto) => {
-    const comercio = await this.getStoreByUserId(userId);
-    if (!comercio) throw new Error("Comercio no encontrado");
-    return await Producto.create({
-      ...datosProducto,
-      comercioId: comercio.id,
-    });
-  });
-
-  createCategory = HandRepositoriesAsync(async (userId, datosCategoria) => {
-    const comercio = await this.getStoreByUserId(userId);
-    if (!comercio) throw new Error("Comercio no encontrado");
-    return await Categoria.create({
-      ...datosCategoria,
-      comercioId: comercio.id,
-    });
   });
 }
 

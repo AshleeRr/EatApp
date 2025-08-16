@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const Favorito = sequelize.define("Favorito", {
@@ -23,19 +23,7 @@ export default (sequelize) => {
         key: "id",
       },
     },
-  })
+  });
 
-  Favorito.associate = (models) => {
-    Favorito.belongsTo(models.Usuario, {
-      foreignKey: "clienteId",
-      as: "cliente",
-    })
-
-    Favorito.belongsTo(models.Comercio, {
-      foreignKey: "comercioId",
-      as: "comercio",
-    })
-  }
-
-  return Favorito
-}
+  return Favorito;
+};

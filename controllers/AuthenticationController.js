@@ -11,17 +11,20 @@ import { HandError } from "../utils/handlers/handlerError.js";
 export function GetLogIn(req, res, next) {
   res.render("AuthenticationViews/login", {
     "page-title": "Log In",
-   // layout: "LogInLayout",
+    // layout: "LogInLayout",
   });
 }
 
 export async function CreateAdmin() {
   const admin = await context.User.findOne({ where: { role: "admin" } });
-  const hashedPassword = await bcrypt.hash( process.env.ADMIN_PASS || "contra123", 10);
+  const hashedPassword = await bcrypt.hash(
+    process.env.ADMIN_PASS || "contra123",
+    10
+  );
   try {
     if (!admin) {
       //const nuevoAdmin =
-       await context.User.create({
+      await context.User.create({
         role: "admin",
         userName: process.env.ADMIN_USERNAME,
         email: process.env.ADMIN_EMAIL,
@@ -32,7 +35,7 @@ export async function CreateAdmin() {
 
       //console.log("nuevoAdmin :>> ", nuevoAdmin);
 
-     /* if (!nuevoAdmin)
+      /* if (!nuevoAdmin)
         HandError(500, "An error ocurred while creating the admin");*/
 
       console.log("Admin created");
@@ -88,7 +91,7 @@ export async function PostLogIn(req, res, next) {
           res.redirect("/admin/home");
           break;
         case "store":
-          res.redirect("/store/index");
+          res.redirect("/store/home");
           break;
         case "delivery":
           res.redirect("/delivery/home");
@@ -132,7 +135,7 @@ export async function GetSignUpBusiness(req, res, next) {
   }
   res.render("AuthenticationViews/signUp-business", {
     "page-title": "Sign Up",
-   // layout: "LogInLayout",
+    // layout: "LogInLayout",
     businessTypeList: businessTypes,
     hasBusinessTypes: businessTypes.length > 0,
   });
@@ -209,7 +212,7 @@ export async function PostSignUpBusiness(req, res, next) {
 export function GetSignUpClient_Delivery(req, res, next) {
   res.render("AuthenticationViews/signUp-client-delivery", {
     "page-title": "Sign Up",
-   // layout: "LogInLayout",
+    // layout: "LogInLayout",
   });
 }
 export async function PostSignUpClient_Delivery(req, res, next) {
@@ -278,11 +281,16 @@ export async function PostSignUpClient_Delivery(req, res, next) {
       html: `<p>Dear ${FirstName},</p>
                 <p>Thank you for registering.</p>
                 <p>
-                  ${UserType === "client" ? "Now you can enjoy the magnitud of business in your area without going out of your home!"
-                      : "We are excited to work with you. Welcome to the Zipy family!"}
+                  ${
+                    UserType === "client"
+                      ? "Now you can enjoy the magnitud of business in your area without going out of your home!"
+                      : "We are excited to work with you. Welcome to the Zipy family!"
+                  }
                 </p>
                 <p> Please click the link below so you can activate your account and enjoy:</p>
-                <p><a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
+                <p><a href="${process.env.APP_URL}${
+        process.env.PORT
+      }/user/activate/${token}">Activate Account</a></p>`,
     });
     return res.redirect("/");
   } catch (error) {
@@ -295,7 +303,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
 export function GetForgotPassword(req, res, next) {
   res.render("AuthenticationViews/forgotPassword", {
     "page-title": "Forgot Password",
-   // layout: "LogInLayout",
+    // layout: "LogInLayout",
   });
 }
 export async function PostForgotPassword(req, res, next) {
@@ -335,7 +343,7 @@ export async function PostForgotPassword(req, res, next) {
     return res.redirect("/");
   } catch (error) {
     console.log(error);
-    req.flash("errors",`An error ocurred during this process, try again.`);
+    req.flash("errors", `An error ocurred during this process, try again.`);
     return res.redirect("/user/forgotPassword");
   }
 }
@@ -363,7 +371,7 @@ export async function GetResetPassword(req, res, next) {
     }
     res.render("AuthenticationViews/resetPassword", {
       "page-title": "Reset Password",
-     // layout: "LogInLayout",
+      // layout: "LogInLayout",
       passwordToken: token,
       userId: user.id,
     });

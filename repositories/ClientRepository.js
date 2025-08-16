@@ -1,21 +1,20 @@
-import db from "../config/context/AppContext.js";
+import Context from "../config/context/AppContext.js";
 import { HandRepositoriesAsync } from "../utils/handlers/handlerAsync.js";
 
-const {
-  Client,
-  User,
-  Direccion,
-  Pedido,
-  Favorito,
-  Comercio,
-  DetallePedido,
-  Producto,
-} = db;
+//repositories imports
+import GenericRepository from "./GenericRepository.js";
+import OrderRepository from "./stores/OrderRepository.js";
 
-class ClientRepository {
-  getClienteByUserId = HandRepositoriesAsync(async (userId) => {
-    return await Client.findOne({
-      where: { userId },
+const { User, Direccion, Pedido, Favorito, Comercio, DetallePedido, Producto } =
+  Context;
+
+class ClientRepository extends GenericRepository {
+  constructor() {
+    super(Context.Client);
+  }
+  findById = HandRepositoriesAsync(async (id) => {
+    return await super.findOne({
+      where: { id },
       include: [
         {
           model: User,
@@ -24,28 +23,9 @@ class ClientRepository {
       ],
     });
   });
-
-  getClienteCompleto = HandRepositoriesAsync(async (userId) => {
-    return await Client.findOne({
-      where: { userId },
-      include: [
-        {
-          model: User,
-          attributes: ["id", "email", "role"],
-          include: [
-            {
-              model: Direccion,
-              as: "direcciones",
-            },
-          ],
-        },
-      ],
-    });
-  });
-
-  getHistorialPedidos = HandRepositoriesAsync(async (userId, limite = 10) => {
-    return await Pedido.findAll({
-      where: { clienteId: userId },
+  getOrdersHistory = HandRepositoriesAsync(async (id, limit = 10) => {
+    return await OrderRepository.findAll({
+      where: { clienteId: id },
       include: [
         {
           model: Comercio,
@@ -69,15 +49,14 @@ class ClientRepository {
         },
       ],
       order: [["createdAt", "DESC"]],
-      limit: limite,
+      limit: limit,
     });
   });
-
-  getPedidosActivos = HandRepositoriesAsync(async (userId) => {
-    return await Pedido.findAll({
+  getActiveOrders = HandRepositoriesAsync(async (userId) => {
+    return await OrderRepository.findAll({
       where: {
         clienteId: userId,
-        estado: ["pendiente", "en_proceso", "en_camino"],
+        estado: ["pendiente", "en proceso", "completado"],
       },
       include: [
         {
@@ -100,7 +79,6 @@ class ClientRepository {
       order: [["createdAt", "DESC"]],
     });
   });
-
   getFavoritos = HandRepositoriesAsync(async (userId) => {
     return await Favorito.findAll({
       where: { clienteId: userId },
@@ -113,8 +91,7 @@ class ClientRepository {
       ],
     });
   });
-
-  agregarFavorito = HandRepositoriesAsync(async (userId, comercioId) => {
+  addFavorite = HandRepositoriesAsync(async (userId, comercioId) => {
     const favoritoExiste = await Favorito.findOne({
       where: { clienteId: userId, comercioId },
     });
@@ -126,8 +103,7 @@ class ClientRepository {
       comercioId,
     });
   });
-
-  removerFavorito = HandRepositoriesAsync(async (userId, comercioId) => {
+  deleteFavorite = HandRepositoriesAsync(async (userId, comercioId) => {
     const resultado = await Favorito.destroy({
       where: { clienteId: userId, comercioId },
     });
@@ -136,30 +112,19 @@ class ClientRepository {
     }
     return resultado;
   });
-
-  getDirecciones = HandRepositoriesAsync(async (userId) => {
+  getDirections = HandRepositoriesAsync(async (userId) => {
     return await Direccion.findAll({
       where: { usuarioId: userId },
       order: [["createdAt", "DESC"]],
     });
   });
-
-  agregarDireccion = HandRepositoriesAsync(async (userId, datosDireccion) => {
+  addDirection = HandRepositoriesAsync(async (userId, directionData) => {
     return await Direccion.create({
-      ...datosDireccion,
+      ...directionData,
       usuarioId: userId,
     });
   });
-
-  actualizarCliente = HandRepositoriesAsync(
-    async (userId, datosActualizacion) => {
-      const cliente = await this.getClienteByUserId(userId);
-      if (!cliente) throw new Error("Cliente no encontrado");
-      return await cliente.update(datosActualizacion);
-    }
-  );
-
-  getEstadisticasCliente = HandRepositoriesAsync(async (userId) => {
+  getClientStadistics = HandRepositoriesAsync(async (userId) => {
     const totalPedidos = await Pedido.count({
       where: { clienteId: userId },
     });
@@ -183,5 +148,4 @@ class ClientRepository {
     };
   });
 }
-
 export default new ClientRepository();

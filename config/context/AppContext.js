@@ -84,14 +84,19 @@ Producto.belongsTo(Categoria, { foreignKey: "categoriaId", as: "categoria" });
 Comercio.hasMany(Pedido, { foreignKey: "comercioId", as: "pedidos" });
 Pedido.belongsTo(Comercio, { foreignKey: "comercioId", as: "comercio" });
 
+Configuracion.belongsTo(Pedido, {
+  foreignKey: "configuracionId",
+  as: "configuracion",
+});
+
 Direccion.hasMany(Pedido, { foreignKey: "direccionId", as: "pedidos" });
 Pedido.belongsTo(Direccion, { foreignKey: "direccionId", as: "direccion" });
 
 Pedido.hasMany(DetallePedido, { foreignKey: "pedidoId", as: "detalles" });
 DetallePedido.belongsTo(Pedido, { foreignKey: "pedidoId", as: "pedido" });
 
-Producto.hasMany(DetallePedido, { foreignKey: "productoId", as: "detalles" });
-DetallePedido.belongsTo(Producto, { foreignKey: "productoId", as: "producto" });
+DetallePedido.hasMany(Producto, { foreignKey: "productoId", as: "detalles" });
+Producto.belongsTo(DetallePedido, { foreignKey: "productoId", as: "producto" });
 
 User.hasMany(Favorito, {
   foreignKey: "clienteId",

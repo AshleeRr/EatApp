@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const Configuracion = sequelize.define("Configuracion", {
@@ -7,12 +7,15 @@ export default (sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    itbis: {
+    key: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    value: {
       type: DataTypes.DECIMAL(5, 2),
       allowNull: false,
-      defaultValue: 18.0,
     },
-  })
+  });
 
-  return Configuracion
-}
+  return Configuracion;
+};

@@ -1,15 +1,17 @@
 import context from "../config/context/AppContext.js";
-
+import GenericRepository from "./GenericRepository.js";
+//handlers
 import { HandRepositoriesAsync } from "../utils/handlers/handlerAsync.js";
-import GenericRepository from "./genericRepository.js";
 
-const { Delivery, User } = context;
+// const DeliveryRepo = new GenericRepository(Delivery);
+const { User } = context;
 
-const DeliveryRepo = new GenericRepository(Delivery);
-
-class DeliveryRepository {
+class DeliveryRepository extends GenericRepository {
+  constructor() {
+    super(context.Delivery);
+  }
   getAvailableDelivery = HandRepositoriesAsync(async () => {
-    return await Delivery.findOne({
+    return await super.findOne({
       where: {
         estado: "disponible",
         activo: true,
@@ -18,16 +20,15 @@ class DeliveryRepository {
         {
           model: User,
           as: "user",
-          attributes: ["nombre", "apellido", "telefono"],
+          attributes: ["nombre", "apellido", "telefono", "isActive"],
         },
       ],
       order: [["updatedAt", "ASC"]],
     });
   });
-
   updateDeliveryStatus = HandRepositoriesAsync(
     async (deliveryId, estado, options = {}) => {
-      return await Delivery.update(
+      return await super.update(
         { estado },
         {
           where: { id: deliveryId },
@@ -36,23 +37,20 @@ class DeliveryRepository {
       );
     }
   );
-
   getAvailableDeliveries = HandRepositoriesAsync(async () => {
-    return await Delivery.findAll({
+    return await super.findAll({
       where: {
         estado: "disponible",
-        activo: true,
       },
       include: [
         {
           model: User,
           as: "user",
-          attributes: ["nombre", "apellido", "telefono"],
+          attributes: ["nombre", "apellido", "telefono", "isActive"],
         },
       ],
       order: [["updatedAt", "ASC"]],
     });
   });
 }
-
 export default new DeliveryRepository();
