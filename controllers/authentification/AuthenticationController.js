@@ -1,5 +1,5 @@
-import context from "../config/context/AppContext.js";
-import { mailer } from "../services/mailer.js";
+import context from "../../config/context/AppContext.js";
+import { mailer } from "../../services/mailer.js";
 import bcrypt from "bcrypt";
 import path from "path";
 import { Op } from "sequelize";
@@ -476,7 +476,7 @@ export async function GetActivate(req, res, next) {
     return res.redirect("/");
   }
 }
-
+/*
 export async function PostDisableAccount(req, res, next) {
   try {
     req.user = req.session.user;
@@ -496,7 +496,7 @@ export async function PostDisableAccount(req, res, next) {
     req.flash("errors", "An error ocurred trying to disable your account");
   }
 }
-
+*/
 export function GetLogInWithoutAuth(req, res, next) {
   res.render("AuthenticationViews/login", {
     "page-title": "Log In",

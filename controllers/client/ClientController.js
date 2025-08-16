@@ -1,4 +1,4 @@
-import context from "../config/context/AppContext.js";
+import context from "../../config/context/AppContext.js";
 import {Op} from "sequelize";
 import path from "path";
 export async function GetHome(req,res,next){
