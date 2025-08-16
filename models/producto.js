@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const Producto = sequelize.define("Producto", {
@@ -23,24 +23,7 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  })
+  });
 
-  Producto.associate = (models) => {
-    Producto.belongsTo(models.Comercio, {
-      foreignKey: "comercioId",
-      as: "comercio",
-    })
-
-    Producto.belongsTo(models.Categoria, {
-      foreignKey: "categoriaId",
-      as: "categoria",
-    })
-
-    Producto.hasMany(models.DetallePedido, {
-      foreignKey: "productoId",
-      as: "detallesPedido",
-    })
-  }
-
-  return Producto
-}
+  return Producto;
+};

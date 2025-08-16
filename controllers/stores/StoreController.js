@@ -1,6 +1,6 @@
-import { StoreRepository } from "../repositories/index.js";
-import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
-import { HandError } from "../utils/handlers/handlerError.js";
+import { StoreRepository } from "../../repositories/index.js";
+import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
+import { HandError } from "../../utils/handlers/handlerError.js";
 
 export const index = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
@@ -22,7 +22,7 @@ export const index = HandControllersAsync(async (req, res) => {
     hasPedidos: pedidos.length > 0,
     pedidos,
     hasAsignedDelivery,
-  //  layout: "StoreLayout",
+    //  layout: "StoreLayout",
   });
 });
 

@@ -51,17 +51,5 @@ export default (sequelize) => {
     }
   );
 
-  DeliveryModel.associate = (models) => {
-    DeliveryModel.belongsTo(models.User, {
-      foreignKey: "userId",
-      as: "user",
-    });
-
-    DeliveryModel.hasMany(models.Pedido, {
-      foreignKey: "deliveryId",
-      as: "pedidos",
-    });
-  };
-
   return DeliveryModel;
 };

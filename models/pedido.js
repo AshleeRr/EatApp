@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const Pedido = sequelize.define("Pedido", {
@@ -23,34 +23,7 @@ export default (sequelize) => {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-  })
+  });
 
-  Pedido.associate = (models) => {
-    Pedido.belongsTo(models.Usuario, {
-      foreignKey: "clienteId",
-      as: "cliente",
-    })
-
-    Pedido.belongsTo(models.Usuario, {
-      foreignKey: "deliveryId",
-      as: "delivery",
-    })
-
-    Pedido.belongsTo(models.Comercio, {
-      foreignKey: "comercioId",
-      as: "comercio",
-    })
-
-    Pedido.belongsTo(models.Direccion, {
-      foreignKey: "direccionId",
-      as: "direccion",
-    })
-
-    Pedido.hasMany(models.DetallePedido, {
-      foreignKey: "pedidoId",
-      as: "detalles",
-    })
-  }
-
-  return Pedido
-}
+  return Pedido;
+};

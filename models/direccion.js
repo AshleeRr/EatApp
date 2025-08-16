@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const Direccion = sequelize.define("Direccion", {
@@ -15,19 +15,7 @@ export default (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-  })
+  });
 
-  Direccion.associate = (models) => {
-    Direccion.belongsTo(models.Usuario, {
-      foreignKey: "usuarioId",
-      as: "usuario",
-    })
-
-    Direccion.hasMany(models.Pedido, {
-      foreignKey: "direccionId",
-      as: "pedidos",
-    })
-  }
-
-  return Direccion
-}
+  return Direccion;
+};

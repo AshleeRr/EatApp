@@ -1,16 +1,16 @@
 import path from "path";
 
-import { ProductsRepository, StoreRepository } from "../repositories/index.js";
-import { HandError } from "../utils/handlers/handlerError.js";
-import { HandControllersAsync } from "../utils/handlers/handlerAsync.js";
+import STORE from "../../repositories/stores/index.js";
+import { HandError } from "../../utils/handlers/handlerError.js";
+import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 
 export const index = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const products = await ProductsRepository.getProductsByStore(store.id);
+  const products = await STORE.ProductsRepository.getProductsByStore(store.id);
 
   return res.render("storeViews/product/index", {
     title: "My Products",
@@ -23,7 +23,7 @@ export const index = HandControllersAsync(async (req, res) => {
 
 export const createProductForm = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -36,7 +36,7 @@ export const createProductForm = HandControllersAsync(async (req, res) => {
 
 export const createProduct = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -48,7 +48,7 @@ export const createProduct = HandControllersAsync(async (req, res) => {
   }
   const ImgRoute = "\\" + path.resolve("public", Logo.path);
 
-  const newP = await ProductsRepository.createProduct({
+  const newP = await STORE.ProductsRepository.createProduct({
     nombre,
     descripcion,
     precio,
@@ -63,12 +63,12 @@ export const createProduct = HandControllersAsync(async (req, res) => {
 
 export const editProductForm = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
   const productId = req.params.id;
-  const product = await ProductsRepository.getProductById(productId);
+  const product = await STORE.ProductsRepository.getProductById(productId);
 
   if (!product) HandError(404, "Producto no encontrado");
 
@@ -82,16 +82,16 @@ export const editProductForm = HandControllersAsync(async (req, res) => {
 
 export const editProduct = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
   const productId = req.params.id;
-  const product = await ProductsRepository.getProductById(productId);
+  const product = await STORE.ProductsRepository.getProductById(productId);
 
   if (!product) HandError(404, "Producto no encontrado");
 
-  const newP = await ProductsRepository.updateProduct({
+  const newP = await STORE.ProductsRepository.updateProduct({
     nombre,
     descripcion,
     precio,
@@ -106,15 +106,15 @@ export const editProduct = HandControllersAsync(async (req, res) => {
 
 export const deleteProduct = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const store = await STORE.StoreRepository.getStoreByUserId(userId);
   if (!store) HandError(404, "Comercio no encontrado");
 
   const productId = req.params.id;
-  const product = await ProductsRepository.getProductById(productId);
+  const product = await STORE.ProductsRepository.getProductById(productId);
 
   if (!product) HandError(404, "Producto no encontrado");
 
-  await ProductsRepository.deleteProduct(productId);
+  await STORE.ProductsRepository.deleteProduct(productId);
 
   return res.redirect("/storeViews/product/index");
 });

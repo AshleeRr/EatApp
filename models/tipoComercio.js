@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const TipoComercio = sequelize.define("TipoComercio", {
@@ -19,14 +19,7 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  })
+  });
 
-  TipoComercio.associate = (models) => {
-    TipoComercio.hasMany(models.Comercio, {
-      foreignKey: "tipoComercioId",
-      as: "comercios",
-    })
-  }
-
-  return TipoComercio
-}
+  return TipoComercio;
+};

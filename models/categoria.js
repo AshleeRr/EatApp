@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize"
+import { DataTypes } from "sequelize";
 
 export default (sequelize) => {
   const Categoria = sequelize.define("Categoria", {
@@ -15,19 +15,7 @@ export default (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-  })
+  });
 
-  Categoria.associate = (models) => {
-    Categoria.belongsTo(models.Comercio, {
-      foreignKey: "comercioId",
-      as: "comercio",
-    })
-
-    Categoria.hasMany(models.Producto, {
-      foreignKey: "categoriaId",
-      as: "productos",
-    })
-  }
-
-  return Categoria
-}
+  return Categoria;
+};
