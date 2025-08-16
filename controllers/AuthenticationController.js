@@ -184,10 +184,11 @@ export async function PostSignUpBusiness(req, res, next) {
     await mailer({
       to: Email,
       subject: "Welcome to Zipy",
-      html: `<p>Thank you for sign up your business,</p>
+      html: `<h1>Thank you for sign up your business,</h1>
              <p>We are so excited to work with you! Please click the link below to activate your account:</p>
              <img src="https://i5.walmartimages.com/seo/Avanti-Press-Kitten-Rainbow-Funny-Humorous-Cat-Congratulations-Card_1d585531-d998-40f6-b245-fcfb3e29aca2.87e2f0022e73ba3e4fd26995970c829f.jpeg" alt="gato con arcoiris" width="200px" height="200px">
-             <p><a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
+             <p class="btn btn-dark">
+             <a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
     });
     return res.redirect("/");
   } catch (error) {
@@ -401,7 +402,7 @@ export async function UpdatePassword(req, res, next) {
     const { CurrentPassword, NewPassword, ConfirmNewPassword } = req.body;
 
     const user = await context.User.findOne({
-      where: { id: req.user.id }
+      where: { id: req.user.id },
     });
 
     if (!user) {
@@ -416,11 +417,14 @@ export async function UpdatePassword(req, res, next) {
     }
 
     if (CurrentPassword === NewPassword) {
-      req.flash("errors", "The new password can not be the same as the current.");
+      req.flash(
+        "errors",
+        "The new password can not be the same as the current."
+      );
       return res.redirect("/client/profile");
     }
 
-     if (NewPassword !== ConfirmNewPassword) {
+    if (NewPassword !== ConfirmNewPassword) {
       req.flash("errors", "The new passwords do not match.");
       return res.redirect("/client/profile");
     }
@@ -474,25 +478,27 @@ export async function GetActivate(req, res, next) {
 }
 
 export async function PostDisableAccount(req, res, next) {
- try{
-  req.user = req.session.user;
-  const user = await context.User.findOne({where:{id:req.user.id}});
-  if(!user){
-    return res.redirect(`/${req.user.role}/home`); //check this
+  try {
+    req.user = req.session.user;
+    const user = await context.User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      return res.redirect(`/${req.user.role}/home`); //check this
+    }
+    await context.User.update(
+      {
+        isActive: false,
+      },
+      { where: { id: req.user.id } }
+    );
+    req.flash("success", "Your account was disabled");
+    return res.redirect("/user/logOutWithoutAuth");
+  } catch (error) {
+    req.flash("errors", "An error ocurred trying to disable your account");
   }
-  await context.User.update({
-    isActive: false,
-  },{where:{id:req.user.id}});
-  req.flash("success", "Your account was disabled");
-  return res.redirect("/user/logOutWithoutAuth");
- }catch(error){
-  req.flash("errors", "An error ocurred trying to disable your account");
- }
 }
 
 export function GetLogInWithoutAuth(req, res, next) {
   res.render("AuthenticationViews/login", {
-    "page-title": "Log In"
+    "page-title": "Log In",
   });
 }
-

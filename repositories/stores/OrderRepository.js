@@ -68,6 +68,32 @@ class OrderRespository extends GenericRepository {
     return todayOrders;
   });
 
+  getOrderByUserId = HandRepositoriesAsync(async (id, usuarioId) => {
+    return await super.findOne({
+      where: { id: id, clienteId: usuarioId },
+      include: [
+        {
+          model: context.DetallePedido,
+          as: "detalles",
+          include: [
+            {
+              model: context.Producto,
+              as: "producto",
+            },
+          ],
+        },
+        {
+          model: context.Direccion,
+          as: "direccion",
+        },
+        {
+          model: context.Comercio,
+          as: "comercio",
+        },
+      ],
+    });
+  });
+
   startTransaction = HandRepositoriesAsync(async () => {
     return await db.sequelize.transaction();
   });

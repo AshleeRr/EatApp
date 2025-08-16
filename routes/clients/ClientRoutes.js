@@ -4,9 +4,8 @@ import {
   GetHome,
   GetStoresList,
   PostProfile,
-} from "../controllers/ClientController.js";
-
-import { saveProfilePhoto } from "../utils/handlers/FileHandler.js";
+} from "../../controllers/ClientController.js";
+import { saveProfilePhoto } from "../../utils/handlers/FileHandler.js";
 
 const router = express.Router();
 router.get("/storesList", GetStoresList);

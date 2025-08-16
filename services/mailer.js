@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const mailer = HandRepositoriesAsync(async (to, subject, html) => {
+export const mailer = HandRepositoriesAsync(async ({ to, subject, html }) => {
   const info = await transporter.sendMail({
     from: `Zipy ${process.env.EMAIL_USER}`,
     to,

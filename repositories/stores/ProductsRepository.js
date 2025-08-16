@@ -1,9 +1,9 @@
-import db from "../../config/context/AppContext.js";
+import context from "../../config/context/AppContext.js";
 import { Op } from "sequelize";
 import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 import GenericRepository from "../GenericRepository.js";
 
-const { Categoria, Comercio, DetallePedido } = db;
+const { Categoria, Comercio, DetallePedido } = context;
 
 class ProductsRepository extends GenericRepository {
   constructor() {

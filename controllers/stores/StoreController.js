@@ -22,13 +22,14 @@ export const index = HandControllersAsync(async (req, res) => {
     hasPedidos: pedidos.length > 0,
     pedidos,
     hasAsignedDelivery,
-    //  layout: "StoreLayout",
   });
 });
 
 export const StorePerfil = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
+
   const store = await StoreRepository.getStoreByUserId(userId);
+
   if (!store) HandError(404, "Comercio no encontrado");
 
   return res.render("store/perfil", {

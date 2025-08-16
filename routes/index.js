@@ -1,20 +1,22 @@
-import ClientRoutes from "./ClientRoutes.js";
+import ClientRoutes from "./clients/index.js";
 import AuthenticationRoutes from "./AuthenticationRoutes.js";
 import DeliveryRoutes from "./DeliveryRoutes.js";
 import StoreRoutes from "./stores/indexStoreRoutes.js";
 import AdminRoutes from "./admin/homeRoutes.js";
-import DirectionsRoutes from "./DirectionsRoutes.js";
+import DirectionsRoutes from "./clients/DirectionsRoutes.js";
+
 //midlewares
 import setLayout from "../middlewares/setLayout.js";
 import isAuth from "../middlewares/isAuthenticated.js";
+import errorHandler from "../middlewares/errorHandler.js";
 //import loadUser from "../middlewares/loadUserLogin.js";
 
 export const routes = (app) => {
+  app.use(errorHandler);
+
   app.use(AuthenticationRoutes);
 
   app.use("/client", isAuth, setLayout("ClientLayout"), ClientRoutes);
-  
-  app.use("/client/directions", isAuth, setLayout("ClientLayout"), DirectionsRoutes);
 
   app.use("/store", isAuth, setLayout("StoreLayout"), StoreRoutes);
 

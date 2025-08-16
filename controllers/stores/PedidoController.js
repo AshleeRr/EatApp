@@ -6,7 +6,7 @@ import {
 } from "../../repositories/index.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const pedidoId = req.params.id;
+  const { pedidoId } = req.params;
   const pedido = await StoreRepository.OrderRepository.getOrderById(pedidoId);
 
   if (!pedido) {
@@ -25,8 +25,10 @@ export const index = HandControllersAsync(async (req, res) => {
 });
 
 export const assignDelivery = HandControllersAsync(async (req, res) => {
-  const pedidoId = req.params.id;
+  const { pedidoId } = req.params;
+
   const pedido = await StoreRepository.OrderRepository.getOrderById(pedidoId);
+
   if (!pedido) HandError(404, "Pedido no encontrado");
 
   if (pedido.comercioId !== req.user.comercioId)

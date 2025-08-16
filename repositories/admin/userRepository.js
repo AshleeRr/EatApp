@@ -29,6 +29,16 @@ class UserRepository extends GenericRepository {
 
     return { activeUsers, inactiveUsers };
   });
+
+  GetUserDirections = HandRepositoriesAsync(async (idUser) => {
+    const direcciones = await context.Direccion.findOne({
+      where: { idUsuario: idUser },
+    });
+
+    if (!direcciones) return false;
+
+    return direcciones;
+  });
 }
 
 export default new UserRepository();

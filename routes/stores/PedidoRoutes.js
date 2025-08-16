@@ -6,7 +6,7 @@ import {
 
 const router = express.Router();
 
-router.get("/index/:id", index);
-router.post("/index/assing-delivery", assignDelivery);
+router.get("/index/:idPedido", index);
+router.post("/index/assing-delivery/:idPedido", assignDelivery);
 
 export default router;

@@ -1,7 +1,7 @@
 import {
   index,
   changeItbis,
-} from "../../controllers/admin/ConfigController.js";
+} from "../../controllers/admins/ConfigController.js";
 
 import express from "express";
 

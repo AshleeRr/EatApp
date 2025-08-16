@@ -96,7 +96,10 @@ Pedido.hasMany(DetallePedido, { foreignKey: "pedidoId", as: "detalles" });
 DetallePedido.belongsTo(Pedido, { foreignKey: "pedidoId", as: "pedido" });
 
 DetallePedido.hasMany(Producto, { foreignKey: "productoId", as: "detalles" });
-Producto.belongsTo(DetallePedido, { foreignKey: "productoId", as: "producto" });
+Producto.belongsTo(DetallePedido, {
+  foreignKey: "DetallePedidoId",
+  as: "producto",
+});
 
 User.hasMany(Favorito, {
   foreignKey: "clienteId",

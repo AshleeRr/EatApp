@@ -1,7 +1,7 @@
-import context from "../config/context/AppContext.js";
-import GenericRepository from "./GenericRepository.js";
+import context from "../../config/context/AppContext.js";
+import GenericRepository from "../GenericRepository.js";
 //handlers
-import { HandRepositoriesAsync } from "../utils/handlers/handlerAsync.js";
+import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 
 // const DeliveryRepo = new GenericRepository(Delivery);
 const { User } = context;

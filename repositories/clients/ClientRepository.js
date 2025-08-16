@@ -1,9 +1,9 @@
-import Context from "../config/context/AppContext.js";
-import { HandRepositoriesAsync } from "../utils/handlers/handlerAsync.js";
+import Context from "../../config/context/AppContext.js";
+import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 
 //repositories imports
-import GenericRepository from "./GenericRepository.js";
-import OrderRepository from "./stores/OrderRepository.js";
+import GenericRepository from "../GenericRepository.js";
+import OrderRepository from "../stores/OrderRepository.js";
 
 const { User, Direccion, Pedido, Favorito, Comercio, DetallePedido, Producto } =
   Context;

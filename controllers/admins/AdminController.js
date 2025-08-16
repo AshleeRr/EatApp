@@ -57,17 +57,18 @@ export const create = HandControllersAsync(async (req, res) => {
     activateToken: token,
   });
 
+  const appurel = process.env.APP_URL || "http://localhost:";
   if (!newAdmin)
     HandError(500, "Error al crear el nuevo administrador, intenta de nuevo");
 
-  await mailer(
-    email,
-    "Welcome to Zipy",
-    `<h1>An admin added you to zipy</h1>
+  await mailer({
+    to: email,
+    subject: "Welcome to Zipy",
+    html: `<h1>An admin added you to zipy</h1>
              <p>We are so excited to work with you! Please click the link below to activate your admin account:</p>
              <img src="https://i5.walmartimages.com/seo/Avanti-Press-Kitten-Rainbow-Funny-Humorous-Cat-Congratulations-Card_1d585531-d998-40f6-b245-fcfb3e29aca2.87e2f0022e73ba3e4fd26995970c829f.jpeg" alt="gato con arcoiris" width="200px" height="200px">
-             <p><a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`
-  );
+             <p><a href="http://localhost:${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
+  });
 
   req.flash("success", "The account has been created!");
 

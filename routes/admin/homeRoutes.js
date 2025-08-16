@@ -2,7 +2,7 @@ import {
   index,
   UsersListByRole,
   changeStatus,
-} from "../../controllers/admin/IndexController.js";
+} from "../../controllers/admins/IndexController.js";
 import express from "express";
 
 const router = express.Router();

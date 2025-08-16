@@ -4,6 +4,9 @@ import STORE from "../../repositories/stores/index.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 
+//services
+import { saveIMG } from "../../services/imgSaver.js";
+
 export const index = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
   const store = await STORE.StoreRepository.getStoreByUserId(userId);
@@ -23,6 +26,7 @@ export const index = HandControllersAsync(async (req, res) => {
 
 export const createProductForm = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
+
   const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
@@ -36,23 +40,25 @@ export const createProductForm = HandControllersAsync(async (req, res) => {
 
 export const createProduct = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
+
   const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
   const { nombre, descripcion, precio, categoria } = req.body;
-  const Logo = req.file ? req.file.filename : null;
+  const Logo = req.file;
 
   if (!nombre || !descripcion || !precio || !categoria || !imagen) {
     HandError(400, "Todos los campos son obligatorios");
   }
-  const ImgRoute = "\\" + path.resolve("public", Logo.path);
 
-  const newP = await STORE.ProductsRepository.createProduct({
+  const logo = saveIMG(Logo);
+
+  const newP = await STORE.ProductsRepository.create({
     nombre,
     descripcion,
     precio,
-    ImgRoute,
+    imagen,
     comercioId: store.id,
     categoriaId: categoria.id,
   });
@@ -63,11 +69,13 @@ export const createProduct = HandControllersAsync(async (req, res) => {
 
 export const editProductForm = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
+
   const store = await STORE.StoreRepository.getStoreByUserId(userId);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
   const productId = req.params.id;
+
   const product = await STORE.ProductsRepository.getProductById(productId);
 
   if (!product) HandError(404, "Producto no encontrado");
@@ -91,25 +99,34 @@ export const editProduct = HandControllersAsync(async (req, res) => {
 
   if (!product) HandError(404, "Producto no encontrado");
 
+  const { nombre, descripcion, precio, categoria } = req.body;
+  const logo = req.file;
+
+  const imagen = saveIMG(logo);
+
   const newP = await STORE.ProductsRepository.updateProduct({
     nombre,
     descripcion,
     precio,
-    ImgRoute,
+    imagen,
     comercioId: store.id,
     categoriaId: categoria.id,
   });
 
   if (!newP) HandError(500, "Error al editar el producto");
+
   return res.redirect("/storeViews/product/index");
 });
 
 export const deleteProduct = HandControllersAsync(async (req, res) => {
   const userId = req.session.user.id;
+
   const store = await STORE.StoreRepository.getStoreByUserId(userId);
+
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const productId = req.params.id;
+  const { productId } = req.params;
+
   const product = await STORE.ProductsRepository.getProductById(productId);
 
   if (!product) HandError(404, "Producto no encontrado");

@@ -5,7 +5,7 @@ import {
   editForm,
   edit,
   deleteA,
-} from "../../controllers/admin/AdminController.js";
+} from "../../controllers/admins/AdminController.js";
 
 import express from "express";
 
