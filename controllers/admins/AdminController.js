@@ -10,11 +10,12 @@ import { Hash } from "../../services/hasher.js";
 import { generateToken } from "../../services/generateToken.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const user = req;
+  const { user } = req.session;
 
-  const FindAdmin = await admin.adminRepository.findOne(user);
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const admins = admin.adminRepository.getAllAdmins();
 
   return res.render("storeViews/admins/index", {
@@ -38,11 +39,12 @@ export const createForm = HandControllersAsync(async (req, res) => {
 });
 
 export const create = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.adminRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const { name, email, password } = req.body;
 
   const hashedPassword = await Hash(password);
@@ -57,7 +59,6 @@ export const create = HandControllersAsync(async (req, res) => {
     activateToken: token,
   });
 
-  const appurel = process.env.APP_URL || "http://localhost:";
   if (!newAdmin)
     HandError(500, "Error al crear el nuevo administrador, intenta de nuevo");
 
@@ -76,11 +77,12 @@ export const create = HandControllersAsync(async (req, res) => {
 });
 
 export const editForm = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const adminId = req.params.id;
   const admin = await admin.userRepository.findOne(adminId);
 
@@ -95,11 +97,12 @@ export const editForm = HandControllersAsync(async (req, res) => {
 });
 
 export const edit = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.adminRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const { nombre, apellido, cedula, correo, usuario, contrasenia } = req.body;
 
   const hashedPassword = Hash(contrasenia);
@@ -121,11 +124,12 @@ export const edit = HandControllersAsync(async (req, res) => {
 });
 
 export const deleteA = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.adminRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const adminId = req.params.id;
   const Admin = await admin.adminRepository.findOne(user);
 

@@ -8,12 +8,12 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const { user } = req;
+  const { user } = req.session;
 
+  console.log("user :>> ", user);
   if (user.role !== "admin") {
     HandError(403, "No tienes permisos para acceder a esta ruta");
   }
-
   const stores = await AdminRepository.userRepository.GetUsersByRoleWithStatus(
     "store"
   );
@@ -43,7 +43,7 @@ export const index = HandControllersAsync(async (req, res) => {
 
 export const UsersListByRole = (role, title) =>
   HandControllersAsync(async (req, res) => {
-    const { user } = req;
+    console.log("role :>> ", role);
 
     const usersByRole = await AdminRepository.userRepository.GetUserByRole(
       role

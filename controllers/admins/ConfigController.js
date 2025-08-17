@@ -6,9 +6,12 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const { user } = req;
+  const { user } = req.session;
 
-  if (!user) HandError(405, "No tienes permisos para entrar a esta ruta");
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
 
   const itbis = await admin.configRepository.getItbis();
 
@@ -21,9 +24,12 @@ export const index = HandControllersAsync(async (req, res) => {
 });
 
 export const changeItbis = HandControllersAsync(async (req, res) => {
-  const { user } = req;
+  const { user } = req.session;
 
-  if (!user) HandError(405, "No tienes permisos para entrar a esta ruta");
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
 
   const { itbis } = req.body;
 

@@ -31,9 +31,12 @@ export default (sequelize) => {
         allowNull: false,
       },
       estado: {
-        type: DataTypes.ENUM("disponible", "ocupado"),
+        type: DataTypes.STRING,
         allowNull: false,
         defaultValue: "disponible",
+        validate: {
+          isIn: [["disponible", "ocupado"]],
+        },
       },
       userId: {
         type: DataTypes.INTEGER,

@@ -1,4 +1,4 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 
 export default (sequelize) => {
   const Direccion = sequelize.define("Direccion", {
@@ -15,7 +15,16 @@ export default (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    usuarioId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   });
-
   return Direccion;
 };

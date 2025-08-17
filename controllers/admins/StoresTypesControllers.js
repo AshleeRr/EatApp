@@ -8,11 +8,12 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { saveIMG } from "../../services/imgSaver.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const user = req;
+  const { user } = req.session;
 
-  const FindAdmin = await admin.userRepository.findOne(user);
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const storeTypes = admin.storesTypesRepository.findAll();
 
   return res.render("storeViews/storesTypes/index", {
@@ -24,11 +25,12 @@ export const index = HandControllersAsync(async (req, res) => {
 });
 
 export const createForm = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   return res.render("storeViews/storesTypes/create", {
     title: "Create a Store Type",
     user: user,
@@ -36,11 +38,12 @@ export const createForm = HandControllersAsync(async (req, res) => {
 });
 
 export const create = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userReposi.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const { name, description } = req.body;
   const { logo } = req.file;
 
@@ -63,11 +66,12 @@ export const create = HandControllersAsync(async (req, res) => {
 });
 
 export const editForm = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user.id);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const idTypeype = req.params.id;
   const type = await admin.storesTypesRepository.findOne(idType);
 
@@ -82,11 +86,12 @@ export const editForm = HandControllersAsync(async (req, res) => {
 });
 
 export const edit = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const { nombre, descripcion } = req.body;
   const { logo } = req.file;
 
@@ -106,11 +111,12 @@ export const edit = HandControllersAsync(async (req, res) => {
 });
 
 export const deleteA = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  console.log("user :>> ", user);
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const storeId = req.params.id;
   const store = await admin.userRepository.findOne(storeId);
 

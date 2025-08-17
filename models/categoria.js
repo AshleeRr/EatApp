@@ -15,6 +15,16 @@ export default (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
+    comercioId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Comercio",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
   });
 
   return Categoria;

@@ -15,7 +15,7 @@ export function GetLogIn(req, res, next) {
 export async function CreateAdmin() {
   const admin = await context.User.findOne({ where: { role: "admin" } });
   const hashedPassword = await bcrypt.hash(
-    process.env.ADMIN_PASS || "contra123",
+    process.env.ADMIN_PASS || "zipy4pp",
     10
   );
   try {

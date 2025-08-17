@@ -2,7 +2,16 @@ import context from "../../config/context/AppContext.js";
 import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 import GenericRepository from "../GenericRepository.js";
 
-const { TipoComercio, User, Categoria, Producto, Pedido, Favorito } = context;
+const {
+  TipoComercio,
+  User,
+  Categoria,
+  Producto,
+  Pedido,
+  Favorito,
+  Client,
+  Delivery,
+} = context;
 
 class StoreRepository extends GenericRepository {
   constructor() {
@@ -25,6 +34,7 @@ class StoreRepository extends GenericRepository {
       ],
     });
   });
+
   getStore = HandRepositoriesAsync(async (userId) => {
     return await super.findOne({
       where: { userId },
@@ -60,6 +70,7 @@ class StoreRepository extends GenericRepository {
       ],
     });
   });
+
   getPedidoByStore = HandRepositoriesAsync(async (userId, estado = null) => {
     const comercio = await this.getStoreByUserId(userId);
     if (!comercio) throw new Error("Comercio no encontrado");
@@ -71,19 +82,32 @@ class StoreRepository extends GenericRepository {
       where: where,
       include: [
         {
-          model: User,
+          model: Client,
           as: "cliente",
-          attributes: ["id", "email"],
+          attributes: ["id", "name", "userName"],
+          include: [
+            {
+              model: User,
+              attributes: ["email"],
+            },
+          ],
         },
         {
-          model: User,
+          model: Delivery,
           as: "delivery",
-          attributes: ["id", "email"],
+          attributes: ["id", "name", "userName"],
+          include: [
+            {
+              model: User,
+              attributes: ["email"],
+            },
+          ],
         },
       ],
       order: [["createdAt", "DESC"]],
     });
   });
+
   getDashBoardStadistic = HandRepositoriesAsync(async (userId) => {
     const comercio = await this.getStoreByUserId(userId);
     if (!comercio) throw new Error("Comercio no encontrado");

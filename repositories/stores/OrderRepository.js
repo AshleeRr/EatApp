@@ -1,32 +1,34 @@
-// import { where } from "sequelize";
 import context from "../../config/context/AppContext.js";
-
-//Handlers
 import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 import HandError from "../../utils/handlers/handlerError.js";
-
-//needed repositories
 import GenericRepository from "../GenericRepository.js";
 
-const { Pedido } = context;
-const PedidoRepo = new GenericRepository(Pedido);
-
-class OrderRespository extends GenericRepository {
+class OrderRepository extends GenericRepository {
   constructor() {
     super(context.Pedido);
   }
+
   getAllOrders = HandRepositoriesAsync(async () => {
     return await super.findAll({
       include: [
         {
-          model: db.Cliente,
+          model: context.Client,
           as: "cliente",
-          attributes: ["id", "name", "email"],
+          attributes: ["id", "name", "userName"],
         },
         {
-          model: db.Comercio,
+          model: context.Comercio,
           as: "comercio",
-          attributes: ["id", "name", "logo", "activo"],
+          attributes: ["id", "name", "logo"],
+        },
+        {
+          model: context.Delivery,
+          as: "delivery",
+          attributes: ["id", "name", "userName"],
+        },
+        {
+          model: context.Direccion,
+          as: "direccion",
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -34,43 +36,72 @@ class OrderRespository extends GenericRepository {
   });
 
   getOrderById = HandRepositoriesAsync(async (id) => {
-    return await super.findByPk(id, {
+    return await super.findOne({
+      where: { id },
       include: [
         {
-          model: db.Cliente,
+          model: context.Client,
           as: "cliente",
-          attributes: ["id", "name", "email"],
+          attributes: ["id", "name", "userName"],
         },
         {
-          model: db.Comercio,
+          model: context.Comercio,
           as: "comercio",
-          attributes: ["id", "name", "logo", "activo"],
+          attributes: ["id", "name", "logo"],
+        },
+        {
+          model: context.DetallePedido,
+          as: "detalles",
+          include: [
+            {
+              model: context.Producto,
+              as: "producto",
+            },
+          ],
         },
       ],
     });
   });
 
   getTodayOrders = HandRepositoriesAsync(async () => {
-    const orders = await super.findAll();
+    const today = new Date();
+    const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(today.setHours(23, 59, 59, 999));
 
-    const todayOrders = orders.filter((order) => {
-      const orderDate = new Date(order.createdAt);
-      const today = new Date();
-      return (
-        orderDate.getDate() === today.getDate() &&
-        orderDate.getMonth() === today.getMonth() &&
-        orderDate.getFullYear() === today.getFullYear()
-      );
+    const orders = await super.findAll({
+      where: {
+        createdAt: {
+          [context.sequelize.Sequelize.Op.between]: [startOfDay, endOfDay],
+        },
+      },
+      include: [
+        {
+          model: context.Client,
+          as: "cliente",
+          attributes: ["name", "userName"],
+        },
+        {
+          model: context.Comercio,
+          as: "comercio",
+          attributes: ["name", "logo"],
+        },
+      ],
     });
-    if (!todayOrders)
-      HandError(404, "No hay ordenes registradas el dia de hoy");
 
-    return todayOrders;
+    return orders;
   });
 
   getOrderByUserId = HandRepositoriesAsync(async (id, usuarioId) => {
+    const cliente = await context.Client.findOne({
+      where: { userId: usuarioId },
+    });
+
+    if (!cliente) {
+      throw new Error("Cliente no encontrado");
+    }
+
     return await super.findOne({
-      where: { id: id, clienteId: usuarioId },
+      where: { id: id, clienteId: cliente.id },
       include: [
         {
           model: context.DetallePedido,
@@ -95,8 +126,8 @@ class OrderRespository extends GenericRepository {
   });
 
   startTransaction = HandRepositoriesAsync(async () => {
-    return await db.sequelize.transaction();
+    return await context.sequelize.transaction();
   });
 }
 
-export default new OrderRespository();
+export default new OrderRepository();

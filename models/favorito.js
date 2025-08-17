@@ -11,9 +11,11 @@ export default (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Usuarios",
+        model: "Clients",
         key: "id",
       },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
     comercioId: {
       type: DataTypes.INTEGER,
@@ -22,6 +24,8 @@ export default (sequelize) => {
         model: "Comercio",
         key: "id",
       },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
   });
 

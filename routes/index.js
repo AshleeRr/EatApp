@@ -2,7 +2,7 @@ import ClientRoutes from "./clients/index.js";
 import AuthenticationRoutes from "./authentification/AuthenticationRoutes.js";
 import DeliveryRoutes from "./delivery/DeliveryRoutes.js";
 import StoreRoutes from "./stores/indexStoreRoutes.js";
-import AdminRoutes from "./admin/homeRoutes.js";
+import AdminRoutes from "./admin/indexAdminRoutes.js";
 
 //midlewares
 import setLayout from "../middlewares/setLayout.js";
