@@ -1,33 +1,33 @@
+import coneccion from "../config/connection/DbConnection.js";
+
 import { DataTypes } from "sequelize";
 
-export default (sequelize) => {
-  const Favorito = sequelize.define("Favorito", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+const Favorito = coneccion.define("Favorito", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  clienteId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "Clients",
+      key: "id",
     },
-    clienteId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Clients",
-        key: "id",
-      },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  },
+  comercioId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "Comercio",
+      key: "id",
     },
-    comercioId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Comercio",
-        key: "id",
-      },
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
-    },
-  });
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  },
+});
 
-  return Favorito;
-};
+export default Favorito;

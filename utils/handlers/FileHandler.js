@@ -64,9 +64,80 @@ const imageStorageForProfilePhotos = multer.diskStorage({
   },
 });
 
+const imageStorageStoresTypesicon = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(
+      null,
+      path.join(
+        projectRoot,
+        "public",
+        "assets",
+        "imgs",
+        "uploads",
+        "admin-uploads"
+      )
+    );
+  },
+  filename: (req, file, cb) => {
+    const fileName = `${guidV4()}-${file.originalname}`;
+    cb(null, fileName);
+  },
+});
+const storeProfileImgs = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(
+      null,
+      path.join(
+        projectRoot,
+        "public",
+        "assets",
+        "imgs",
+        "uploads",
+        "store-uploads",
+        "profile-imgs"
+      )
+    );
+  },
+  filename: (req, file, cb) => {
+    const fileName = `${guidV4()}-${file.originalname}`;
+    cb(null, fileName);
+  },
+});
+
+const imageStorageProductsImgs = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(
+      null,
+      path.join(
+        projectRoot,
+        "public",
+        "assets",
+        "imgs",
+        "uploads",
+        "store-uploads"
+      )
+    );
+  },
+  filename: (req, file, cb) => {
+    const fileName = `${guidV4()}-${file.originalname}`;
+    cb(null, fileName);
+  },
+});
+
 export const saveProfilePhoto = multer({
   storage: imageStorageForProfilePhotos,
 });
 export const saveBusinessLogo = multer({
   storage: imageStorageForBusinessLogo,
+});
+export const saveStoresTypesIcon = multer({
+  storage: imageStorageStoresTypesicon,
+});
+
+export const saveProductsImgs = multer({
+  storage: imageStorageProductsImgs,
+});
+
+export const saveStoreProfileImgs = multer({
+  storage: storeProfileImgs,
 });

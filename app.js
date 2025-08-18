@@ -1,4 +1,4 @@
-import "./config/ENV/config.js";
+import "./config/config.js";
 import express from "express";
 import { engine } from "express-handlebars";
 import path from "path";
@@ -23,7 +23,7 @@ app.engine(
     layoutsDir: "views/layouts",
     defaultLayout: "LogInLayout",
     extname: ".hbs",
-    helpers: { eq: Equals, section: GetSection},
+    helpers: { eq: Equals, section: GetSection },
   })
 );
 
@@ -32,7 +32,7 @@ app.set("view engine", "hbs");
 app.set("views", "views");
 
 //set static files an body parser
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(projectRoot, "public")));
 
 //Session config
@@ -49,6 +49,8 @@ app.use(
 
 //flash
 app.use(flash()); //inicializar flash
+//evitar cacheo de las vistas
+app.set("view cache", false);
 
 app.use((req, res, next) => {
   if (!req.session) {
@@ -91,13 +93,12 @@ routes(app);
 //404
 app.use((req, res, next) => {
   if (req.session.isAuthenticated && req.session) {
-    return res.status(404).render("404", { "page-title": "Not found" });
+    return res.status(404).render("404", { title: "Not found" });
   }
   return res
     .status(404)
-    .render("404", { "page-title": "Not found", layout: "LogInLayout" });
+    .render("404", { title: "Not found", layout: "LogInLayout" });
 });
-
 //DB Configs
 try {
   const shoulfForce = process.env.DB_FORCE === "true";

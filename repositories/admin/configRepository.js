@@ -8,7 +8,13 @@ class ConfigRepository extends GenericRepository {
   }
   getItbis = HandRepositoriesAsync(async () => {
     const config = await super.findOne({ where: { key: "ITBIS" } });
-    return config ? Number(config.value) : 0;
+    if (!config) {
+      return await super.create({
+        key: "ITBIS",
+        value: 18 / 100,
+      });
+    }
+    return config;
   });
 }
 

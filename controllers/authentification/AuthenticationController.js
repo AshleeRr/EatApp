@@ -6,6 +6,7 @@ import { Op } from "sequelize";
 import { promisify } from "util";
 import { randomBytes } from "crypto";
 
+import { AdminRepository } from "../../repositories/index.js";
 export function GetLogIn(req, res, next) {
   res.render("AuthenticationViews/login", {
     "page-title": "Log In",
@@ -20,7 +21,7 @@ export async function CreateAdmin() {
   );
   try {
     if (!admin) {
-      await context.User.create({
+      const baseUser = await context.User.create({
         role: "admin",
         userName: process.env.ADMIN_USERNAME,
         email: process.env.ADMIN_EMAIL,
@@ -28,6 +29,16 @@ export async function CreateAdmin() {
         isActive: true,
         activateToken: null,
       });
+
+      await AdminRepository.adminRepository.create({
+        nombre: "Zipy",
+        apellido: "App",
+        usuario: process.env.ADMIN_USERNAME,
+        cedula: "Este es un admin base autogenerado no tiene una cedula",
+        correo: process.env.ADMIN_EMAIL,
+        userId: baseUser.id,
+      });
+
       console.log("Admin created");
     } else {
       console.log("An administrator already exists");
@@ -78,7 +89,7 @@ export async function PostLogIn(req, res, next) {
           res.redirect("/client/home");
           break;
         case "admin":
-          res.redirect("/admin/home");
+          res.redirect("/admin/dashboard/home");
           break;
         case "store":
           res.redirect("/store/home");

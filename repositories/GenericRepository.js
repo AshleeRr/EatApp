@@ -8,6 +8,9 @@ class GenericRepository {
   async findOne(options = {}) {
     return await this.model.findOne(options);
   }
+  async findById(id) {
+    return await this.model.findByPk(id);
+  }
   async create(data) {
     return await this.model.create(data);
   }
@@ -21,6 +24,9 @@ class GenericRepository {
     if (!instance) return null;
     await instance.destroy();
     return true;
+  }
+  async count(options) {
+    return await this.model.count(options);
   }
 }
 

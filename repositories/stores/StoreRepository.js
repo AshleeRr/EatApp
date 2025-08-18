@@ -35,6 +35,27 @@ class StoreRepository extends GenericRepository {
     });
   });
 
+  getDataStore = HandRepositoriesAsync(async () => {
+    return await super.findAll({
+      include: [
+        {
+          model: context.User,
+          attributes: ["id", "email", "isActive"],
+        },
+        {
+          model: context.TipoComercio,
+          as: "tipoComercio",
+          attributes: ["nombre", "descripcion"],
+        },
+        {
+          model: context.Pedido,
+          as: "pedidos",
+          attributes: ["id"],
+        },
+      ],
+    });
+  });
+
   getStore = HandRepositoriesAsync(async (userId) => {
     return await super.findOne({
       where: { userId },

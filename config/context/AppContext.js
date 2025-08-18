@@ -1,62 +1,19 @@
-import { Sequelize, DataTypes } from "sequelize";
-import path from "path";
-import { projectRoot } from "../../utils/Paths.js";
+import connection from "../connection/DbConnection.js";
 
-import ComercioModel from "../../models/comercio.js";
-import TipoComercioModel from "../../models/tipoComercio.js";
-import CategoriaModel from "../../models/categoria.js";
-import ProductoModel from "../../models/producto.js";
-import PedidoModel from "../../models/pedido.js";
-import DetallePedidoModel from "../../models/detallePedido.js";
-import DireccionModel from "../../models/direccion.js";
-import ConfiguracionModel from "../../models/configuracion.js";
-import FavoritoModel from "../../models/favorito.js";
-import UserModel from "../../models/user.js";
-import ClientModel from "../../models/client.js";
-import DeliveryModel from "../../models/delivery.js";
-
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: path.join(projectRoot, "config", "DB", "EatApp.sqlite"),
-  logging: console.log,
-});
-
-try {
-  await sequelize.authenticate();
-  console.log("Coneccion establecida");
-} catch (error) {
-  console.error("No se pudo conectar a la base de datos", error);
-}
-
-const models = {
-  User: UserModel(sequelize, DataTypes),
-  Client: ClientModel(sequelize, DataTypes),
-  Comercio: ComercioModel(sequelize, DataTypes),
-  TipoComercio: TipoComercioModel(sequelize, DataTypes),
-  Categoria: CategoriaModel(sequelize, DataTypes),
-  Producto: ProductoModel(sequelize, DataTypes),
-  Pedido: PedidoModel(sequelize, DataTypes),
-  DetallePedido: DetallePedidoModel(sequelize, DataTypes),
-  Direccion: DireccionModel(sequelize, DataTypes),
-  Configuracion: ConfiguracionModel(sequelize, DataTypes),
-  Favorito: FavoritoModel(sequelize, DataTypes),
-  Delivery: DeliveryModel(sequelize, DataTypes),
-};
-
-const {
-  User,
-  Client,
-  Comercio,
-  TipoComercio,
-  Categoria,
-  Producto,
-  Pedido,
-  DetallePedido,
-  Direccion,
-  Favorito,
-  Delivery,
-  Configuracion,
-} = models;
+//models
+import Admin from "../../models/admin.js";
+import Comercio from "../../models/comercio.js";
+import TipoComercio from "../../models/tipoComercio.js";
+import Categoria from "../../models/categoria.js";
+import Producto from "../../models/producto.js";
+import Pedido from "../../models/pedido.js";
+import DetallePedido from "../../models/detallePedido.js";
+import Direccion from "../../models/direccion.js";
+import Configuracion from "../../models/configuracion.js";
+import Favorito from "../../models/favorito.js";
+import User from "../../models/user.js";
+import Client from "../../models/client.js";
+import Delivery from "../../models/delivery.js";
 
 User.hasMany(Client, { foreignKey: "userId" });
 Client.belongsTo(User, { foreignKey: "userId" });
@@ -66,6 +23,9 @@ Comercio.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Delivery, { foreignKey: "userId" });
 Delivery.belongsTo(User, { foreignKey: "userId" });
+
+User.hasMany(Admin, { foreignKey: "userId" });
+Admin.belongsTo(User, { foreignKey: "userId" });
 
 User.hasMany(Direccion, { foreignKey: "usuarioId", as: "direcciones" });
 Direccion.belongsTo(User, { foreignKey: "usuarioId", as: "usuario" });
@@ -109,6 +69,8 @@ Producto.hasMany(DetallePedido, { foreignKey: "productoId", as: "detalles" });
 
 Comercio.hasMany(Favorito, { foreignKey: "comercioId", as: "favoritos" });
 Favorito.belongsTo(Comercio, { foreignKey: "comercioId", as: "comercio" });
+Client.hasMany(Favorito, { foreignKey: "clienteId", as: "favoritos" });
+Favorito.belongsTo(Client, { foreignKey: "clienteId", as: "cliente" });
 
 export default {
   Comercio,
@@ -120,9 +82,9 @@ export default {
   Direccion,
   Configuracion,
   Favorito,
-  sequelize,
-  Sequelize: sequelize,
   User,
   Client,
   Delivery,
+  Admin,
+  sequelize: connection,
 };

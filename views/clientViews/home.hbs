@@ -8,7 +8,7 @@
   <div class="col-md-6 col-lg-4">
     <form method="GET" action="/client/home">
       <div class="input-group">
-        <input type="text" name="typeFilter" class="form-control" placeholder="fast food"/>
+        <input type="text" name="typeFilter" class="form-control" placeholder="fast food" />
         <button type="submit" class="btn btn-danger">
           <i class="bi bi-search"></i> Search
         </button>
@@ -19,16 +19,18 @@
 
 {{#if hasBusinessTypes}}
 <div class="row justify-content-center gap-3">
-    {{#each businessTypeList}}
-    <form method="GET" action="/client/storesList" class="col-auto">
-        <div class="col-12 col-sm-3">
-            <button type="submit" name="Type" value="{{this.id}}" class="btn-client-style">
-              <img src="/assets/imgs/site/logo.jpg" alt="{{this.nombre}} logo" class="btn-img-style">
-              <div class="btn-name-style">{{this.nombre}}</div>
-            </button>
+  {{#each businessTypeList}}
+  <form method="GET" action="/client/storesList" class="col-auto">
+    <div class="col-12 col-sm-3">
+      <button type="submit" name="Type" value="{{this.id}}" class="btn-client-style">
+        <img src="{{this.icono}}" alt="{{this.nombre}} logo" height="200px" width="200px" class="btn-img-style">
+        <div class="btn-name-style">
+          <h3 class="mt-2" style="font-weight:inherit;">{{this.nombre}}</h3>
         </div>
-    </form>
-    {{/each}}
+      </button>
+    </div>
+  </form>
+  {{/each}}
 </div>
 {{else}}
 <div class="row d-flex justify-content-center">

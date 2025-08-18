@@ -7,47 +7,61 @@ import { HandError } from "../../utils/handlers/handlerError.js";
 
 class AdminRepository extends GenericRepository {
   constructor() {
-    super(context.User);
+    super(context.Admin);
   }
   getAllAdmins = HandRepositoriesAsync(async () => {
     return await super.findAll({
-      where: { role: "admin" },
-      attributes: ["id", "userName", "email", "role", "isActive"],
-      order: [["createdAt", "DESC"]],
+      attributes: [
+        "id",
+        "nombre",
+        "apellido",
+        "usuario",
+        "cedula",
+        "correo",
+        "userId",
+      ],
+      order: [["id", "ASC"]],
     });
   });
   getAdminById = HandRepositoriesAsync(async (id) => {
     return await super.findOne(id, {
-      where: { role: "admin" },
-      attributes: ["id", "userName", "email", "role", "isActive"],
+      attributes: [
+        "id",
+        "nombre",
+        "apellido",
+        "usuario",
+        "cedula",
+        "correo",
+        "userId",
+      ],
     });
   });
   createAdmin = HandRepositoriesAsync(async (data) => {
     if (!data) {
       HandError(400, "Los datos no pueden estar vacíos");
     }
-
-    if (!data.role) {
-      data.role = "admin";
+    const requiredFields = [
+      "nombre",
+      "apellido",
+      "usuario",
+      "cedula",
+      "correo",
+      "userId",
+    ];
+    for (const field of requiredFields) {
+      if (!data[field]) {
+        HandError(400, `El campo ${field} es obligatorio`);
+      }
     }
-
     return await super.create(data);
   });
   updateAdmin = HandRepositoriesAsync(async (id, data) => {
-    return await super.update(data, {
-      where: { id, role: "admin", isActive: true },
-    });
+    return await super.update(id, data);
   });
   deleteAdmin = HandRepositoriesAsync(async (id) => {
     const admin = await this.getAdminById(id);
     if (!admin) {
       HandError(404, "Administrador no encontrado");
-    }
-    if (admin.role !== "admin") {
-      HandError(403, "No tienes permiso para eliminar este administrador");
-    }
-    if (!admin.isActive) {
-      HandError(400, "El administrador ya está inactivo");
     }
     return await super.delete(id);
   });

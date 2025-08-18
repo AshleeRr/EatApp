@@ -5,28 +5,38 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  const { user } = req.session;
+
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const CategoriesAndProducts =
-    await STORE.CategoryRepository.getCategoriesByCommerceWithProducts(
-      store.id
-    );
+  const categories = await STORE.CategoryRepository.getCategoriesByCommerce(
+    store.id
+  );
+  const categorias = categories.map((cat) => cat.dataValues);
 
   return res.render("storeViews/categories/index", {
     title: "Categories",
     user: req.user,
     store,
-    hasCategories: CategoriesAndProducts.length > 0,
-    categories: CategoriesAndProducts,
+    hasCategories: categorias.length > 0,
+    categories: categorias,
   });
 });
 
 export const createCategoryForm = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  const { user } = req.session;
+
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -38,74 +48,87 @@ export const createCategoryForm = HandControllersAsync(async (req, res) => {
 });
 
 export const createCategory = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  const { user } = req.session;
 
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
   if (!store) HandError(404, "Comercio no encontrado");
-
   const { name, description } = req.body;
   await STORE.CategoryRepository.createCategory({
-    name,
-    description,
+    nombre: name,
+    descripcion: description,
     comercioId: store.id,
   });
 
   req.flash("success", "A new category has been created!!");
 
-  return res.redirect("/storeViews/categories/index");
+  return res.redirect("/store/category/index");
 });
 
 export const editCategoryForm = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  const { user } = req.session;
 
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
   if (!store) HandError(404, "Comercio no encontrado");
-
   const categoryId = req.params.id;
-  const category = await STORE.CategoryRepository.getCategoryById(categoryId);
-
+  const category = await STORE.CategoryRepository.findById(categoryId);
+  const categorias = category.dataValues;
   if (!category) HandError(404, "Categoria no encontrado");
 
-  return res.render("store/categories/create", {
+  return res.render("storeViews/categories/create", {
     title: "Edit a category",
-    user: req.user,
+    user: user,
     isEditing: true,
     store,
-    category,
+    categorias,
   });
 });
 
 export const editCategory = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  const { user } = req.session;
 
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
   if (!store) HandError(404, "Comercio no encontrado");
-
   const categoryId = req.params.id;
-  const category = await STORE.CategoryRepository.getCategoryById(categoryId);
+  const category = await STORE.CategoryRepository.findById(categoryId);
   if (!category) HandError(404, "Categoria no encontrado");
 
   const { name, description } = req.body;
   await STORE.CategoryRepository.updateCategory(categoryId, {
-    name,
-    description,
+    nombre: name,
+    descripcion: description,
   });
   req.flash("success", "A category has been edited!!");
-  return res.redirect("/storeViews/categories/index");
+  return res.redirect("/store/category/index");
 });
 
 export const deleteCategory = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
-  if (!store) HandError(404, "Comercio no encontrado");
+  const { user } = req.session;
 
-  const categoryId = req.params.id;
-  const category = await STORE.CategoryRepository.getCategoryById(categoryId);
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
+  if (!store) HandError(404, "Comercio no encontrado");
+  const categoryId = req.body.id;
+  const category = await STORE.CategoryRepository.findById(categoryId);
   if (!category) HandError(404, "Categoria no encontrado");
 
   await STORE.CategoryRepository.delete(categoryId);
 
   req.flash("success", "A new category has been deleted!!");
 
-  return res.redirect("/storeViews/categories/index");
+  return res.redirect("/store/category/index");
 });

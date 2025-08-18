@@ -12,6 +12,21 @@ class ClientRepository extends GenericRepository {
   constructor() {
     super(Context.Client);
   }
+
+  findAllOrders = HandRepositoriesAsync(async () => {
+    return await super.findAll({
+      include: [
+        {
+          model: Pedido,
+          as: "pedidosCliente",
+        },
+        {
+          model: User,
+          attributes: ["id", "email", "isActive"],
+        },
+      ],
+    });
+  });
   findById = HandRepositoriesAsync(async (id) => {
     return await super.findOne({
       where: { id },

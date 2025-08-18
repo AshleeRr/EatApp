@@ -10,6 +10,22 @@ class DeliveryRepository extends GenericRepository {
   constructor() {
     super(context.Delivery);
   }
+
+  findAll = HandRepositoriesAsync(async () => {
+    return super.findAll({
+      include: [
+        {
+          model: context.User,
+          attributes: ["id", "email", "isActive"],
+        },
+        {
+          model: context.Pedido,
+          as: "pedidosDelivery",
+          attributes: ["id"],
+        },
+      ],
+    });
+  });
   getAvailableDelivery = HandRepositoriesAsync(async () => {
     return await super.findOne({
       where: {

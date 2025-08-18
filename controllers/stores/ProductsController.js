@@ -1,5 +1,3 @@
-import path from "path";
-
 import STORE from "../../repositories/stores/index.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
@@ -8,51 +6,71 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { saveIMG } from "../../services/imgSaver.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  const { user } = req.session;
 
-  if (!store) HandError(404, "Comercio no encontrado");
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
 
-  const products = await STORE.ProductsRepository.getProductsByStore(store.id);
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
-  return res.render("storeViews/product/index", {
+  const data = await STORE.ProductsRepository.getProductsByStore(store.id);
+
+  const products = data.map((cat) => cat.dataValues);
+
+  return res.render("storeViews/products/index", {
     title: "My Products",
     user: req.user,
     store,
     hasProducts: products.length > 0,
-    products,
+    products: products,
   });
 });
 
 export const createProductForm = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
+  const { user } = req.session;
 
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  return res.render("storeViews/product/create", {
+  const categories = await STORE.CategoryRepository.getCategoriesByCommerce(
+    store.id
+  );
+  const categorias = categories.map((cat) => cat.dataValues);
+
+  return res.render("storeViews/products/create", {
     title: "Create Product",
     user: req.user,
     store,
+    hasCategories: categorias.length > 0,
+    categories: categorias,
   });
 });
 
 export const createProduct = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
+  const { user } = req.session;
 
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
   const { nombre, descripcion, precio, categoria } = req.body;
   const Logo = req.file;
 
-  if (!nombre || !descripcion || !precio || !categoria || !imagen) {
+  if (!nombre || !descripcion || !precio || !categoria || !Logo) {
     HandError(400, "Todos los campos son obligatorios");
   }
 
-  const logo = saveIMG(Logo);
+  const imagen = await saveIMG(Logo);
 
   const newP = await STORE.ProductsRepository.create({
     nombre,
@@ -60,37 +78,55 @@ export const createProduct = HandControllersAsync(async (req, res) => {
     precio,
     imagen,
     comercioId: store.id,
-    categoriaId: categoria.id,
+    categoriaId: categoria,
   });
 
   if (!newP) HandError(500, "Error al crear el producto");
-  return res.redirect("/storeViews/product/index");
+  req.flash("success", "El producto ha sido creado");
+  return res.redirect("/store/product/index");
 });
 
 export const editProductForm = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
+  const { user } = req.session;
 
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
   const productId = req.params.id;
 
-  const product = await STORE.ProductsRepository.getProductById(productId);
+  const data = await STORE.ProductsRepository.getProductById(productId);
 
+  const product = data.dataValues;
   if (!product) HandError(404, "Producto no encontrado");
 
-  return res.render("storeViews/product/create", {
+  const categories = await STORE.CategoryRepository.getCategoriesByCommerce(
+    store.id
+  );
+  const categorias = categories.map((cat) => cat.dataValues);
+  return res.render("storeViews/products/create", {
     title: "Editar Producto",
     user: req.user,
     store,
+    isEditing: true,
     product,
+    hasCategories: categorias.length > 0,
+    categories: categorias,
   });
 });
 
 export const editProduct = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  const { user } = req.session;
+
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
@@ -102,36 +138,40 @@ export const editProduct = HandControllersAsync(async (req, res) => {
   const { nombre, descripcion, precio, categoria } = req.body;
   const logo = req.file;
 
-  const imagen = saveIMG(logo);
+  const imagen = await saveIMG(logo);
 
-  const newP = await STORE.ProductsRepository.updateProduct({
+  const newP = await STORE.ProductsRepository.update(productId, {
     nombre,
     descripcion,
     precio,
     imagen,
     comercioId: store.id,
-    categoriaId: categoria.id,
+    categoriaId: categoria,
   });
 
   if (!newP) HandError(500, "Error al editar el producto");
-
-  return res.redirect("/storeViews/product/index");
+  req.flash("success", "El producto ha sido editado");
+  return res.redirect("/store/product/index");
 });
 
 export const deleteProduct = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
+  const { user } = req.session;
 
-  const store = await STORE.StoreRepository.getStoreByUserId(userId);
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  const { productId } = req.params;
+  const { id } = req.body;
 
-  const product = await STORE.ProductsRepository.getProductById(productId);
+  const product = await STORE.ProductsRepository.getProductById(id);
 
   if (!product) HandError(404, "Producto no encontrado");
 
-  await STORE.ProductsRepository.deleteProduct(productId);
-
-  return res.redirect("/storeViews/product/index");
+  await STORE.ProductsRepository.deleteProduct(id);
+  req.flash("success", "El producto ha sido eliminado");
+  return res.redirect("/store/product/index");
 });

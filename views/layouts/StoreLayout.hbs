@@ -1,75 +1,93 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/assets/Css/Libraries/bootstrap/bootstrap.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <link rel="stylesheet" href="/Css-Js/Css/index.css" />
-  {{{_sections.styles}}}
-  <title>{{page-title}}</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/assets/Css/Libraries/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="/assets/Css/index.css" />
+    {{{_sections.styles}}}
+    <title>{{title}}</title>
 </head>
 
-<body>
-  <div class="bg-image">
-    <div class="bg-overlay"></div>
-  </div>
+<body class="store-body">
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark shadow navbar-store" data-bs-theme="dark">
+            <div class="container-fluid">
+                <h3 class="m-3">STORE SETTINGS<i class="bi bi-person-fill-lock" width="40px" height="40px"></i></h3>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
 
-  <header>
-    <nav class="navbar bg-dark border-bottom border-body navbar-expand-lg" data-bs-theme="dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/store/index">Eat App/COMERCIO</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/store/index">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/user/logout"> LogOut{{#if hasUser}}({{user.email}}){{/if}} </a>
-            </li>
-          </ul>
+    <div class="row" id="fila-principal">
+        <div class="col-1 col-sm-1">
+            <section class="seccion-lateral shadow top-fixed">
+                <ul class="nav-navbar">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/store/home">
+                            <img src="\assets\imgs\site\svg\home_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/store/mycomerce">
+                            <img src="\assets\imgs\site\svg\shield_person_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg"
+                                alt="">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/store/product/index">
+                            <img src="\assets\imgs\site\svg\shopping_bag_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg"
+                                alt="">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/store/category/index">
+                            <img src="\assets\imgs\site\svg\category_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user/logout">
+                            <img src="\assets\imgs\site\svg\logout_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg"
+                                alt="">{{#if hasUser}}({{user.email}}){{/if}}
+                        </a>
+                    </li>
+                </ul>
+            </section>
         </div>
-      </div>
-    </nav>
-  </header>
+        <div class="col-11 col-sm-11 mt-5" style="padding-right: 30px;">
+            {{#if hasErrors}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul>
+                    {{#each errors}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+            {{/if}}
 
-
-  <main class="container mt-5">
-    {{#if hasErrors}}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <ul>
-        {{#each errors}}
-        <li>{{this}}</li>
-        {{/each}}
-      </ul>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            {{#if hasSuccess}}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <ul>
+                    {{#each success}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+            {{/if}}
+            {{{body}}}
+        </div>
     </div>
-    {{/if}}
-
-    {{#if hasSuccess}}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <ul>
-        {{#each success}}
-        <li>{{this}}</li>
-        {{/each}}
-      </ul>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
-    </div>
-    {{/if}}
-    {{{body}}}
-  </main>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="/assets/JavaScript/Libraries/bootstrap/bootstrap.min.js"></script>
-  {{{_sections.scripts}}}
+    <script type="module" src="/assets/JavaScript/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/assets/JavaScript/Libraries/bootstrap/bootstrap.min.js"></script>
+    {{{_sections.scripts}}}
 </body>
-
-
-
-</html>
