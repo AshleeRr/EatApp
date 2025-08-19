@@ -28,6 +28,7 @@ export async function GetStoresList(req, res, next){
     
     if(BusinessFilter) result.nombre = {[Op.like]: `%${BusinessFilter}%`};
     const businesses = await context.Comercio.findAll({where: result});
+    
     res.render("clientViews/storesList", {
       "page-title": "Stores",
       businessesList: businesses.map(b => b.get({plain:true})),
@@ -37,7 +38,7 @@ export async function GetStoresList(req, res, next){
   }catch(error){
     console.log(error);
     req.flash("errors", "An error ocurred while trying to bring the businesses");
-    return res.render("/clientViews/home");
+    return res.redirect("/clientViews/home");
   }
 }
 

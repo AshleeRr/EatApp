@@ -1,3 +1,65 @@
-<div class="row">
-    <h1 class="text-center"> Welcome to Eat App/ delivery</h1>
+<div class="row justify-content-center mb-4">
+  <div class="col-auto">
+    <h4 class="text-center">Orders</h4>
+  </div>
 </div>
+
+{{#if hasOrders}}
+<div class="row justify-content-center gap-3">
+  {{#each ordersList}}
+  <div class="card mb-3 shadow-sm" style="max-width: 700px;">
+    <div class="card-body">
+      <!-- Comercio -->
+      <div class="d-flex align-items-center mb-3">
+        <img src="{{this.comercio.logo}}" 
+             alt="{{this.comercio.name}} logo" 
+             class="rounded me-3" 
+             style="width: 60px; height: 60px; object-fit: cover;">
+        <div>
+          <h5 class="mb-0">{{this.comercio.name}}</h5>
+          <span class="badge {{#if (eq this.estado "en proceso")}}bg-warning text-dark{{else}}bg-success{{/if}}">
+            {{this.estado}}
+          </span>
+        </div>
+      </div>
+
+      <!-- Info del pedido -->
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total:</span> <strong>{{this.total}}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Products:</span> <strong>{{productsCount}}</strong>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Date:</span> 
+          <strong>{{Format this.fecha}}</strong>
+        </li>
+      </ul>
+
+      <!-- Botones -->
+      <div class="text-end">
+        {{#if (eq this.estado "en proceso")}}
+          <a href="/delivery/orders/{{this.id}}/complete" class="btn btn-primary btn-sm">
+            Complete Order
+          </a>
+        {{else}}
+          <a href="/delivery/orders/{{this.id}}/details" class="btn btn-secondary btn-sm">
+            Details
+          </a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>
+{{else}}
+<div class="row d-flex justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="alert alert-dark text-center shadow-sm p-4 rounded" role="alert" style="font-size: 1.1rem;">
+      <i class="bi bi-info-circle me-2 fs-4"></i>
+      You do not have any orders asignated
+    </div>
+  </div>
+</div>
+{{/if}}
