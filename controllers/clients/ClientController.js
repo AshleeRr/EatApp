@@ -31,32 +31,10 @@ export async function GetStoresList(req, res, next) {
     if (!Type) {
       return res.redirect("/client/home");
     }
-
-    if (BusinessFilter) result.nombre = { [Op.like]: `%${BusinessFilter}%` };
-    const businesses = await context.Comercio.findAll({ where: result });
-
-    // const comercios = businesses.map((comercio) => comercio.dataValues);
-
-    // console.log("comercios :>> ", comercios);
-
-    // let comersfav = {};
-
-    // if (comercios.length > 0) {
-    //   return comercios.forEach((comercio) => {
-    //     comersfav.add(
-    //       context.Favorito.findAll({
-    //         where: { clienteId: cliente.id, comercioId: comercio.id },
-    //       })
-    //     );
-    //   });
-    // } else {
-    //   req.file("errors", "no se encontraron comercios");
-    // }
-
-    // const favoritos = await comersfav.dataValues;
-
-    // console.log("favoritos :>> ", favoritos);
-
+    
+    if(BusinessFilter) result.nombre = {[Op.like]: `%${BusinessFilter}%`};
+    const businesses = await context.Comercio.findAll({where: result});
+    
     res.render("clientViews/storesList", {
       "page-title": "Stores",
       user: cliente,
@@ -68,10 +46,7 @@ export async function GetStoresList(req, res, next) {
     });
   } catch (error) {
     console.log(error);
-    req.flash(
-      "errors",
-      "An error ocurred while trying to bring the businesses"
-    );
+    req.flash("errors", "An error ocurred while trying to bring the businesses");
     return res.render("/clientViews/home");
   }
 }
