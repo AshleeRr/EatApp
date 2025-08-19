@@ -30,6 +30,7 @@ export const index = HandControllersAsync(async (req, res) => {
   const factura =
     ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
 
+  console.log("carrito :>> ", carrito);
   console.log("productos :>> ", categorias.productos);
   res.render("clientViews/store/index", {
     title: "Catalogo de productos",
@@ -49,9 +50,12 @@ export const addP = HandControllersAsync(async (req, res) => {
     });
   }
 
-  const { idProducto } = req.params;
+  const { idProducto } = req.body;
+  console.log("idProducto :>> ", idProducto);
 
-  const producto = await StoreRepository.ProductsRepository.findOne(idProducto);
+  const producto = await StoreRepository.ProductsRepository.findById(
+    idProducto
+  );
   if (!producto) {
     HandError("Producto no encontrado", 404);
   }
@@ -64,11 +68,13 @@ export const addP = HandControllersAsync(async (req, res) => {
     (item) => item.idProducto === idProducto
   );
 
+  const prod = await StoreRepository.ProductsRepository.findById(idProducto);
+
   if (existente) {
     existente.createdAt = new Date();
   } else {
     req.session.carrito.push({
-      idProducto: idProducto,
+      producto: prod,
       createdAt: new Date(),
     });
   }
@@ -76,7 +82,7 @@ export const addP = HandControllersAsync(async (req, res) => {
 
   req.flash("success", "El producto ha sido agregado de manera satisfactoria");
 
-  res.redirect("/client/store/home");
+  res.redirect(`/client/store/home/${prod.comercioId}`);
 });
 
 export const deleteP = HandControllersAsync(async (req, res) => {
@@ -84,7 +90,7 @@ export const deleteP = HandControllersAsync(async (req, res) => {
     req.flash("errors", "No tienes permiso para ingresar a esta ruta");
   }
 
-  const { idProducto } = req.params;
+  const { idProducto } = req.body;
 
   if (!req.session.carrito || req.session.carrito.length === 0) {
     return res.status(400).json({
