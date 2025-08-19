@@ -11,46 +11,50 @@ class OrderDetailsRepository extends GenericRepository {
   constructor() {
     super(context.DetallePedido);
   }
-
-  calcularFactura = HandRepositoriesAsync(async (items, itbisPercent) => {
-    const subtotal = items.reduce(
-      (acc, item) => acc + item.precio * item.cantidad,
-      0
-    );
-    const itbis = subtotal * (itbisPercent / 100);
+  calcularFactura = HandRepositoriesAsync(async (items, porciento) => {
+    const subtotal = items.reduce((acc, item) => acc + item.precio, 0);
+    const itbis = (subtotal * porciento) / 100;
     const total = subtotal + itbis;
     return { subtotal, itbis, total };
   });
+
   GenerarFactura = HandRepositoriesAsync(async (carrito) => {
     let items = 0;
     const productos = [];
 
     for (const item of carrito) {
-      const producto = await super.findById(item.idProducto);
+      const producto = item.producto;
 
       if (producto) {
-        const itemTotal = producto.precio * item.cantidad;
+        const itemTotal = producto.precio;
         items += itemTotal;
 
         productos.push({
-          ...producto,
-          cantidad: item.cantidad,
+          ...(producto.toJSON ? producto.toJSON() : producto),
           total: itemTotal,
         });
       }
     }
-    const itbisPercent = await config.getItbis();
 
-    const { subtotal, itbis, total } = this.calcularFactura(
+    const itbisConfig = await config.getItbis();
+
+    const porciento = itbisConfig.dataValues
+      ? itbisConfig.dataValues.value
+      : itbisConfig.value || itbisConfig;
+
+    console.log("itbisPercent extraído:", porciento);
+
+    const { subtotal, itbis, total } = await this.calcularFactura(
       productos,
-      itbisPercent
+      porciento
     );
+
     return {
       factura: {
         items,
         productos,
         subtotal,
-        itbisPercent,
+        porciento: porciento,
         itbis,
         total,
       },

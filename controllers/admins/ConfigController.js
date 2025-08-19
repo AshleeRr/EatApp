@@ -44,11 +44,9 @@ export const changeItbis = HandControllersAsync(async (req, res) => {
   }
   const { id, value } = req.body;
 
-  const itbis = parseFloat(value) / 100;
-
   const ITBIS = await admin.configRepository.update(id, {
     key: "ITBIS",
-    value: itbis,
+    value,
   });
 
   if (!ITBIS) {

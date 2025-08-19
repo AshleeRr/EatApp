@@ -2,7 +2,6 @@ import { StoreRepository, ClientRepository } from "../../repositories/index.js";
 //handlers
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
-
 export const index = HandControllersAsync(async (req, res) => {
   const { user } = req.session;
 
@@ -13,30 +12,33 @@ export const index = HandControllersAsync(async (req, res) => {
   const { id } = req.params;
 
   const data = await StoreRepository.StoreRepository.findById(id);
-
   const comercio = data.dataValues;
+
   if (!comercio) HandError("Comercio no encontrado", 404);
 
   const dataCat =
     await StoreRepository.CategoryRepository.getCategoriesByCommerceWithProducts(
       id
     );
-
   const categorias = dataCat.map((cat) => cat.toJSON());
 
   console.log("categorias :>> ", categorias);
+
   const carrito = req.session.carrito || [];
 
-  const factura =
-    ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
-
-  console.log("carrito :>> ", carrito);
-  console.log("productos :>> ", categorias.productos);
+  let factura = null;
+  if (carrito.length > 0) {
+    const facturaData =
+      await ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
+    factura = facturaData.factura;
+  }
   res.render("clientViews/store/index", {
     title: "Catalogo de productos",
     hasCategorias: categorias.length > 0,
     categorias,
     comercio,
+    hasCarrito: carrito.length > 0,
+    carrito,
     factura,
     user,
   });
@@ -65,42 +67,34 @@ export const addP = HandControllersAsync(async (req, res) => {
   }
 
   const existente = req.session.carrito.find(
-    (item) => item.idProducto === idProducto
+    (item) => item.producto.id === parseInt(idProducto)
   );
-
-  const prod = await StoreRepository.ProductsRepository.findById(idProducto);
 
   if (existente) {
     existente.createdAt = new Date();
+    req.flash("info", "El producto ya está en tu carrito");
   } else {
     req.session.carrito.push({
-      producto: prod,
+      producto: producto.toJSON ? producto.toJSON() : producto,
       createdAt: new Date(),
     });
+    req.flash("success", "Producto agregado al carrito");
   }
+
   req.session.save();
-
-  req.flash("success", "El producto ha sido agregado de manera satisfactoria");
-
-  res.redirect(`/client/store/home/${prod.comercioId}`);
+  res.redirect(`/client/store/home/${producto.comercioId}`);
 });
 
 export const deleteP = HandControllersAsync(async (req, res) => {
   if (!req.session.user) {
     req.flash("errors", "No tienes permiso para ingresar a esta ruta");
+    return res.redirect("/login");
   }
 
   const { idProducto } = req.body;
 
-  if (!req.session.carrito || req.session.carrito.length === 0) {
-    return res.status(400).json({
-      success: false,
-      message: "El carrito está vacío",
-    });
-  }
-
   const indice = req.session.carrito.findIndex(
-    (item) => item.idProducto === idProducto
+    (item) => item.producto.id === parseInt(idProducto)
   );
 
   if (indice === -1) {
@@ -109,11 +103,10 @@ export const deleteP = HandControllersAsync(async (req, res) => {
       message: "Producto no encontrado en el carrito",
     });
   }
-
-  req.session.carrito[indice] -= 1;
+  req.session.carrito.splice(indice, 1);
 
   req.session.save();
 
-  req.flash("success", " Producto eliminado");
-  req.redirect("/client/store/home");
+  req.flash("success", "Producto eliminado del carrito");
+  res.redirect("back");
 });

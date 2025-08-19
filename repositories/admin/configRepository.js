@@ -11,7 +11,7 @@ class ConfigRepository extends GenericRepository {
     if (!config) {
       return await super.create({
         key: "ITBIS",
-        value: 18 / 100,
+        value: 18,
       });
     }
     return config;
