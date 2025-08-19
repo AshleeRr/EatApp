@@ -26,14 +26,14 @@
       <!-- Info del pedido -->
       <ul class="list-group list-group-flush mb-3">
         <li class="list-group-item d-flex justify-content-between">
-          <span>Total:</span> <strong>{{this.total}}</strong>
+          <span>$Total:</span> <strong>${{this.total}}</strong>
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          <span>Products:</span> <strong>{{productsCount}}</strong>
+          <span>Amount of Products:</span> <strong>{{productsCount}}</strong>
         </li>
         <li class="list-group-item d-flex justify-content-between">
           <span>Date:</span> 
-          <strong>{{Format this.fecha}}</strong>
+          <strong>{{Format this.createdAt}}</strong>
         </li>
       </ul>
 
@@ -58,7 +58,7 @@
   <div class="col-12 col-md-8 col-lg-6">
     <div class="alert alert-dark text-center shadow-sm p-4 rounded" role="alert" style="font-size: 1.1rem;">
       <i class="bi bi-info-circle me-2 fs-4"></i>
-      You do not have any orders asignated
+      You do not have any orders assigned
     </div>
   </div>
 </div>

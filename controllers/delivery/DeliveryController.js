@@ -7,46 +7,39 @@ import {
 } from "../../repositories/index.js";
 import {Op} from "sequelize";
 
-export async function GetIndex(req, res, next){
-  try{
+export async function GetIndex(req, res, next) {
+  try {
     req.user = req.session.user;
-      const orders = await context.Pedido.findAll({
-      where: { deliveryId: 1 },
+    const orders = await context.Pedido.findAll({
+      where: { deliveryId: req.user.id },
       order: [["createdAt", "DESC"]],
-      include: [{ model: context.Comercio, as: "comercio"}],
+      include: [
+        { model: context.Comercio, as: "comercio" },
+        { model: context.DetallePedido, as: "detalles" }
+      ]
     });
 
-   
-    const ordersList = orders.map((o) => o.get({ plain: true }));
-    const orderIds = ordersList.map(o=> o.id);
-    let quantity = {};
-    if(orderIds.length){
-      const details = await context.DetallePedido.findAll({
-        where: {pedidoId: {[Op.in]: orderIds}},
-        attributes: ["pedidoId"],
-        raw: true
-      });
-    
-    for (const d of details) {
-        quantity[d.pedidoId] = (quantity[d.pedidoId] || 0) + 1;
-      }
-    }
-
-    for (const o of ordersList) {
-      o.productsCount = quantity[o.id] || 0;
-    }
+    const ordersList = orders.map((o) => {
+      const plain = o.get({ plain: true });
+      // sumar todas las cantidades de los detalles
+      plain.productsCount = plain.detalles.reduce(
+        (acc, d) => acc + d.cantidad, 
+        0
+      );
+      return plain;
+    });
 
     res.render("deliveryViews/home", {
-    "page-title": "Home",
-    ordersList,
-    hasOrders: ordersList.length > 0,
-    //local,
+      "page-title": "Home",
+      ordersList,
+      hasOrders: ordersList.length > 0,
     });
-  }catch(error){
+  } catch (error) {
     req.flash("errors", `An error ocurred while loading the orders ${error}`);
     res.redirect("/delivery/home");
-  }  
+  }
 }
+
 
 export async function GetOrderDetails(req, res) {
   try {
@@ -72,7 +65,7 @@ export async function GetOrderDetails(req, res) {
       return res.redirect("/delivery/home");
     }
 
-    res.render("deliveryViews/orderDetails", {
+    res.render("deliveryViews/details", {
       "page-title": "Order Details",
       pedido: pedido.get({ plain: true }),
     });

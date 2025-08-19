@@ -1,8 +1,6 @@
-export function formatDate(dateString) {
-  const date = new Date(dateString);
-
-  // Opciones de formato (sin segundos)
-  return date.toLocaleString("es-ES", {
+export function formatDate(date) {
+  const d = new Date(date);
+  return d.toLocaleString("es-ES", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",

@@ -8,12 +8,12 @@
            style="width:100px;height:100px;object-fit:cover;">
 
       <p><strong>Status:</strong> {{pedido.estado}}</p>
-      <p><strong>Date:</strong> {{pedido.createdAt}}</p>
+      <p><strong>Date:</strong> {{Format pedido.createdAt}}</p>
       <p><strong>Address:</strong> {{pedido.direccionEntrega}}</p>
 
       <h5 class="mt-4">Products</h5>
       <ul class="list-group">
-        {{#each pedido.DetallePedidos}}
+        {{#each pedido.detalles}}
           <li class="list-group-item d-flex align-items-center">
             <img src="{{this.producto.imagen}}" 
                  alt="{{this.producto.nombre}}" 
