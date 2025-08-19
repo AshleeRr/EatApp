@@ -14,7 +14,9 @@ import { Equals } from "./utils/helpers/Compare.js";
 //routes
 import { routes } from "./routes/index.js";
 import { GetSection } from "./utils/helpers/Section.js";
-import isInCart from "./utils/helpers/isInCart.js";
+
+import { formatDate } from "./utils/helpers/date.js";
+
 const app = express();
 
 app.engine(
@@ -23,12 +25,7 @@ app.engine(
     layoutsDir: "views/layouts",
     defaultLayout: "LogInLayout",
     extname: ".hbs",
-    helpers: {
-      eq: Equals,
-      section: GetSection,
-      json: (context) => JSON.stringify(context, null, 2),
-      isInCart: (productId, carrito) => isInCart(productId, carrito),
-    },
+    helpers: { eq: Equals, section: GetSection, Format: formatDate },
   })
 );
 
