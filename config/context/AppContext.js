@@ -1,50 +1,20 @@
 import connection from "../connection/DbConnection.js";
-import { Sequelize } from "sequelize";
-import path from "path";
-import { projectRoot } from "../../utils/Paths.js";
-
-// Import models
-import ComercioModel from "../../models/comercio.js";
-import TipoComercioModel from "../../models/tipoComercio.js";
-import CategoriaModel from "../../models/categoria.js";
-import ProductoModel from "../../models/producto.js";
-import PedidoModel from "../../models/pedido.js";
-import DetallePedidoModel from "../../models/detallePedido.js";
-import DireccionModel from "../../models/direccion.js";
-import ConfiguracionModel from "../../models/configuracion.js";
-import FavoritoModel from "../../models/favorito.js";
-import UserModel from "../../models/user.js";
-import ClientModel from "../../models/client.js";
-import DeliveryModel from "../../models/delivery.js";
-
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: path.join(projectRoot, "config", "DB", "EatApp.sqlite"),
-  logging: false,
-});
-
-try {
-  await connection.authenticate();
-  console.log("Database connection established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database due to:", error);
-}
 
 //models
-const Comercio = ComercioModel(sequelize);
-const TipoComercio = TipoComercioModel(sequelize);
-const Categoria = CategoriaModel(sequelize);
-const Producto = ProductoModel(sequelize);
-const Pedido = PedidoModel(sequelize);
-const DetallePedido = DetallePedidoModel(sequelize);
-const Direccion = DireccionModel(sequelize);
-const Configuracion = ConfiguracionModel(sequelize);
-const Favorito = FavoritoModel(sequelize);
-const Delivery = DeliveryModel(sequelize);
-const Client = ClientModel(sequelize);
-const User = UserModel(sequelize);
+import Admin from "../../models/admin.js";
+import Comercio from "../../models/comercio.js";
+import TipoComercio from "../../models/tipoComercio.js";
+import Categoria from "../../models/categoria.js";
+import Producto from "../../models/producto.js";
+import Pedido from "../../models/pedido.js";
+import DetallePedido from "../../models/detallePedido.js";
+import Direccion from "../../models/direccion.js";
+import Configuracion from "../../models/configuracion.js";
+import Favorito from "../../models/favorito.js";
+import User from "../../models/user.js";
+import Client from "../../models/client.js";
+import Delivery from "../../models/delivery.js";
 
-//relations
 User.hasMany(Client, { foreignKey: "userId" });
 Client.belongsTo(User, { foreignKey: "userId" });
 
@@ -54,18 +24,28 @@ Comercio.belongsTo(User, { foreignKey: "userId" });
 User.hasMany(Delivery, { foreignKey: "userId" });
 Delivery.belongsTo(User, { foreignKey: "userId" });
 
+User.hasMany(Admin, { foreignKey: "userId" });
+Admin.belongsTo(User, { foreignKey: "userId" });
+
 User.hasMany(Direccion, { foreignKey: "usuarioId", as: "direcciones" });
 Direccion.belongsTo(User, { foreignKey: "usuarioId", as: "usuario" });
 
-User.hasMany(Pedido, { foreignKey: "clienteId", as: "pedidosCliente" });
-Pedido.belongsTo(User, { foreignKey: "clienteId", as: "cliente" });
+Pedido.belongsTo(Client, { foreignKey: "clienteId", as: "cliente" });
+Pedido.belongsTo(Comercio, { foreignKey: "comercioId", as: "comercio" });
+Pedido.belongsTo(Delivery, { foreignKey: "deliveryId", as: "delivery" });
+Pedido.belongsTo(Direccion, { foreignKey: "direccionId", as: "direccion" });
 
-User.hasMany(Pedido, { foreignKey: "deliveryId", as: "pedidosDelivery" });
-Pedido.belongsTo(User, { foreignKey: "deliveryId", as: "delivery" });
+Client.hasMany(Pedido, { foreignKey: "clienteId", as: "pedidosCliente" });
+Comercio.hasMany(Pedido, { foreignKey: "comercioId", as: "pedidos" });
+Delivery.hasMany(Pedido, { foreignKey: "deliveryId", as: "pedidosDelivery" });
+Direccion.hasMany(Pedido, {
+  foreignKey: "direccionId",
+  as: "pedidosDireccion",
+});
 
 TipoComercio.hasMany(Comercio, {
   foreignKey: "tipoComercioId",
-  as: "comercio",
+  as: "comercios",
 });
 Comercio.belongsTo(TipoComercio, {
   foreignKey: "tipoComercioId",
@@ -81,53 +61,16 @@ Producto.belongsTo(Comercio, { foreignKey: "comercioId", as: "comercio" });
 Categoria.hasMany(Producto, { foreignKey: "categoriaId", as: "productos" });
 Producto.belongsTo(Categoria, { foreignKey: "categoriaId", as: "categoria" });
 
-Comercio.hasMany(Pedido, { foreignKey: "comercioId", as: "pedidos" });
-Pedido.belongsTo(Comercio, { foreignKey: "comercioId", as: "comercio" });
-
-Configuracion.belongsTo(Pedido, {
-  foreignKey: "configuracionId",
-  as: "configuracion",
-});
-
-Direccion.hasMany(Pedido, { foreignKey: "direccionId", as: "pedidos" });
-Pedido.belongsTo(Direccion, { foreignKey: "direccionId", as: "direccion" });
-
 Pedido.hasMany(DetallePedido, { foreignKey: "pedidoId", as: "detalles" });
 DetallePedido.belongsTo(Pedido, { foreignKey: "pedidoId", as: "pedido" });
 
-DetallePedido.hasMany(Producto, { foreignKey: "productoId", as: "detalles" });
-Producto.belongsTo(DetallePedido, {
-  foreignKey: "DetallePedidoId",
-  as: "producto",
-});
+DetallePedido.belongsTo(Producto, { foreignKey: "productoId", as: "producto" });
+Producto.hasMany(DetallePedido, { foreignKey: "productoId", as: "detalles" });
 
-User.hasMany(Favorito, {
-  foreignKey: "clienteId",
-  as: "favoritos",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-
-Favorito.belongsTo(User, {
-  foreignKey: "clienteId",
-  as: "cliente",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-
-Comercio.hasMany(Favorito, {
-  foreignKey: "comercioId",
-  as: "favoritos",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-
-Favorito.belongsTo(Comercio, {
-  foreignKey: "comercioId",
-  as: "comercio",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
+Comercio.hasMany(Favorito, { foreignKey: "comercioId", as: "favoritos" });
+Favorito.belongsTo(Comercio, { foreignKey: "comercioId", as: "comercio" });
+Client.hasMany(Favorito, { foreignKey: "clienteId", as: "favoritos" });
+Favorito.belongsTo(Client, { foreignKey: "clienteId", as: "cliente" });
 
 export default {
   Comercio,
@@ -139,9 +82,9 @@ export default {
   Direccion,
   Configuracion,
   Favorito,
-  sequelize,
-  Sequelize: connection,
   User,
   Client,
   Delivery,
+  Admin,
+  sequelize: connection,
 };

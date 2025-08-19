@@ -1,0 +1,85 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-12 col-sm-5">
+        {{#if isEditing}}
+        <div class="card mt-5 shadow">
+            <div class="card-header text-center" style="background-color: #673d36; color:white">
+                <h3 class="card-title">Edita el producto {{product.nombre}}</h3>
+            </div>
+            <div class="card-body">
+                <form action="/store/product/edit/{{product.id}}" method="POST" class="form"
+                    enctype="multipart/form-data">
+                    <label for="imagen" class="form-label mt-2" style="font-weight: bold;">Imagen</label>
+                    <input type="file" class="form-control" name="imagen" id="imagen" required>
+                    <label for="nombre" class="form-label mt-2" style="font-weight: bold;">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" id="nombre" value="{{product.nombre}}"
+                        required>
+                    <label for="descripcion" class="form-label mt-2" style="font-weight: bold;">Descripcion</label>
+                    <input type="text" class="form-control" name="descripcion" id="descripcion"
+                        value="{{product.descripcion}}" required>
+                    <label for="precio" class="form-label mt-2" style="font-weight: bold;">Precio</label>
+                    <input type="number" class="form-control" name="precio" id="precio" value="{{product.precio}}"
+                        required>
+                    <label for="categoria" class="form-label"
+                        style="font-weight:bold; margin-top:5px;">Categoria</label>
+                    <select name="categoria" id="categoria" class="form-control" required>
+                        {{#if hasCategories}}
+                        <option value="{{product.categoria.dataValues.id}}" selected>
+                            {{product.categoria.dataValues.nombre}}</option>
+                        {{#each categories}}
+                        <option value="{{this.id}}">{{this.nombre}}</option>
+                        {{/each}}
+                        {{else}}
+                        <option value="" disabled selected>No hay categorias disponibles</option>
+                        {{/if}}
+                    </select>
+
+
+                    <div class="float-end mt-2">
+                        <a href="/store/product/index" class="btn btn-warning">Volver</a>
+                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Editar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{else}}
+        <div class="card mt-5 shadow">
+            <div class="card-header text-center" style="background-color: #673d36; color:white">
+                <h3 class="card-title">Nuevo producto</h3>
+            </div>
+            <div class="card-body">
+                <form action="/store/product/create" method="POST" class="form" enctype="multipart/form-data">
+                    <label for="imagen" class="form-label mt-2" style="font-weight: bold;">Imagen</label>
+                    <input type="file" class="form-control" name="imagen" id="imagen" required>
+
+                    <label for="nombre" class="form-label mt-2" style="font-weight: bold;">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" id="nombre" required>
+
+                    <label for="descripcion" class="form-label mt-2" style="font-weight: bold;">Descripcion</label>
+                    <input type="text" class="form-control" name="descripcion" id="descripcion"
+                        value="{{producto.descripcion}}" required>
+                    <label for="precio" class="form-label mt-2" style="font-weight: bold;">Precio</label>
+                    <input type="number" class="form-control" name="precio" id="precio" required>
+                    <label for="categoria" class="form-label"
+                        style="font-weight:bold; margin-top:5px;">Categoria</label>
+                    <select name="categoria" id="categoria" class="form-control" required>
+                        {{#if hasCategories}}
+                        <option value="" disabled selected>Selecciona una categoria </option>
+                        {{#each categories}}
+                        <option value="{{this.id}}">{{this.nombre}}</option>
+                        {{/each}}
+                        {{else}}
+                        <option value="" disabled selected>No hay categorias disponibles</option>
+                        {{/if}}
+                    </select>
+
+
+                    <div class="float-end mt-2">
+                        <a href="/store/product/index" class="btn btn-warning">Volver</a>
+                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>

@@ -2,39 +2,94 @@ import { StoreRepository } from "../../repositories/index.js";
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 
+//helper
+import { saveIMG } from "../../services/imgSaver.js";
 export const index = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
+  const { user } = req.session;
 
-  console.log("userId :>> ", userId);
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
 
-  const store = await StoreRepository.getStoreByUserId(userId);
+  const data = await StoreRepository.StoreRepository.getStoreByUserId(user.id);
 
-  if (!store) HandError(404, "Comercio no encontrado");
+  const store = data.dataValues;
 
-  const pedidos = await StoreRepository.getPedidoByStore(userId);
+  const pedidos = await StoreRepository.OrderRepository.getAllOrders();
 
-  const hasAsignedDelivery = pedidos.some((pedido) => pedido.deliveryId);
+  const Pendientes = await StoreRepository.StoreRepository.getPedidoByStore(
+    store.id,
+    "pendiente"
+  );
+  const Procesandose = await StoreRepository.StoreRepository.getPedidoByStore(
+    store.id,
+    "en proceso"
+  );
+
+  const Completados = await StoreRepository.StoreRepository.getPedidoByStore(
+    store.id,
+    "completado"
+  );
 
   return res.render("storeViews/home", {
     title: "My store",
     user: req.user,
     store,
-    hasPedidos: pedidos.length > 0,
+    hasPedidos: pedidos.length > 0 || 0,
     pedidos,
-    hasAsignedDelivery,
+    Pendientes,
+    Completados,
+    Procesandose,
   });
 });
 
 export const StorePerfil = HandControllersAsync(async (req, res) => {
-  const userId = req.session.user.id;
+  const { user } = req.session;
 
-  const store = await StoreRepository.getStoreByUserId(userId);
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const data = await StoreRepository.StoreRepository.getStoreByUserId(user.id);
+
+  const store = data.dataValues;
 
   if (!store) HandError(404, "Comercio no encontrado");
 
-  return res.render("store/perfil", {
+  return res.render("storeViews/perfil", {
     title: "My perfil",
     user: req.user,
     store,
   });
+});
+
+export const actualizarPerfil = HandControllersAsync(async (req, res) => {
+  const { user } = req.session;
+
+  if (user.role !== "store") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+
+  const store = await StoreRepository.StoreRepository.getStoreByUserId(user.id);
+
+  if (!store) HandError(404, "Comercio no encontrado");
+
+  const { name, phoneNumber, email, opening, closing } = req.body;
+  const imagen = req.file;
+
+  const logo = await saveIMG(imagen);
+
+  await StoreRepository.StoreRepository.update(store.id, {
+    name,
+    phoneNumber,
+    email,
+    logo,
+    opening,
+    closing,
+    userId: user.id,
+    tipoComercioId: store.tipoComercioId,
+  });
+
+  req.flash("success", "El perfil de tu comercio ha sido actualizado");
+  return res.redirect("/store/mycomerce");
 });

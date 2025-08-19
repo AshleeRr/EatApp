@@ -21,6 +21,5 @@ export const mailer = HandRepositoriesAsync(async ({ to, subject, html }) => {
     subject,
     html,
   });
-  console.log("Email sent:", info.response);
   return info;
 });

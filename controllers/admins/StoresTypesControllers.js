@@ -1,5 +1,6 @@
 //repositories
 import admin from "../../repositories/admin/index.js";
+import { StoreRepository } from "../../repositories/index.js";
 //handlers
 import { HandError } from "../../utils/handlers/handlerError.js";
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
@@ -8,43 +9,58 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { saveIMG } from "../../services/imgSaver.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const user = req;
+  const { user } = req.session;
 
-  const FindAdmin = await admin.userRepository.findOne(user);
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const data = await admin.storesTypesRepository.findAll();
 
-  const storeTypes = admin.storesTypesRepository.findAll();
+  const stores = await StoreRepository.StoreRepository.findAll();
 
-  return res.render("storeViews/storesTypes/index", {
+  const storeTypes = data.map((store) => store.dataValues);
+
+  const store = storeTypes.map((type) => {
+    const count = stores.filter(
+      (store) => store.tipoComercioId === type.id
+    ).length;
+
+    return {
+      ...type,
+      count,
+    };
+  });
+
+  return res.render("adminViews/storesTypes/index", {
     title: "Store types managment",
     user: user,
-    storeTypes,
-    hasStoresTypes: storeTypes.leght > 0,
+    store,
+    hasStoresTypes: store.length > 0,
   });
 });
 
 export const createForm = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
-  return res.render("storeViews/storesTypes/create", {
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  return res.render("adminViews/storesTypes/create", {
     title: "Create a Store Type",
     user: user,
   });
 });
 
 export const create = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userReposi.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
   const { name, description } = req.body;
-  const { logo } = req.file;
+  const logo = req.file;
 
-  const icono = saveIMG(logo.path);
+  const icono = await saveIMG(logo);
 
   const newType = await admin.storesTypesRepository.create({
     nombre: name,
@@ -59,21 +75,24 @@ export const create = HandControllersAsync(async (req, res) => {
     );
   req.flash("success", "A new store type has been created!!");
 
-  return res.redirect("/storesTypes/home");
+  return res.redirect("/admin/storesTypes/home");
 });
 
 export const editForm = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user.id);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const { id } = req.params;
 
-  const idTypeype = req.params.id;
-  const type = await admin.storesTypesRepository.findOne(idType);
+  const data = await admin.storesTypesRepository.findById(id);
+
+  const type = data.dataValues;
 
   if (!type) HandError(404, "Tipo de comercio no encontrado");
 
-  return res.render("storeViews/storesTypes/create", {
+  return res.render("adminViews/storesTypes/create", {
     title: "Editing a Store Type",
     isEditing: true,
     user: user,
@@ -82,17 +101,18 @@ export const editForm = HandControllersAsync(async (req, res) => {
 });
 
 export const edit = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
-
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const { id } = req.params;
   const { nombre, descripcion } = req.body;
-  const { logo } = req.file;
+  const logo = req.file;
 
-  const icono = saveIMG(logo.path);
+  const icono = await saveIMG(logo);
 
-  const edited = await admin.storesTypesRepository.update({
+  const edited = await admin.storesTypesRepository.update(id, {
     nombre,
     descripcion,
     icono,
@@ -102,23 +122,24 @@ export const edit = HandControllersAsync(async (req, res) => {
 
   req.flash("success", "A new store type has been edited!!");
 
-  return res.redirect("/storesTypes/home");
+  return res.redirect("/admin/storesTypes/home");
 });
 
 export const deleteA = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const { id } = req.params;
 
-  const storeId = req.params.id;
-  const store = await admin.userRepository.findOne(storeId);
+  const store = await admin.storesTypesRepository.findById(id);
 
   if (!store) HandError(404, "Tipo de comercio no encontrado");
 
-  await admin.adminRepository.delete(store);
+  await admin.storesTypesRepository.delete(id);
 
-  req.flash("success", "A new store type has been deleted!!");
+  req.flash("success", "The store type has been deleted!!");
 
-  return res.redirect("/storesTypes/home");
+  return res.redirect("/admin/storesTypes/home");
 });

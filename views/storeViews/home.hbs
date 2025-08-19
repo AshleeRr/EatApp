@@ -1,3 +1,32 @@
-<div class="row">
-    <h1 class="text-center"> Welcome to Eat App/ comercio</h1>
+<div class="row mt-5">
+    <div class="text-center">
+        <h1>Listado de pedidos</h1>
+    </div>
 </div>
+
+{{#if hasPedidos}}
+<div class="container mt-4">
+    <div class="row">
+        {{#each stores}}
+        <div class="col-12 mb-3">
+            <div class="card flex-row" style="margin: 0 10px;">
+                <img src="{{this.image}}" class="card-img-left"
+                    style="width: 120px; object-fit: cover; border-radius: 0.25rem 0 0 0.25rem;">
+                <div class="card-body d-flex align-items-center">
+                    {{this.body}}
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+{{else}}
+<div class="row d-flex justify-content-center">
+    <div class="col-12 col-sm-4">
+        <div class="alert alert-warning" role="alert">
+            <i class="bi bi-exclamation-circle-fill me-1"></i>No hay pedidos nuevos, aqui saldran los pedidos que sean
+            solicitados a tu comercio
+        </div>
+    </div>
+</div>
+{{/if}}

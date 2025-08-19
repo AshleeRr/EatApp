@@ -4,31 +4,34 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  if (!req.session.user) {
+  const { user } = req.session;
+
+  if (!user) {
     return res.redirect("/login");
   }
 
-  const { idComercio } = req.params;
+  const { id } = req.params;
 
-  const comercio = await StoreRepository.StoreRepository.findOne(idComercio);
+  const data = await StoreRepository.StoreRepository.findById(id);
 
+  const comercio = data.dataValues;
   if (!comercio) HandError("Comercio no encontrado", 404);
 
-  const categorias =
+  const dataCat =
     await StoreRepository.CategoryRepository.getCategoriesByCommerceWithProducts(
-      idComercio
+      id
     );
 
-  if (!categorias || categorias.length === 0)
-    HandError("Este comercio no cuenta con productos disponibles", 404);
+  const categorias = dataCat.map((cat) => cat.toJSON());
 
-  const { user } = req.session.user;
+  console.log("categorias :>> ", categorias);
   const carrito = req.session.carrito || [];
 
   const factura =
     ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
 
-  res.render("clientViews/storesList", {
+  console.log("productos :>> ", categorias.productos);
+  res.render("clientViews/store/index", {
     title: "Catalogo de productos",
     hasCategorias: categorias.length > 0,
     categorias,

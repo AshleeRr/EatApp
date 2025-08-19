@@ -67,7 +67,7 @@ export const procesarPedido = HandControllersAsync(async (req, res) => {
   const factura =
     ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
 
-  console.log("factura :>> ", factura);
+  "factura :>> ", factura;
 
   const { productos, subtotal, itbis, total } = factura;
 

@@ -6,15 +6,17 @@ import {
   editProductForm,
   editProduct,
   deleteProduct,
-} from "../../controllers/Stores/ProductsController.js";
+} from "../../controllers/stores/ProductsController.js";
+
+import { saveProductsImgs } from "../../utils/handlers/FileHandler.js";
 
 const router = express.Router();
 
 router.get("/index", index);
 router.get("/create", createProductForm);
-router.post("/create", createProduct);
+router.post("/create", saveProductsImgs.single("imagen"), createProduct);
 router.get("/edit/:id", editProductForm);
-router.post("/edit/:id", editProduct);
-router.post("/delete/:id", deleteProduct);
+router.post("/edit/:id", saveProductsImgs.single("imagen"), editProduct);
+router.post("/delete", deleteProduct);
 
 export default router;

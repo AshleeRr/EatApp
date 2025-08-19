@@ -1,7 +1,10 @@
+import coneccion from "../config/connection/DbConnection.js";
+
 import { DataTypes } from "sequelize";
 
-export default (sequelize) => {
-  const Pedido = sequelize.define("Pedido", {
+const Pedido = coneccion.define(
+  "Pedido",
+  {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -16,14 +19,63 @@ export default (sequelize) => {
       allowNull: false,
     },
     estado: {
-      type: DataTypes.ENUM("pendiente", "en proceso", "completado"),
+      type: DataTypes.STRING,
       defaultValue: "pendiente",
+      validate: {
+        isIn: [["pendiente", "en proceso", "completado"]],
+      },
     },
     fecha: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
-  });
 
-  return Pedido;
-};
+    clienteId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Clients",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+
+    comercioId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Comercio",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+
+    deliveryId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Deliveries",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+
+    direccionId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Direccion",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
+  },
+  {
+    tableName: "Pedidos",
+  }
+);
+export default Pedido;

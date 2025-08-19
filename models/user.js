@@ -1,7 +1,10 @@
+import coneccion from "../config/connection/DbConnection.js";
+
 import { DataTypes } from "sequelize";
 
-export default (sequelize) =>{
-  const UserModel = sequelize.define("Users", {
+const UserModel = coneccion.define(
+  "Users",
+  {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -9,8 +12,11 @@ export default (sequelize) =>{
       autoIncrement: true,
     },
     role: {
-        type: DataTypes.ENUM("client", "delivery", "store", "admin"),
-        allowNull: false    
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [["client", "delivery", "store", "admin"]],
+      },
     },
     userName: {
       type: DataTypes.STRING,
@@ -32,20 +38,18 @@ export default (sequelize) =>{
       type: DataTypes.STRING,
       allowNull: true,
     },
-    activateToken:{
+    activateToken: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
     },
-    isActive:{
-      type: DataTypes.STRING,
+    isActive: {
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
-      allowNull: true
-    }
+      allowNull: true,
+    },
   },
   {
     tableName: "Users",
   }
-)
-  return UserModel;
-}
-  
+);
+export default UserModel;

@@ -20,10 +20,10 @@ class UserRepository extends GenericRepository {
   });
 
   GetUsersByRoleWithStatus = HandRepositoriesAsync(async (role) => {
-    const activeUsers = await super.findAll({
+    const activeUsers = await super.count({
       where: { role, isActive: true },
     });
-    const inactiveUsers = await super.findAll({
+    const inactiveUsers = await super.count({
       where: { role, isActive: false },
     });
 

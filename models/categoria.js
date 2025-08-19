@@ -1,21 +1,31 @@
+import coneccion from "../config/connection/DbConnection.js";
+
 import { DataTypes } from "sequelize";
 
-export default (sequelize) => {
-  const Categoria = sequelize.define("Categoria", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+const Categoria = coneccion.define("Categoria", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  nombre: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  descripcion: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  comercioId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: "Comercio",
+      key: "id",
     },
-    nombre: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    descripcion: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  });
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  },
+});
 
-  return Categoria;
-};
+export default Categoria;

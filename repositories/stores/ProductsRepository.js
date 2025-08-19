@@ -9,6 +9,7 @@ class ProductsRepository extends GenericRepository {
   constructor() {
     super(context.Producto);
   }
+
   getAllProducts = HandRepositoriesAsync(async () => {
     return await super.findAll({
       include: [
@@ -16,14 +17,16 @@ class ProductsRepository extends GenericRepository {
         {
           model: Comercio,
           as: "comercio",
-          attributes: ["id", "name", "logo", "activo"],
+          attributes: ["id", "name", "logo"],
         },
       ],
       order: [["createdAt", "DESC"]],
     });
   });
+
   getProductById = HandRepositoriesAsync(async (id) => {
-    return await super.findOne(id, {
+    return await super.findOne({
+      where: { id },
       include: [
         { model: Categoria, as: "categoria" },
         {
@@ -34,6 +37,7 @@ class ProductsRepository extends GenericRepository {
       ],
     });
   });
+
   getProductsByStore = HandRepositoriesAsync(async (comercioId) => {
     return await super.findAll({
       where: { comercioId },
@@ -42,7 +46,7 @@ class ProductsRepository extends GenericRepository {
         {
           model: Comercio,
           as: "comercio",
-          attributes: ["id", "name", "logo", "opening", "closing", "activo"],
+          attributes: ["id", "name", "logo", "opening", "closing"],
         },
       ],
       order: [
@@ -51,6 +55,7 @@ class ProductsRepository extends GenericRepository {
       ],
     });
   });
+
   getProductsByStoreGroupedByCategory = HandRepositoriesAsync(
     async (comercioId) => {
       const productos = await super.findAll({
@@ -60,7 +65,7 @@ class ProductsRepository extends GenericRepository {
           {
             model: Comercio,
             as: "comercio",
-            attributes: ["id", "name", "logo", "opening", "closing", "activo"],
+            attributes: ["id", "name", "logo", "opening", "closing"],
           },
         ],
         order: [
@@ -81,6 +86,7 @@ class ProductsRepository extends GenericRepository {
       return productsList;
     }
   );
+
   searchProductsByName = HandRepositoriesAsync(
     async (nombre, comercioId = null) => {
       const whereClause = {
@@ -100,16 +106,17 @@ class ProductsRepository extends GenericRepository {
           {
             model: Comercio,
             as: "comercio",
-            attributes: ["id", "name", "logo", "activo"],
+            attributes: ["id", "name", "logo"],
           },
         ],
         order: [["nombre", "ASC"]],
       });
     }
   );
+
   deleteProduct = HandRepositoriesAsync(async (id) => {
     const detallesPedidos = await DetallePedido.findAll({
-      where: { PedidoId: id },
+      where: { productoId: id },
     });
 
     if (detallesPedidos.length > 0) {

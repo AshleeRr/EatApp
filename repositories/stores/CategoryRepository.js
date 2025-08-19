@@ -1,15 +1,10 @@
 import context from "../../config/context/AppContext.js";
 import { Op } from "sequelize";
-
-//handlers
 import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
-
-//import nedeed repositories
 import GenericRepository from "../GenericRepository.js";
 import StoreRepository from "./StoreRepository.js";
 import ProductsRepository from "./ProductsRepository.js";
 
-//models
 const { Comercio, Producto } = context;
 
 class CategoriesRepository extends GenericRepository {
@@ -32,7 +27,7 @@ class CategoriesRepository extends GenericRepository {
         "nombre",
         "descripcion",
         [
-          db.sequelize.fn("COUNT", db.sequelize.col("productos.id")),
+          context.sequelize.fn("COUNT", context.sequelize.col("productos.id")),
           "cantidadProductos",
         ],
       ],
@@ -40,6 +35,7 @@ class CategoriesRepository extends GenericRepository {
       order: [["nombre", "ASC"]],
     });
   });
+
   searchCategoriesByName = HandRepositoriesAsync(
     async (nombre, comercioId = null) => {
       const whereClause = {
@@ -72,7 +68,10 @@ class CategoriesRepository extends GenericRepository {
           "descripcion",
           "comercioId",
           [
-            db.sequelize.fn("COUNT", db.sequelize.col("productos.id")),
+            context.sequelize.fn(
+              "COUNT",
+              context.sequelize.col("productos.id")
+            ),
             "cantidadProductos",
           ],
         ],
@@ -81,42 +80,40 @@ class CategoriesRepository extends GenericRepository {
       });
     }
   );
+
   createCategory = HandRepositoriesAsync(async (data) => {
-    const comercio = await StoreRepository.findAll(data.comercioId);
+    const comercio = await StoreRepository.findOne({
+      where: { id: data.comercioId },
+    });
     if (!comercio) {
       throw new Error("El comercio especificado no existe");
     }
 
-    if (!comercio.activo) {
-      throw new Error("No se puede crear categorías para un comercio inactivo");
-    }
-
-    return await StoreRepository.createCategory(data.comercioId, {
+    return await super.create({
       nombre: data.nombre,
       descripcion: data.descripcion,
+      comercioId: data.comercioId,
     });
   });
+
   updateCategory = HandRepositoriesAsync(async (id, data) => {
-    const categoria = await super.findOne(id);
+    const categoria = await super.findOne({ where: { id } });
     if (!categoria) {
       throw new Error("Categoría no encontrada");
     }
 
     if (data.comercioId && data.comercioId !== categoria.comercioId) {
-      const comercio = await StoreRepository.findAll(data.comercioId);
+      const comercio = await StoreRepository.findOne({
+        where: { id: data.comercioId },
+      });
       if (!comercio) {
         throw new Error("El comercio especificado no existe");
-      }
-
-      if (!comercio.activo) {
-        throw new Error(
-          "No se puede asignar la categoría a un comercio inactivo"
-        );
       }
     }
 
     return await super.update(id, data);
   });
+
   deleteCategory = HandRepositoriesAsync(async (id) => {
     const productos = await ProductsRepository.findAll({
       where: { categoriaId: id },
@@ -130,6 +127,7 @@ class CategoriesRepository extends GenericRepository {
 
     return await super.delete(id);
   });
+
   getCategoriesByCommerceWithProducts = HandRepositoriesAsync(
     async (comercioId) => {
       return await super.findAll({

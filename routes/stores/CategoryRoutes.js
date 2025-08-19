@@ -6,7 +6,7 @@ import {
   editCategoryForm,
   editCategory,
   deleteCategory,
-} from "../../controllers/Stores/CategoryController.js";
+} from "../../controllers/stores/CategoryController.js";
 
 const router = express.Router();
 
@@ -15,6 +15,6 @@ router.get("/create", createCategoryForm);
 router.post("/create", createCategory);
 router.get("/edit/:id", editCategoryForm);
 router.post("/edit/:id", editCategory);
-router.post("/delete/:id", deleteCategory);
+router.post("/delete", deleteCategory);
 
 export default router;

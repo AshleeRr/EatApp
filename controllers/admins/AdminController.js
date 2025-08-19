@@ -10,130 +10,141 @@ import { Hash } from "../../services/hasher.js";
 import { generateToken } from "../../services/generateToken.js";
 
 export const index = HandControllersAsync(async (req, res) => {
-  const user = req;
+  const { user } = req.session;
 
-  const FindAdmin = await admin.adminRepository.findOne(user);
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const admins = await admin.adminRepository.getAllAdmins();
+  const data = admins.map((a) => a.dataValues);
 
-  const admins = admin.adminRepository.getAllAdmins();
-
-  return res.render("storeViews/admins/index", {
+  return res.render("adminViews/admins/index", {
     title: "Administers",
-    user: user,
-    admins,
-    hasadmins: admins.length > 0,
+    user,
+    admins: data,
+    hasadmins: data.length > 0,
   });
 });
 
 export const createForm = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.adminRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
 
-  return res.render("storeViews/admins/create", {
+  return res.render("adminViews/admins/create", {
     title: "Create Admin",
     user: user,
   });
 });
 
 export const create = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.adminRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const { nombre, apellido, usuario, cedula, correo } = req.body;
 
-  const { name, email, password } = req.body;
+  const hashedPassword = await Hash(cedula);
+  const token = await generateToken();
 
-  const hashedPassword = await Hash(password);
-  const token = await generateToken;
-
-  const newAdmin = await admin.adminRepository.create({
+  const newAdmin = await admin.userRepository.create({
     role: "admin",
-    userName: name,
-    email: email,
+    userName: usuario,
+    email: correo,
     password: hashedPassword,
-    isActive: false,
+    isActive: true,
     activateToken: token,
   });
 
-  const appurel = process.env.APP_URL || "http://localhost:";
-  if (!newAdmin)
-    HandError(500, "Error al crear el nuevo administrador, intenta de nuevo");
+  await admin.adminRepository.create({
+    nombre: nombre,
+    apellido: apellido,
+    usuario: usuario,
+    cedula: cedula,
+    correo: correo,
+    userId: newAdmin.id,
+  });
 
   await mailer({
-    to: email,
+    to: correo,
     subject: "Welcome to Zipy",
-    html: `<h1>An admin added you to zipy</h1>
-             <p>We are so excited to work with you! Please click the link below to activate your admin account:</p>
+    html: `<h1>Un administrador te ha añadido a nuestra App</h1>
+             <h4>La contraseña que se ta establecido es tu cedula</h4>
              <img src="https://i5.walmartimages.com/seo/Avanti-Press-Kitten-Rainbow-Funny-Humorous-Cat-Congratulations-Card_1d585531-d998-40f6-b245-fcfb3e29aca2.87e2f0022e73ba3e4fd26995970c829f.jpeg" alt="gato con arcoiris" width="200px" height="200px">
-             <p><a href="http://localhost:${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
+             <h5><a href="http://localhost:${process.env.PORT}/">Go to zipy</a></h5>`,
   });
 
   req.flash("success", "The account has been created!");
 
-  return res.redirect("/admins/home");
+  return res.redirect("/admin/admins/home");
 });
 
 export const editForm = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.userRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const id = req.params.id;
 
-  const adminId = req.params.id;
-  const admin = await admin.userRepository.findOne(adminId);
+  const data = await admin.adminRepository.findById(id);
 
-  if (!admin) HandError(404, "Administrador no encontrado");
+  const adm = data.dataValues;
 
-  return res.render("storeViews/admins/create", {
+  if (!adm) HandError(404, "Administrador no encontrado");
+
+  return res.render("adminViews/admins/create", {
     title: "Editing an Administrator",
     user: user,
     isEditing: true,
-    admin,
+    adm,
   });
 });
 
 export const edit = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.adminRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const { id } = req.params;
+  const { nombre, apellido, cedula, correo, usuario } = req.body;
 
-  const { nombre, apellido, cedula, correo, usuario, contrasenia } = req.body;
-
-  const hashedPassword = Hash(contrasenia);
-
-  const edited = await admin.adminRepository.create({
-    name: nombre,
-    lastName: apellido,
-    dominicanID: cedula,
-    email: correo,
-    user: usuario,
-    pass: hashedPassword,
+  const edited = await admin.adminRepository.update(id, {
+    nombre,
+    apellido,
+    cedula,
+    correo,
+    usuario,
   });
 
   if (!edited) HandError(500, "Error al editar el producto");
 
   req.flash("success", "The admin account has been edited!!");
 
-  return res.redirect("/admins/home");
+  return res.redirect("/admin/admins/home");
 });
 
 export const deleteA = HandControllersAsync(async (req, res) => {
-  const user = req;
-  const FindAdmin = await admin.adminRepository.findOne(user);
+  const { user } = req.session;
 
-  if (!FindAdmin) HandError(400, "No tienes permiso para acceder a esta ruta");
+  if (user.role !== "admin") {
+    HandError(403, "No tienes permisos para acceder a esta ruta");
+  }
+  const id = req.params.id;
 
-  const adminId = req.params.id;
-  const Admin = await admin.adminRepository.findOne(user);
+  const Admin = await admin.adminRepository.findById(id);
+  const userDele = await admin.userRepository.findById(id);
 
-  if (!Admin) HandError(404, "Administrador no encontrado");
+  if (!Admin && !userDele) {
+    HandError(404, "Administrador no encontrado");
+  }
 
-  await admin.adminRepository.delete(adminId);
+  await admin.userRepository.delete(id);
 
   req.flash("success", "The admin account has been deleted!!");
-
-  return res.redirect("/admins/home");
+  return res.redirect("/admin/admins/home");
 });

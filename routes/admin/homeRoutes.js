@@ -1,18 +1,20 @@
 import {
   index,
-  UsersListByRole,
   changeStatus,
+  ClientsList,
+  deliveriesList,
+  storesList,
 } from "../../controllers/admins/IndexController.js";
 import express from "express";
 
 const router = express.Router();
 
 router.get("/home", index);
-router.post("/changeUser/:id/status", changeStatus);
+router.get("/changeUser-status/:id", changeStatus);
 
 // manejo de listas de usuarios
-router.get("/clients", UsersListByRole("client", "Clients List"));
-router.get("/stores", UsersListByRole("store", "Stores List"));
-router.get("/deliveries", UsersListByRole("delivery", "Deliveries List"));
+router.get("/clients", ClientsList);
+router.get("/stores", storesList);
+router.get("/deliveries", deliveriesList);
 
 export default router;

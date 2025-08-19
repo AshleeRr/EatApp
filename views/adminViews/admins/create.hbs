@@ -1,0 +1,65 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-12 col-sm-5">
+        {{#if isEditing}}
+        <div class="card mt-5 shadow">
+            <div class="card-header text-center" style="background-color: #673d36; color:white">
+                <h3 class="card-title">Edita al Admin {{adm.nombre}}</h3>
+            </div>
+            <div class="card-body">
+                <form action="/admin/admins/edit/{{adm.id}}" method="POST" class="form">
+                    <label for="nombre" class="form-label mt-2" style="font-weight: bold;">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" id="nombre" value="{{adm.nombre}}" required>
+
+                    <label for="apellido" class="form-label mt-2" style="font-weight: bold;">Apellido</label>
+                    <input type="text" class="form-control" name="apellido" id="apellido" value="{{adm.apellido}}"
+                        required>
+
+                    <label for="usuario" class="form-label mt-2" style="font-weight: bold;">Usuario</label>
+                    <input type="text" class="form-control" name="usuario" id="usuario" value="{{adm.usuario}}"
+                        required>
+
+                    <label for="cedula" class="form-label mt-2" style="font-weight: bold;">Cedula</label>
+                    <input type="text" class="form-control" name="cedula" id="cedula" value="{{adm.cedula}}" required>
+
+                    <label for="correo" class="form-label mt-2" style="font-weight: bold;">Correo Electronico</label>
+                    <input type="text" class="form-control" name="correo" id="correo" value="{{adm.correo}}" required>
+
+                    <div class="float-end mt-2">
+                        <a href="/admin/admins/home" class="btn btn-warning">Volver</a>
+                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Editar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{else}}
+        <div class="card mt-5 shadow">
+            <div class="card-header text-center" style="background-color: #673d36; color:white">
+                <h3 class="card-title">Crea un Administrador</h3>
+            </div>
+            <div class="card-body">
+                <form action="/admin/admins/create" method="POST" class="form">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="nombre" id="nombre" required>
+
+                    <label for="apellido" class="form-label">Apellido</label>
+                    <input type="text" class="form-control" name="apellido" id="apellido" required>
+
+                    <label for="usuario" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" name="usuario" id="usuario" required>
+
+                    <label for="cedula" class="form-label">Cedula</label>
+                    <input type="text" class="form-control" name="cedula" id="cedula" required>
+
+                    <label for="correo" class="form-label">Correo Electronico</label>
+                    <input type="email" class="form-control" name="correo" id="correo" required>
+
+                    <div class="float-end mt-2">
+                        <a href="/admin/admins/home" class="btn btn-warning">Volver</a>
+                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>
