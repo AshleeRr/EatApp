@@ -2,4 +2,3 @@
 node_modules/
 .env
 .env.qa
-config/DB/EatApp.sqlite

@@ -25,10 +25,13 @@
                                             <h4 style="font-weight: bold; color: #000000;">${{precio}}</h4>
                                         </div>
                                         <div class="col col-md-6">
-                                            <a href="/client/storesList" class="float-end" title="agregar al carrito">
-                                                <img src="\assets\imgs\site\svg\add_shopping_cart_24dp_982B2B_FILL0_wght400_GRAD0_opsz24.svg"
-                                                    alt="">
-                                            </a>
+                                            <form action="/client/store/add-product/shopping-car" method="post">
+                                                <input type="hidden" name="idProducto" value="{{id}}">
+                                                <button class="float-end btn" type="submit" title="agregar al carrito">
+                                                    <img src="\assets\imgs\site\svg\add_shopping_cart_24dp_982B2B_FILL0_wght400_GRAD0_opsz24.svg"
+                                                        alt="">
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

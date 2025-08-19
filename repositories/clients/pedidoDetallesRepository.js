@@ -26,7 +26,7 @@ class OrderDetailsRepository extends GenericRepository {
     const productos = [];
 
     for (const item of carrito) {
-      const producto = await super.findOne(item.idProducto);
+      const producto = await super.findById(item.idProducto);
 
       if (producto) {
         const itemTotal = producto.precio * item.cantidad;
