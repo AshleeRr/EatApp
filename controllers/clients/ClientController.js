@@ -113,6 +113,7 @@ export async function PostProfile(req, res, next) {
       await context.User.update(
         {
           email: Email,
+          userName: UserName,
         },
         { where: { id: req.user.id } }
       );

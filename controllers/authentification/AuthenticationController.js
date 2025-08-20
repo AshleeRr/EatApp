@@ -269,6 +269,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
         userName: UserName,
         phoneNumber: PhoneNumber,
         userId: newUser.id,
+        estado: "disponible",
       });
     }
     req.flash(

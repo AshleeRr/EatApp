@@ -8,11 +8,6 @@ const DetallePedido = coneccion.define("DetallePedido", {
     primaryKey: true,
     autoIncrement: true,
   },
-  cantidad: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
-  },
   subtotal: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
