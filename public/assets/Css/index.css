@@ -88,6 +88,19 @@ select:focus {
     color: white;
 }
 
+/*dev*/
+.navbar-dev{
+    background-color: #af8b5c !important;
+    color: rgb(205, 203, 189);
+}
+.seccion-lateral-dev {
+  background-color: #af8b5c ;
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    justify-content: center;
+}
+
 /*client*/
 .navbar-client{
       background-color:  #5d1a1a !important;

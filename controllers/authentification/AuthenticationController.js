@@ -339,7 +339,7 @@ export async function PostForgotPassword(req, res, next) {
       subject: "Password Reset Request",
       html: `<p>Dear ${user.userName},</p>
              <p>You requested a password reset. Please click the link below to reset your password:</p>
-             <p><a href="${process.env.APP_URL}${process.env.PORT}/user/resetPassword/${token}">Reset Password</a>HERE</p>`,
+             <p><a href="${process.env.APP_URL}${process.env.PORT}/user/resetPassword/${token}">Reset Password</a> HERE</p>`,
     });
     req.flash("success", "The link has been sent to your email successfully");
     return res.redirect("/");

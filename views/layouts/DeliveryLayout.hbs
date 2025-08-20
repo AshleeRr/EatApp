@@ -5,69 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/assets/Css/Libraries/bootstrap/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
-  <link rel="stylesheet" href="/Css-Js/Css/index.css" />
+  <link rel="stylesheet" href="/assets/Css/index.css" />
   {{{_sections.styles}}}
   <title>{{title}}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
 </head>
 
-<body>
+<body class="body-dev">
   <header>
-    <nav class="navbar bg-dark border-bottom border-body navbar-expand-lg" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg bg-dark shadow navbar-dev" data-bs-theme="dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/delivery/home">Zipy</a>
+        <h3 class="m-3">ZIPY <img src="\assets\imgs\site\svg\dining_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+        </h3>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/delivery/home">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/delivery/profile">Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/user/logout"> LogOut{{#if hasUser}}({{user.email}}){{/if}} </a>
-            </li>
-          </ul>
-        </div>
       </div>
     </nav>
   </header>
-
-  <main class="container mt-5">
-    {{#if hasErrors}}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <ul>
-        {{#each errors}}
-        <li>{{this}}</li>
-        {{/each}}
-      </ul>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+  <div class="row" id="">
+    <div class="col-1 col-sm-1">
+      <section class="seccion-lateral-dev shadow top-fixed">
+        <ul class="navbar-nav nav-navbar sidebar">
+          <li class="nav-item">
+            <a class="nav-link" href="/delivery/home"><img
+                src="\assets\imgs\site\svg\home_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/delivery/profile"><img
+                src="\assets\imgs\site\svg\account_circle_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/logout">  <img
+                src="\assets\imgs\site\svg\chip_extraction_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt="">{{#if hasUser}}({{user.email}}){{/if}} </a>
+          </li>
+        </ul>
+      </section>
     </div>
-    {{/if}}
+    <div class="col-11 col-sm-11" style="padding-right: 30px;">
+      {{#if hasErrors}}
+      <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert">
+        <ul>
+          {{#each errors}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+      </div>
+      {{/if}}
 
-    {{#if hasSuccess}}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <ul>
-        {{#each success}}
-        <li>{{this}}</li>
-        {{/each}}
-      </ul>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+      {{#if hasSuccess}}
+      <div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+        <ul>
+          {{#each success}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+      </div>
+      {{/if}}
+      {{{body}}}
     </div>
-    {{/if}}
-    {{{body}}}
-  </main>
+  </div>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script type="module" src="/assets/JavaScript/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="/assets/JavaScript/Libraries/bootstrap/bootstrap.min.js"></script>
   {{{_sections.scripts}}}
 </body>
-
-
-
-</html>
