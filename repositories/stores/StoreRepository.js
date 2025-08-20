@@ -3,6 +3,7 @@ import Comercio from "../../models/comercio.js";
 import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 import GenericRepository from "../GenericRepository.js";
 
+import { Sequelize } from "sequelize";
 import formatear from "../../utils/helpers/dateFormat.js";
 const {
   TipoComercio,
@@ -96,7 +97,32 @@ class StoreRepository extends GenericRepository {
 
     const pedidos = await Pedido.findAll({
       where: { comercioId: comercio.id },
-      order: [["createdAt", "DESC"]],
+      order: [
+        [
+          Sequelize.literal(`
+          CASE estado 
+            WHEN 'pendiente' THEN 1 
+            WHEN 'en proceso' THEN 2 
+            WHEN 'completado' THEN 3 
+            ELSE 4 
+          END
+        `),
+          "ASC",
+        ],
+        ["createdAt", "DESC"],
+      ],
+      include: [
+        {
+          model: context.DetallePedido,
+          as: "detalles",
+          include: [
+            {
+              model: Producto,
+              as: "producto",
+            },
+          ],
+        },
+      ],
     });
 
     const pedido = pedidos.map((pedido) => {
@@ -105,6 +131,7 @@ class StoreRepository extends GenericRepository {
         ...dto,
         fecha: formatear(dto.fecha),
         original: dto.fecha || dto.createdAt,
+        detalles: pedido.detalles,
       };
     });
 

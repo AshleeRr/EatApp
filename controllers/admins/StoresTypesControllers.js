@@ -60,12 +60,17 @@ export const create = HandControllersAsync(async (req, res) => {
   const { name, description } = req.body;
   const logo = req.file;
 
-  const icono = await saveIMG(logo);
+  let icono;
 
+  if (logo) {
+    icono = await saveIMG(logo);
+  } else {
+    icono = await saveIMG("logo.jpg");
+  }
   const newType = await admin.storesTypesRepository.create({
     nombre: name,
     descripcion: description,
-    icono: icono,
+    icono,
   });
 
   if (!newType)
@@ -114,7 +119,13 @@ export const edit = HandControllersAsync(async (req, res) => {
   console.log("name :>> ", name);
   console.log("description :>> ", description);
   console.log("logo :>> ", logo);
-  const icono = await saveIMG(logo);
+  let icono;
+
+  if (logo) {
+    icono = await saveIMG(logo);
+  } else {
+    icono = await saveIMG("logo.jpg");
+  }
 
   const edited = await admin.storesTypesRepository.update(id, {
     nombre: name,

@@ -3,20 +3,31 @@
         <form action="/client/order/proccess-order" method="post">
             <div class="card shadow border-0 h-100">
                 <div class="card-body">
+                    {{#if direcciones.length}}
                     {{#each direcciones}}
                     <div class="row float-start w-100 g-4 aling-items-center justify-content-center"
                         style="border-bottom: 1px solid #eee; margin-top: 0.1px">
                         <div class="col col-md-12">
                             <small class="fw-bold "><input type="radio" name="idDireccion" value="{{id}}" required>
                                 {{nombre}}</small>
-                            <small class="text-muted"> {{descripcion}}</small>
+                            <small class="text-muted me-3"> {{descripcion}}</small>
                         </div>
                     </div>
                     {{/each}}
+                    {{else}}
+                    <div class="text-center">
+                        <img src="\assets\imgs\site\svg\error_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                        <h6 class="mt-3">No tienes direcciones agregadas</h6>
+                        <a href="/client/directions/home" class="btn mt-2"
+                            style="background-color: #982b2b; border: none; color: white;">
+                            Agregar una</a>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
 
-            <button class="btn float-end mt-2" type="submit" id="btnPedir" style="background-color: #982b2b;" disabled>
+            <button class="btn float-end mt-2" type="submit" id="btnPedir"
+                style="background-color: #982b2b; border: none; color: white;" disabled>
                 Realizar pedido</button>
         </form>
     </div>

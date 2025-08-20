@@ -20,7 +20,7 @@ export const index = HandControllersAsync(async (req, res) => {
     await StoreRepository.CategoryRepository.getCategoriesByCommerceWithProducts(
       id
     );
-  const categorias = dataCat.map((cat) => cat.toJSON());
+  // const categorias = dataCat.map((cat) => cat.toJSON());
 
   const carrito = req.session.carrito || [];
 
@@ -30,6 +30,20 @@ export const index = HandControllersAsync(async (req, res) => {
       await ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
     factura = facturaData.factura;
   }
+  const productosEnCarrito = new Set(carrito.map((item) => item.producto.id));
+
+  const categorias = dataCat.map((cat) => {
+    const categoria = cat.toJSON();
+    if (categoria.productos) {
+      categoria.productos = categoria.productos.map((producto) => ({
+        ...producto,
+        inCart: productosEnCarrito.has(producto.id),
+      }));
+    }
+    return categoria;
+  });
+
+  console.log("carrito :>> ", carrito);
 
   res.render("clientViews/store/index", {
     title: "Catalogo de productos",

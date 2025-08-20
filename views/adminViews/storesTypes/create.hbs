@@ -9,7 +9,7 @@
                 <form action="/admin/storesTypes/edit/{{type.id}}" method="POST" class="form"
                     enctype="multipart/form-data">
                     <label for="logo" class="form-label mt-2" style="font-weight: bold;">Icono</label>
-                    <input type="file" class="form-control" name="logo" id="logo" required>
+                    <input type="file" class="form-control" name="logo" id="logo">
 
                     <label for="name" class="form-label mt-2" style="font-weight: bold;">Nombre</label>
                     <input type="text" class="form-control" name="name" id="name" value="{{type.nombre}}" required>
@@ -33,7 +33,7 @@
             <div class="card-body">
                 <form action="/admin/storesTypes/create" method="POST" class="form" enctype="multipart/form-data">
                     <label for="logo" class="form-label mt-2" style="font-weight: bold;">Icono</label>
-                    <input type="file" class="form-control" name="logo" id="logo" required>
+                    <input type="file" class="form-control" name="logo" id="logo">
 
                     <label for="name" class="form-label mt-2" style="font-weight: bold;">Nombre</label>
                     <input type="text" class="form-control" name="name" id="name" required>

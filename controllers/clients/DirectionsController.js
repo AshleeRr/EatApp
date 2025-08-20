@@ -1,18 +1,18 @@
 import context from "../../config/context/AppContext.js";
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 
 export async function GetAdresses(req, res) {
   try {
     const adresses = await context.Direccion.findAll({
-      where: { usuarioId: req.session.user.id }
+      where: { usuarioId: req.session.user.id },
     });
 
-    const adressesPlain = adresses.map((a) => a.get({plain:true}));
+    const adressesPlain = adresses.map((a) => a.get({ plain: true }));
 
     res.render("clientViews/adressesViews/home", {
       pageTitle: "My Adresses",
       adressesList: adressesPlain,
-      hasAdresses: adressesPlain.length > 0
+      hasAdresses: adressesPlain.length > 0,
     });
   } catch (error) {
     console.log(error);
@@ -24,7 +24,7 @@ export async function GetAdresses(req, res) {
 export async function GetCreateAdress(req, res) {
   res.render("clientViews/adressesViews/create", {
     pageTitle: "Add Adress",
-    editMode: false
+    editMode: false,
   });
 }
 
@@ -36,31 +36,30 @@ export async function PostCreateAdress(req, res) {
     const existingAddress = await context.Direccion.findOne({
       where: {
         usuarioId: req.user.id,
-        [Op.or]: [
-          { nombre: Name },
-          { descripcion: Description }
-        ]
-      }
+        [Op.or]: [{ nombre: Name }, { descripcion: Description }],
+      },
     });
-    
-    if(existingAddress){
-      req.flash("errors", "You already have a direction with this informations");
+
+    if (existingAddress) {
+      req.flash(
+        "errors",
+        "You already have a direction with this informations"
+      );
       return res.redirect("/client/directions/home");
     }
 
     await context.Direccion.create({
       nombre: Name,
       descripcion: Description,
-      usuarioId: req.user.id
+      usuarioId: req.user.id,
     });
 
     req.flash("success", "Adress created successfully");
     res.redirect("/client/directions/home");
-
   } catch (error) {
     console.log(error);
     req.flash("errors", "Error creating adress");
-    res.redirect("/client/directions/create"); 
+    res.redirect("/client/directions/create");
   }
 }
 
@@ -69,7 +68,7 @@ export async function GetEditAdress(req, res) {
     req.user = req.session.user;
     const id = req.params.adressId;
     const directionResult = await context.Direccion.findOne({
-      where: {id, usuarioId: req.user.id}
+      where: { id, usuarioId: req.user.id },
     });
 
     if (!directionResult) {
@@ -78,15 +77,15 @@ export async function GetEditAdress(req, res) {
     }
     const adress = directionResult.dataValues;
     const adressResult = await context.Direccion.findAll({
-      where:{usuarioId: req.user.id}
+      where: { usuarioId: req.user.id },
     });
     const adressList = adressResult.map((a) => a.dataValues);
     res.render("clientViews/adressesViews/create", {
       pageTitle: "Edit my Direction",
       directions: adressList,
-      hasDirections: adressList.length > 0, 
+      hasDirections: adressList.length > 0,
       editMode: true,
-      adress
+      adress,
     });
   } catch (error) {
     console.log(error);
@@ -101,18 +100,19 @@ export async function PostEditAdress(req, res) {
     const { Name, Description, AdressId } = req.body;
 
     const directionResult = await context.Direccion.findOne({
-      where: {id: AdressId, usuarioId: req.user.id}
+      where: { id: AdressId, usuarioId: req.user.id },
     });
 
-    if(!directionResult){
+    if (!directionResult) {
       req.flash("An error ocurred trying to access this direction");
-      return res.redirect(
-        "/client/directions/home");
+      return res.redirect("/client/directions/home");
     }
-    await context.Direccion.update({ 
-      nombre: Name, 
-      descripcion: Description 
-    },{ where: { id: AdressId } }
+    await context.Direccion.update(
+      {
+        nombre: Name,
+        descripcion: Description,
+      },
+      { where: { id: AdressId } }
     );
 
     req.flash("success", "Adress updated successfully");
@@ -133,13 +133,25 @@ export async function Delete(req, res) {
       where: { id, usuarioId: req.user.id },
     });
 
-    if(!direction){
-      req.flash("An error ocurred trying to delete this direction"); 
+    if (!direction) {
+      req.flash("An error ocurred trying to delete this direction");
+      return res.redirect("/client/directions/home");
+    }
+
+    const ubicacion = await context.Pedido.findAll({
+      where: { direccionId: id },
+    });
+
+    if (ubicacion.length > 0) {
+      req.flash(
+        "errors",
+        "No puedes eliminar esta dirección porque tiene pedidos asociados"
+      );
       return res.redirect("/client/directions/home");
     }
 
     await context.Direccion.destroy({
-      where: { id, usuarioId: req.user.id }
+      where: { id, usuarioId: req.user.id },
     });
 
     req.flash("success", "Adress deleted successfully");
@@ -150,4 +162,3 @@ export async function Delete(req, res) {
     res.redirect("/client/directions/home");
   }
 }
-
