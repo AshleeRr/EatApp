@@ -2,3 +2,8 @@
 node_modules/
 .env
 .env.qa
+/.vs/EatApp/FileContentIndex
+/.vs/EatApp/v17
+/.vs/EatApp/config
+/.vs/slnx.sqlite-journal
+/.vs/slnx.sqlite
