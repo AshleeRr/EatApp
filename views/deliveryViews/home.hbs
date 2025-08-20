@@ -1,11 +1,7 @@
-<div class="row justify-content-center mb-4">
-  <div class="col-auto">
-    <h4 class="text-center">Orders</h4>
-  </div>
-</div>
+
 
 {{#if hasOrders}}
-<div class="row justify-content-center gap-3">
+<div class="row justify-content-center gap-3 mt-4">
   {{#each ordersList}}
     <a href="/delivery/orders/{{this.id}}/details" 
        class="text-decoration-none col-12 col-md-8">
@@ -43,7 +39,7 @@
 </div>
 
 {{else}}
-<div class="row d-flex justify-content-center">
+<div class="row d-flex justify-content-center mt-4">
   <div class="col-12 col-md-8 col-lg-6">
     <div class="alert alert-dark text-center shadow-sm p-4 rounded" role="alert" style="font-size: 1.1rem;">
       <i class="bi bi-info-circle me-2 fs-4"></i>
