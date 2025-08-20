@@ -197,7 +197,7 @@ export async function PostSignUpBusiness(req, res, next) {
       subject: "Welcome to Zipy",
       html: `<h1>Thank you for sign up your business,</h1>
              <p>We are so excited to work with you! Please click the link below to activate your account:</p>
-             <img src="https://i5.walmartimages.com/seo/Avanti-Press-Kitten-Rainbow-Funny-Humorous-Cat-Congratulations-Card_1d585531-d998-40f6-b245-fcfb3e29aca2.87e2f0022e73ba3e4fd26995970c829f.jpeg" alt="gato con arcoiris" width="200px" height="200px">
+             <img src="https://i.pinimg.com/736x/2f/f0/4a/2ff04a076d7d44d978f64b5321e424ed.jpg" alt="Zipy Logo" width="350px" height="200px">
              <p class="btn btn-dark">
              <a href="${process.env.APP_URL}${process.env.PORT}/user/activate/${token}">Activate Account</a></p>`,
     });
@@ -291,7 +291,9 @@ export async function PostSignUpClient_Delivery(req, res, next) {
                 <p> Please click the link below so you can activate your account and enjoy:</p>
                 <p><a href="${process.env.APP_URL}${
         process.env.PORT
-      }/user/activate/${token}">Activate Account</a></p>`,
+      }/user/activate/${token}">Activate Account</a></p>
+      <img src="https://i.pinimg.com/736x/2f/f0/4a/2ff04a076d7d44d978f64b5321e424ed.jpg" alt="Zipy Logo" width="350px" height="200px">`
+      ,
     });
     return res.redirect("/");
   } catch (error) {
