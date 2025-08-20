@@ -8,6 +8,8 @@ import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { mailer } from "../../services/mailer.js";
 import { Hash } from "../../services/hasher.js";
 import { generateToken } from "../../services/generateToken.js";
+import adminRepository from "../../repositories/admin/adminRepository.js";
+import { where } from "sequelize";
 
 export const index = HandControllersAsync(async (req, res) => {
   const { user } = req.session;
@@ -105,6 +107,14 @@ export const editForm = HandControllersAsync(async (req, res) => {
   }
   const id = req.params.id;
 
+  const usuario = await admin.adminRepository.findOne({
+    where: { userId: id },
+  });
+
+  if (user.id === usuario.id) {
+    req.flash("errors", "No puedes editar el usuario logueado");
+    return res.redirect("/admin/admins/home");
+  }
   const data = await admin.adminRepository.findById(id);
 
   const adm = data.dataValues;
@@ -151,6 +161,14 @@ export const deleteA = HandControllersAsync(async (req, res) => {
   }
   const id = req.params.id;
 
+  const usuario = await admin.adminRepository.findOne({
+    where: { userId: id },
+  });
+
+  if (user.id === usuario.id) {
+    req.flash("errors", "No puedes eliminar el usuario logueado");
+    return res.redirect("/admin/admins/home");
+  }
   const Admin = await admin.adminRepository.findById(id);
   const userDele = await admin.userRepository.findById(id);
 

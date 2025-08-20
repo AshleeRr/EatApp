@@ -42,15 +42,20 @@
                 src="\assets\imgs\site\svg\account_circle_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user/logout">  <img
-                src="\assets\imgs\site\svg\chip_extraction_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt="">{{#if hasUser}}({{user.email}}){{/if}} </a>
+            <a class="nav-link" href="/user/logout"> <img
+                src="\assets\imgs\site\svg\chip_extraction_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt="">{{#if
+              hasUser}}({{user.email}}){{/if}} </a>
           </li>
         </ul>
       </section>
     </div>
-    <div class="col-11 col-sm-11" style="padding-right: 30px;">
+    <div class="col-11 col-sm-11 " style="padding-right: 30px; ">
+      {{{body}}}
+    </div>
+
+    <div class="position-fixed top-0 end-0 m-5 pt-3" style="z-index: 9999; max-width: 350px">
       {{#if hasErrors}}
-      <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert">
+      <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert" id="alerta">
         <ul>
           {{#each errors}}
           <li>{{this}}</li>
@@ -61,7 +66,7 @@
       {{/if}}
 
       {{#if hasSuccess}}
-      <div class="alert alert-success alert-dismissible fade show mt-5" role="alert">
+      <div class="alert alert-success alert-dismissible fade show  mt-5" role="alert" id="alerta">
         <ul>
           {{#each success}}
           <li>{{this}}</li>
@@ -70,7 +75,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
       </div>
       {{/if}}
-      {{{body}}}
     </div>
   </div>
 
