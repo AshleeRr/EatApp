@@ -1,8 +1,8 @@
 <div class="row d-flex justify-content-center">
     <div class="col-12 col-sm-5">
         {{#if isEditing}}
-        <div class="card mt-5 shadow">
-            <div class="card-header text-center" style="background-color: #673d36; color:white">
+        <div class="card mt-5 shadow" style="border: none;">
+            <div class="card-header text-center" style="background-color: wheat;">
                 <h3 class="card-title">Edita el producto {{product.nombre}}</h3>
             </div>
             <div class="card-body">
@@ -36,14 +36,14 @@
 
                     <div class="float-end mt-2">
                         <a href="/store/product/index" class="btn btn-warning">Volver</a>
-                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Editar</button>
+                        <button class="btn " style="background-color: wheat " type="subtmit">Editar</button>
                     </div>
                 </form>
             </div>
         </div>
         {{else}}
-        <div class="card mt-5 shadow">
-            <div class="card-header text-center" style="background-color: #673d36; color:white">
+        <div class="card mt-5 shadow" style="border: none;">
+            <div class="card-header text-center" style="background-color: wheat ;">
                 <h3 class="card-title">Nuevo producto</h3>
             </div>
             <div class="card-body">
@@ -75,7 +75,7 @@
 
                     <div class="float-end mt-2">
                         <a href="/store/product/index" class="btn btn-warning">Volver</a>
-                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Crear</button>
+                        <button class="btn " style="background-color: wheat " type="subtmit">Crear</button>
                     </div>
                 </form>
             </div>

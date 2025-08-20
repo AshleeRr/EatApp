@@ -22,7 +22,7 @@ class ClientRepository extends GenericRepository {
       include: [
         {
           model: Pedido,
-          as: "pedidosCliente",
+          as: "Pedidos",
         },
         {
           model: User,

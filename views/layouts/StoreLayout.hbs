@@ -25,43 +25,46 @@
 
     <div class="row" id="fila-principal">
         <div class="col-1 col-sm-1">
-            <section class="seccion-lateral shadow top-fixed">
+            <section class="seccion-lateral-store shadow top-fixed">
                 <ul class="nav-navbar">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/store/home">
-                            <img src="\assets\imgs\site\svg\home_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                            <img src="\assets\imgs\site\svg\home_50dp_F3F3F3_FILL1_wght400_GRAD0_opsz48.svg" alt="">
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/store/mycomerce">
-                            <img src="\assets\imgs\site\svg\shield_person_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg"
+                            <img src="\assets\imgs\site\svg\account_circle_50dp_F3F3F3_FILL1_wght400_GRAD0_opsz48.svg"
                                 alt="">
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/store/product/index">
-                            <img src="\assets\imgs\site\svg\shopping_bag_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg"
+                            <img src="\assets\imgs\site\svg\local_mall_50dp_F3F3F3_FILL1_wght400_GRAD0_opsz48.svg"
                                 alt="">
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/store/category/index">
-                            <img src="\assets\imgs\site\svg\category_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+                            <img src="\assets\imgs\site\svg\category_50dp_F3F3F3_FILL1_wght400_GRAD0_opsz48.svg" alt="">
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="/user/logout">
-                            <img src="\assets\imgs\site\svg\logout_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg"
+                            <img src="\assets\imgs\site\svg\exit_to_app_50dp_F3F3F3_FILL1_wght400_GRAD0_opsz48.svg"
                                 alt="">{{#if hasUser}}({{user.email}}){{/if}}
                         </a>
                     </li>
                 </ul>
             </section>
         </div>
-        <div class="col-11 col-sm-11 mt-5" style="padding-right: 30px;">
+        <div class="col-11 col-sm-11 " style="padding-right: 30px;">
+            {{{body}}}
+        </div>
+        <div class="position-fixed top-0 end-0 m-5" style="max-width: 350px z-index: 9999;">
             {{#if hasErrors}}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert" id="alerta">
                 <ul>
                     {{#each errors}}
                     <li>{{this}}</li>
@@ -72,7 +75,7 @@
             {{/if}}
 
             {{#if hasSuccess}}
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show  mt-5" role="alert" id="alerta">
                 <ul>
                     {{#each success}}
                     <li>{{this}}</li>
@@ -81,7 +84,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
             </div>
             {{/if}}
-            {{{body}}}
         </div>
     </div>
     <script type="module" src="/assets/JavaScript/index.js"></script>

@@ -1,6 +1,8 @@
-<div class="card mt-5 shadow">
-    <div class="card-header text-center" style="background-color: #673d36; color:white">
-        <h3 class="card-title">My store perfil</h3>
+<div class="card shadow mt-5 w-75 m-auto" style="background-color: #fffaf0; border: none; ">
+    <div class="card-header" style="background-color: wheat;">
+        <div class="card-title" style="border: none;">
+            <h3 class="text-center fw-bold">PERFIL DEL COMERCIO</h3>
+        </div>
     </div>
     <div class="card-body">
         <form action="/store/mycomerce" method="POST" class="form" enctype="multipart/form-data">
@@ -8,48 +10,49 @@
                 <div class="col-md-6">
                     <label for="name" class="form-label">Nombre del comercio</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <span class="input-group-text" style="border: none;"><i class="bi bi-person"></i></span>
                         <input type="text" class="form-control" id="nameame" name="nameame"
-                            placeholder="Enter your business name" value="{{store.name}}" required>
+                            placeholder="Enter your business name" value="{{store.name}}" required style="border: none">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <label for="imagen" class="form-label">Logo del comercio</label>
-                    <input type="file" class="form-control" id="imagen" name="imagen" required="required">
+                    <input type="file" class="form-control" id="imagen" name="imagen" style="border: none">
                 </div>
             </div>
             <div class="mb-3">
                 <label for="phone" class="form-label">Telefono</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                    <span class="input-group-text" style="border: none;"><i class="bi bi-telephone-fill"></i></span>
                     <input type="phoneNumber" class="form-control" id="phoneNumber" placeholder="18297512563"
-                        name="phoneNumber" value="{{store.phoneNumber}}" required="required">
+                        name="phoneNumber" value="{{store.phoneNumber}}" required="required" style="border: none">
                 </div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Correo</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                    <span class="input-group-text" style="border: none;"><i class="bi bi-envelope"></i></span>
                     <input type="email" class="form-control" id="email" name="email" placeholder=""
-                        value="{{store.email}}" required="required">
+                        value="{{store.email}}" required="required" style="border: none">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="opening" class="form-label">Hora de apertura</label>
                     <input type="time" class="form-control" id="opening" name="opening" value="{{store.opening}}"
-                        required="required">
+                        required="required" style="border: none">
                 </div>
                 <div class="col-md-6">
                     <label for="closing" class="form-label">Hora de cierre</label>
                     <input type="time" class="form-control" id="closing" name="closing" value="{{store.closing}}"
-                        required="required">
+                        required="required" style="border: none">
                 </div>
             </div>
             <div class="float-end mt-2">
                 <a href="/store/home" class="btn btn-warning">Volver</a>
-                <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Editar</button>
+                <button class="btn" style="background-color: #6f4132; color:white" type="subtmit">Editar</button>
             </div>
         </form>
     </div>
+</div>
 </div>

@@ -56,7 +56,7 @@ export const ClientsList = HandControllersAsync(async (req, res) => {
   const clients = clientsdata.map((a) => a.dataValues);
 
   const clientes = clients.map((cliente) => {
-    const cantidad = cliente.pedidosCliente?.length || 0;
+    const cantidad = cliente.Pedidos?.length || 0;
 
     return {
       id: cliente.id,
@@ -89,8 +89,9 @@ export const deliveriesList = HandControllersAsync(async (req, res) => {
   const deliveriesdata = await DeliveryRepository.findAll();
   const deliveries = deliveriesdata.map((a) => a.dataValues);
   const deliveriesProcessed = deliveries.map((delivery) => {
-    const cantidadEntregas = delivery.entregasRealizadas?.length || 0;
+    const cantidadEntregas = delivery.Pedidos?.length || 0;
 
+    console.log("delivery :>> ", delivery);
     return {
       id: delivery.id,
       nombre: delivery.name,
@@ -123,7 +124,9 @@ export const storesList = HandControllersAsync(async (req, res) => {
   const storesdata = await StoreRepository.StoreRepository.getDataStore();
   const stores = storesdata.map((a) => a.dataValues);
   const storesProcessed = stores.map((store) => {
-    const cantidadPedidos = store.pedidosComercio?.length || 0;
+    const cantidadPedidos = store.Pedidos?.length || 0;
+
+    console.log("store :>> ", store);
 
     return {
       id: store.id,
@@ -155,16 +158,22 @@ export const storesList = HandControllersAsync(async (req, res) => {
 
 export const changeStatus = HandControllersAsync(async (req, res) => {
   const { id } = req.params;
-  const { user: sessionUser } = req.session;
-
+  const { user } = req.session;
   const usuario = await AdminRepository.userRepository.findById(id);
 
+  if (parseInt(usuario.id) === parseInt(user.id)) {
+    req.flash("errors", "No puedes desactivar el usuario logueado");
+    return res.redirect("/admin/admins/home");
+  }
   const update = await AdminRepository.userRepository.update(id, {
     isActive: !usuario.isActive,
   });
 
   if (!update) {
-    HandError(500, "Hubo un error tratando de cambiar el estado del usuario");
+    req.flash(
+      "errors",
+      "Hubo un error tratando de cambiar el estado del usuario"
+    );
   }
 
   req.flash(
@@ -179,6 +188,8 @@ export const changeStatus = HandControllersAsync(async (req, res) => {
       return res.redirect("/admin/dashboard/deliveries");
     case "store":
       return res.redirect("/admin/dashboard/stores");
+    case "admin":
+      return res.redirect("/admin/admins/home");
     default:
       return res.redirect("/admin/dashboard/home");
   }

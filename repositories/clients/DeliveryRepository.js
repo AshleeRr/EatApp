@@ -20,7 +20,7 @@ class DeliveryRepository extends GenericRepository {
         },
         {
           model: context.Pedido,
-          as: "pedidosDelivery",
+          as: "Pedidos",
           attributes: ["id"],
         },
       ],
@@ -41,13 +41,9 @@ class DeliveryRepository extends GenericRepository {
   });
   updateDeliveryStatus = HandRepositoriesAsync(
     async (deliveryId, estado, options = {}) => {
-      return await super.update(
-        deliveryId,   
-      { estado },   
-      options          
-    );
-  }
-);
+      return await super.update(deliveryId, { estado }, options);
+    }
+  );
   getAvailableDeliveries = HandRepositoriesAsync(async () => {
     return await super.findAll({
       where: {

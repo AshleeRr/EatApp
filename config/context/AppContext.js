@@ -35,9 +35,9 @@ Pedido.belongsTo(Comercio, { foreignKey: "comercioId", as: "comercio" });
 Pedido.belongsTo(Delivery, { foreignKey: "deliveryId", as: "delivery" });
 Pedido.belongsTo(Direccion, { foreignKey: "direccionId", as: "direccion" });
 
-Client.hasMany(Pedido, { foreignKey: "clienteId", as: "pedidosCliente" });
-Comercio.hasMany(Pedido, { foreignKey: "comercioId", as: "pedidos" });
-Delivery.hasMany(Pedido, { foreignKey: "deliveryId", as: "pedidosDelivery" });
+Client.hasMany(Pedido, { foreignKey: "clienteId", as: "Pedidos" });
+Comercio.hasMany(Pedido, { foreignKey: "comercioId", as: "Pedidos" });
+Delivery.hasMany(Pedido, { foreignKey: "deliveryId", as: "Pedidos" });
 Direccion.hasMany(Pedido, {
   foreignKey: "direccionId",
   as: "pedidosDireccion",

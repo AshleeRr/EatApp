@@ -50,4 +50,14 @@ $(document).ready(function () {
       boton.disabled = false;
     });
   });
+
+  setTimeout(() => {
+    const laalerta = document.getElementById("alerta");
+    if (laalerta) {
+      laalerta.classList.remove("show");
+      laalerta.addEventListener("transitionend", () => {
+        laalerta.remove();
+      });
+    }
+  }, 3000);
 });

@@ -2,7 +2,7 @@
     <div class="col-12 col-sm-5">
         {{#if isEditing}}
         <div class="card mt-5 shadow">
-            <div class="card-header text-center" style="background-color: #673d36; color:white">
+            <div class="card-header text-center" style="background-color: wheat ; color:white">
                 <h3 class="card-title">Edita la categoria {{categorias.nombre}}</h3>
             </div>
             <div class="card-body">
@@ -17,15 +17,15 @@
 
                     <div class="float-end mt-2">
                         <a href="/store/category/index" class="btn btn-warning">Volver</a>
-                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Editar</button>
+                        <button class="btn" style="background-color: wheat ;" type="subtmit">Editar</button>
                     </div>
                 </form>
             </div>
         </div>
         {{else}}
-        <div class="card mt-5 shadow">
-            <div class="card-header text-center" style="background-color: #673d36; color:white">
-                <h3 class="card-title">Nuevo categoria</h3>
+        <div class="card mt-5 shadow" style="border: none;">
+            <div class="card-header text-center" style="background-color: wheat ; border: none;">
+                <h3 class="card-title">Nueva categoria</h3>
             </div>
             <div class="card-body">
                 <form action="/store/category/create" method="POST" class="form">
@@ -38,7 +38,7 @@
 
                     <div class="float-end mt-2">
                         <a href="/store/category/index" class="btn btn-warning">Volver</a>
-                        <button class="btn btn-dark" style="background-color: #673d36;" type="subtmit">Crear</button>
+                        <button class="btn" style="background-color: wheat ;" type="subtmit">Crear</button>
                     </div>
                 </form>
             </div>

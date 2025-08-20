@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 body {
   margin: 0;
   padding: 0;
   position: relative;
   height: 100vh;
   overflow-x: hidden;
-  font-family: "Poppins", sans-serif;
+  font-family: "Oswald", sans-serif;
 }
 .btn-volver {
     color: white;
@@ -73,19 +75,18 @@ select:focus {
     border-color: #000000a5 !important;
     box-shadow: 0 0 5px #00000090!important;
 }
-/*home*/
 
-.contenedor-home{
-  width: 300px;
-  max-height: 600px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-}
 /*Store*/
 .navbar-store {
-    background-color: #FDBF50 !important;
+    background-color: #6f4132 !important;
     color: white;
+}
+.seccion-lateral-store {
+  background-color:#6f4132  ;
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    justify-content: center;
 }
 
 /*client*/
@@ -106,7 +107,6 @@ select:focus {
     font-weight: bold !important;
 }
 
-
 /* admin */
 .seccion-lateral-admin {
   background-color: #2A2C41;
@@ -119,8 +119,6 @@ select:focus {
     background-color: #2A2C41 !important;
     color: white;
 }
-
-
 
 
 /* Colores que podria usar como paleta */

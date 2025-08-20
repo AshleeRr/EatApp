@@ -47,7 +47,7 @@ class StoreRepository extends GenericRepository {
         },
         {
           model: context.Pedido,
-          as: "pedidos",
+          as: "Pedidos",
           attributes: ["id"],
         },
       ],

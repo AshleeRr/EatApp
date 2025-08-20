@@ -28,9 +28,12 @@
     </nav>
   </header>
 
-  <main class="container mt-5 pt-5">
+  <div class="col-12 col-sm-12 mt-5 pt-5">
+    {{{body}}}
+  </div>
+  <div class="position-fixed top-0 end-0 m-5" style="max-width: 350px z-index: 9999;">
     {{#if hasErrors}}
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show mt-5" role="alert" id="alerta">
       <ul>
         {{#each errors}}
         <li>{{this}}</li>
@@ -41,7 +44,7 @@
     {{/if}}
 
     {{#if hasSuccess}}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <div class="alert alert-success alert-dismissible fade show  mt-5" role="alert" id="alerta">
       <ul>
         {{#each success}}
         <li>{{this}}</li>
@@ -50,9 +53,9 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
     </div>
     {{/if}}
-    {{{body}}}
-  </main>
+  </div>
 
+  <script type="module" src="/assets/JavaScript/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>

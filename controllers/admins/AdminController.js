@@ -18,11 +18,26 @@ export const index = HandControllersAsync(async (req, res) => {
   const admins = await admin.adminRepository.getAllAdmins();
   const data = admins.map((a) => a.dataValues);
 
+  const ids = data.map((a) => a.userId);
+
+  const dataU = await admin.userRepository.findAll({ where: { id: ids } });
+  console.log("data users :>> ", dataU);
+
+  const users = dataU.map((data) => data.dataValues);
+  const adminsUsers = data.map((admin) => {
+    const user = users.find((u) => u.id === admin.userId);
+    return {
+      ...admin,
+      user,
+    };
+  });
+
+  console.log("adminUsers :>> ", adminsUsers);
+
   return res.render("adminViews/admins/index", {
     title: "Administers",
-    user,
-    admins: data,
     hasadmins: data.length > 0,
+    admins: adminsUsers,
   });
 });
 

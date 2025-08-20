@@ -1,41 +1,37 @@
-<div class="row mt-5">
-    <div class="text-center">
-        <h1>Productos del comercio</h1>
-    </div>
-</div>
+<h3 class="text-center mb-5 mt-5 fw-bold">PRODUCTOS DEL COMERCIO</h3>
 
-<div class="row">
+<div class="row w-75 m-auto">
     <div class="col-12 col-sm-4 mb-3 mt-3">
-        <a href="/store/product/create" class="btn btn-dark" style="background-color: #9a3950;">Agregar
+        <a href="/store/product/create" class="btn" style="background-color: wheat">Agregar
             <i class="bi bi-plus-circle"></i></a>
     </div>
 </div>
 
 <div style="max-height: 500px; overflow-y: auto;">
-    <table class="table table-striped table-bordered table-hover text-center"
+    <table class="table text-center w-75 m-auto"
         style="border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(36,45,80,0.08);">
         {{#if hasProducts}}
         <div class="row">
             <thead>
                 <tr>
-                    <th style="background-color: #982b2b; color: white; border: none;">Imagen</th>
-                    <th style="background-color: #982b2b; color: white; border: none;">Nombre</th>
-                    <th style="background-color: #982b2b; color: white; border: none;">Descripcion</th>
-                    <th style="background-color: #982b2b; color: white; border: none;">Precio</th>
-                    <th style="background-color: #982b2b; color: white; border: none;">Categoria</th>
-                    <th style="background-color: #982b2b; color: white; border: none;">Acciones</th>
+                    <th style="background-color: wheat ; color: black; border: none;">Imagen</th>
+                    <th style="background-color: wheat ; color: black; border: none;">Nombre</th>
+                    <th style="background-color: wheat ; color: black; border: none;">Descripcion</th>
+                    <th style="background-color: wheat ; color: black; border: none;">Precio</th>
+                    <th style="background-color: wheat ; color: black; border: none;">Categoria</th>
+                    <th style="background-color: wheat ; color: black; border: none;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each products}}
                 <tr style="border: none; consulta-row">
-                    <td style="border: none; background: #f8fafc;"><img src="{{this.imagen}}" alt="" width="60px"
+                    <td style="border: none; background: #fffaf0;"><img src="{{this.imagen}}" alt="" width="60px"
                             height="60px"></td>
-                    <td style=" border: none; background: #f8fafc;">{{nombre}}</td>
-                    <td style="border: none; background: #f8fafc;">{{descripcion}}</td>
-                    <td style="border: none; background: #f8fafc;">{{precio}}</td>
-                    <td style="border: none; background: #f8fafc;">{{categoria.dataValues.nombre}}</td>
-                    <td style="border: none; background: #f8fafc;">
+                    <td style=" border: none; background: #fffaf0">{{nombre}}</td>
+                    <td style="border: none; background: #fffaf0">{{descripcion}}</td>
+                    <td style="border: none; background: #fffaf0">{{precio}}</td>
+                    <td style="border: none; background: #fffaf0">{{categoria.dataValues.nombre}}</td>
+                    <td style="border: none; background: #fffaf0">
                         <form action="/store/product/delete" method="POST" class="form-eliminar">
                             <a href="/store/product/edit/{{id}}" class="btn btn-warning me-2">
                                 <i class="bi bi-pencil-square"></i>
