@@ -1,16 +1,21 @@
+<a href="/client/home" class="btn mt-2" style="float: inline-start;">
+  <img src="\assets\imgs\site\svg\arrow_back_ios_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+</a>
 <div class="container mt-5" style="max-width: 700px;">
   <h3>My Profile</h3>
   <div class="accordion" id="profileAccordion">
     <div class="accordion-item">
       <h3 class="accordion-header" id="headingProfile">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfile" aria-expanded="false" aria-controls="collapseProfile">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapseProfile" aria-expanded="false" aria-controls="collapseProfile">
           Update Profile
         </button>
       </h3>
-      <div id="collapseProfile" class="accordion-collapse collapse" aria-labelledby="headingPorfile" data-bs-parent="#profileAccordion">
+      <div id="collapseProfile" class="accordion-collapse collapse" aria-labelledby="headingPorfile"
+        data-bs-parent="#profileAccordion">
         <div class="accordion-body">
           <form action="/client/profile" method="POST" enctype="multipart/form-data">
-            
+
             <div class="row mb-3">
               <div class="col-md-6">
                 <label for="firstName" class="form-label">Name</label>
@@ -68,18 +73,21 @@
 
     <div class="accordion-item">
       <h3 class="accordion-header" id="headingPassword">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePassword" aria-expanded="false" aria-controls="collapsePassword">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapsePassword" aria-expanded="false" aria-controls="collapsePassword">
           Update Password
         </button>
       </h3>
-      <div id="collapsePassword" class="accordion-collapse collapse" aria-labelledby="headingPasswrod" data-bs-parent="#profileAccordion">
+      <div id="collapsePassword" class="accordion-collapse collapse" aria-labelledby="headingPasswrod"
+        data-bs-parent="#profileAccordion">
         <div class="accordion-body">
           <form action="/user/changePassword" method="POST">
             <div class="mb-3">
               <label for="password" class="form-label">Current Password</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                <input type="password" class="form-control" id="password" name="CurrentPassword" placeholder="Enter your password" required>
+                <input type="password" class="form-control" id="password" name="CurrentPassword"
+                  placeholder="Enter your password" required>
               </div>
             </div>
 
@@ -87,15 +95,17 @@
               <label for="confirmPassword" class="form-label">New Password</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                <input type="password" class="form-control" id="confirmPassword" name="NewPassword" placeholder="Confirm your password" required>
+                <input type="password" class="form-control" id="confirmPassword" name="NewPassword"
+                  placeholder="Confirm your password" required>
               </div>
             </div>
 
-             <div class="mb-3">
+            <div class="mb-3">
               <label for="confirmPassword" class="form-label">Confirm New Password</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                <input type="password" class="form-control" id="confirmPassword" name="ConfirmNewPassword" placeholder="Confirm your password" required>
+                <input type="password" class="form-control" id="confirmPassword" name="ConfirmNewPassword"
+                  placeholder="Confirm your password" required>
               </div>
             </div>
 
@@ -104,7 +114,7 @@
                 <i class="bi bi-question-circle"></i> Forgot your password?
               </a>
             </div>
-            
+
             <button type="submit" class="btn btn-dark w-100">
               <i class="bi bi-person-check"></i> Update
             </button>
@@ -117,10 +127,10 @@
       <a href="/client/home" class="btn btn-outline-secondary w-100">
         <i class="bi bi-box-arrow-left"></i> Go back to home
       </a>
-      
+
     </div>
   </div>
 </div>
 {{#section "scripts"}}
-  <script src="/assets/JavaScript/accounts.js"></script>
+<script src="/assets/JavaScript/accounts.js"></script>
 {{/section}}

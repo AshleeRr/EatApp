@@ -8,6 +8,6 @@ import express from "express";
 const router = express.Router();
 
 router.get("/", index);
-router.post("/details/:idUser/:idPedido", verDetalle);
+router.get("/details/:id", verDetalle);
 
 export default router;

@@ -36,13 +36,13 @@
                         {{count}}
                     </td>
                     <td style="border: none; background: #f8fafc;">
-                        <form class="form-eliminar">
+                        <form action="/admin/storesTypes/delete/{{id}}" class="form-eliminar" method="post">
                             <a href="/admin/storesTypes/edit/{{id}}" class="btn btn-warning me-2">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a href="/admin/storesTypes/delete/{{id}}" class="btn btn-danger me-2">
-                                <i class="bi bi-x-circle" type="submit"></i>
-                            </a>
+                            <button type="submit" class="btn btn-danger me-2">
+                                <i class="bi bi-x-circle"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>

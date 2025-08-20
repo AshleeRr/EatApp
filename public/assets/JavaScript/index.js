@@ -29,4 +29,25 @@ $(document).ready(function () {
       });
     });
   });
+
+  let btn = null;
+
+  $(document).on("click", 'input[type="radio"]', function () {
+    if (this === btn) {
+      this.checked = false;
+      btn = null;
+      location.reload();
+    } else {
+      btn = this;
+    }
+  });
+
+  const radios = document.querySelectorAll('input[name="idDireccion"]');
+  const boton = document.getElementById("btnPedir");
+
+  radios.forEach((r) => {
+    r.addEventListener("change", () => {
+      boton.disabled = false;
+    });
+  });
 });

@@ -1,4 +1,7 @@
-<div class="row mb-3">
+<a href="/client/home" class="btn mt-5" style="float: inline-start;">
+  <img src="\assets\imgs\site\svg\arrow_back_ios_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt="">
+</a>
+<div class="row mb-3 mt-5">
   <div class="col-12 text-center">
     <h2>My Directions</h2>
   </div>
@@ -13,9 +16,11 @@
 </div>
 {{#if hasAdresses}}
 
-  <div class="row">
-    {{#each adressesList}}
-      <div class="col-12 col-sm-4">
+<div class="row w-50 m-auto">
+  <div class="col col-12">
+    <div class="row">
+      {{#each adressesList}}
+      <div class="col-12 col-sm-12">
         <div class="card shadow-sm mb-3">
           <div class="card-body">
             <h5 class="card-title fw-bold">
@@ -24,8 +29,7 @@
             <p class="card-text text-muted">{{this.descripcion}}</p>
 
             <div class="mt-2">
-              <a href="/client/directions/edit/{{this.id}}" 
-                 class="btn btn-primary btn-sm me-2">
+              <a href="/client/directions/edit/{{this.id}}" class="btn btn-primary btn-sm me-2">
                 <i class="bi bi-pencil"></i> Edit
               </a>
               <form method="post" action="/client/directions/delete" class="float-end me-2">
@@ -38,21 +42,23 @@
           </div>
         </div>
       </div>
-    {{/each}}
+      {{/each}}
+    </div>
   </div>
+</div>
 
 {{else}}
 
-  <div class="row d-flex justify-content-center">
-    <div class="col-12 col-sm-6">
-      <div class="alert alert-info text-center" role="alert">
-        <i class="bi bi-info-circle"></i> You have no directions registered.
-      </div>
+<div class="row d-flex justify-content-center">
+  <div class="col-12 col-sm-6">
+    <div class="alert alert-info text-center" role="alert">
+      <i class="bi bi-info-circle"></i> You have no directions registered.
     </div>
   </div>
+</div>
 
 {{/if}}
 
 {{#section "scripts"}}
-  <script src="/assets/JavaScript/directions.js"></script>
+<script src="/assets/JavaScript/directions.js"></script>
 {{/section}}

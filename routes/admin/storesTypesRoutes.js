@@ -22,6 +22,6 @@ router.post("/create", saveStoresTypesIcon.single("logo"), create);
 router.get("/edit/:id", editForm);
 router.post("/edit/:id", saveStoresTypesIcon.single("logo"), edit);
 
-router.get("/delete/:id", deleteA);
+router.post("/delete/:id", deleteA);
 
 export default router;

@@ -12,7 +12,8 @@ export const index = HandControllersAsync(async (req, res) => {
     HandError(403, "No tienes permisos para acceder a esta ruta");
   }
 
-  const store = await STORE.StoreRepository.getStoreByUserId(user.id);
+  const datast = await STORE.StoreRepository.getStoreByUserId(user.id);
+  const store = datast.dataValues;
 
   const data = await STORE.ProductsRepository.getProductsByStore(store.id);
 

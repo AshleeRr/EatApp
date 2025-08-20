@@ -1,7 +1,9 @@
 import context from "../../config/context/AppContext.js";
+import Comercio from "../../models/comercio.js";
 import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 import GenericRepository from "../GenericRepository.js";
 
+import formatear from "../../utils/helpers/dateFormat.js";
 const {
   TipoComercio,
   User,
@@ -22,10 +24,6 @@ class StoreRepository extends GenericRepository {
     return await super.findOne({
       where: { userId },
       include: [
-        {
-          model: User,
-          attributes: ["id", "email", "role"],
-        },
         {
           model: TipoComercio,
           as: "tipoComercio",
@@ -92,42 +90,64 @@ class StoreRepository extends GenericRepository {
     });
   });
 
-  getPedidoByStore = HandRepositoriesAsync(async (userId, estado = null) => {
+  getPedidoByStore = HandRepositoriesAsync(async (userId) => {
     const comercio = await this.getStoreByUserId(userId);
     if (!comercio) throw new Error("Comercio no encontrado");
 
-    const where = { comercioId: comercio.id };
-    if (estado) where.estado = estado;
-
-    return await Pedido.findAll({
-      where: where,
-      include: [
-        {
-          model: Client,
-          as: "cliente",
-          attributes: ["id", "name", "userName"],
-          include: [
-            {
-              model: User,
-              attributes: ["email"],
-            },
-          ],
-        },
-        {
-          model: Delivery,
-          as: "delivery",
-          attributes: ["id", "name", "userName"],
-          include: [
-            {
-              model: User,
-              attributes: ["email"],
-            },
-          ],
-        },
-      ],
+    const pedidos = await Pedido.findAll({
+      where: { comercioId: comercio.id },
       order: [["createdAt", "DESC"]],
     });
+
+    const pedido = pedidos.map((pedido) => {
+      const dto = pedido.dataValues;
+      return {
+        ...dto,
+        fecha: formatear(dto.fecha),
+        original: dto.fecha || dto.createdAt,
+      };
+    });
+
+    return pedido;
   });
+  getPedidoByStoreStatus = HandRepositoriesAsync(
+    async (userId, estado = null) => {
+      const comercio = await this.getStoreByUserId(userId);
+      if (!comercio) throw new Error("Comercio no encontrado");
+
+      const where = { comercioId: comercio.id };
+      if (estado) where.estado = estado;
+
+      return await Pedido.findAll({
+        where: where,
+        include: [
+          {
+            model: Client,
+            as: "cliente",
+            attributes: ["id", "name", "userName"],
+            include: [
+              {
+                model: User,
+                attributes: ["email"],
+              },
+            ],
+          },
+          {
+            model: Delivery,
+            as: "delivery",
+            attributes: ["id", "name", "userName"],
+            include: [
+              {
+                model: User,
+                attributes: ["email"],
+              },
+            ],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+      });
+    }
+  );
 
   getDashBoardStadistic = HandRepositoriesAsync(async (userId) => {
     const comercio = await this.getStoreByUserId(userId);

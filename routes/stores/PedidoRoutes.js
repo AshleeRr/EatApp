@@ -2,11 +2,11 @@ import express from "express";
 import {
   index,
   assignDelivery,
-} from "../../controllers/Stores/PedidoController.js";
+} from "../../controllers/stores/PedidoController.js";
 
 const router = express.Router();
 
 router.get("/index/:idPedido", index);
-router.post("/index/assing-delivery/:idPedido", assignDelivery);
+router.get("/index/assing-delivery/:id", assignDelivery);
 
 export default router;

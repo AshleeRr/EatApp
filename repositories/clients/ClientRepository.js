@@ -5,9 +5,13 @@ import { HandRepositoriesAsync } from "../../utils/handlers/handlerAsync.js";
 import GenericRepository from "../GenericRepository.js";
 import OrderRepository from "../stores/OrderRepository.js";
 
+//hleper
+import toTitleCase from "../../utils/helpers/changerCase.js";
 const { User, Direccion, Pedido, Favorito, Comercio, DetallePedido, Producto } =
   Context;
 
+import formatear from "../../utils/helpers/dateFormat.js";
+import { DATE } from "sequelize";
 class ClientRepository extends GenericRepository {
   constructor() {
     super(Context.Client);
@@ -161,6 +165,42 @@ class ClientRepository extends GenericRepository {
       totalFavoritos,
       totalDirecciones,
     };
+  });
+
+  getOrdersByClient = HandRepositoriesAsync(async (id) => {
+    const dataPed = await Pedido.findAll({
+      where: { clienteId: id },
+    });
+
+    const dta = dataPed.map((p) => p.dataValues);
+
+    console.log("dta ya llego:>> ", dta);
+    let pedidos = [];
+
+    const comercios = await Comercio.findAll();
+    const tiendas = comercios.map((t) => t.dataValues);
+
+    dta.forEach((dto) => {
+      const comercio =
+        tiendas.find((tienda) => tienda.id === dto.comercioId) || {};
+
+      const pedido = {
+        id: dto.id,
+        subtotal: dto.subtotal,
+        total: dto.total,
+        estado: toTitleCase(dto.estado),
+        fecha: formatear(dto.fecha),
+        clienteId: dto.clienteId,
+        comercioId: dto.comercioId,
+        comercio,
+        deliveryId: dto.deliveryId,
+        direccionId: dto.direccionId,
+      };
+
+      pedidos.push(pedido);
+    });
+
+    return pedidos;
   });
 }
 export default new ClientRepository();

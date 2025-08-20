@@ -1,6 +1,6 @@
 import coneccion from "../config/connection/DbConnection.js";
 
-import { DataTypes } from "sequelize";
+import { DataTypes, Sequelize } from "sequelize";
 
 const Pedido = coneccion.define(
   "Pedido",
@@ -25,11 +25,11 @@ const Pedido = coneccion.define(
         isIn: [["pendiente", "en proceso", "completado"]],
       },
     },
+
     fecha: {
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
     },
-
     clienteId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -67,7 +67,7 @@ const Pedido = coneccion.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Direccion",
+        model: "Direccions",
         key: "id",
       },
       onDelete: "CASCADE",

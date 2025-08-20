@@ -5,10 +5,10 @@ import { HandError } from "../../utils/handlers/handlerError.js";
 export const index = HandControllersAsync(async (req, res) => {
   const { user } = req.session;
 
-  if (!user) {
-    return res.redirect("/login");
+  if (!user || user.role !== "client") {
+    req.flash("errors", "No tienes permisos para estar aquí");
+    return res.redirect("/");
   }
-
   const { id } = req.params;
 
   const data = await StoreRepository.StoreRepository.findById(id);
@@ -22,8 +22,6 @@ export const index = HandControllersAsync(async (req, res) => {
     );
   const categorias = dataCat.map((cat) => cat.toJSON());
 
-  console.log("categorias :>> ", categorias);
-
   const carrito = req.session.carrito || [];
 
   let factura = null;
@@ -32,6 +30,7 @@ export const index = HandControllersAsync(async (req, res) => {
       await ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
     factura = facturaData.factura;
   }
+
   res.render("clientViews/store/index", {
     title: "Catalogo de productos",
     hasCategorias: categorias.length > 0,
@@ -45,15 +44,14 @@ export const index = HandControllersAsync(async (req, res) => {
 });
 
 export const addP = HandControllersAsync(async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({
-      success: false,
-      message: "Debes iniciar sesión para agregar productos",
-    });
+  const { user } = req.session;
+
+  if (!user || user.role !== "client") {
+    req.flash("errors", "No tienes permisos para estar aquí");
+    return res.redirect("/");
   }
 
   const { idProducto } = req.body;
-  console.log("idProducto :>> ", idProducto);
 
   const producto = await StoreRepository.ProductsRepository.findById(
     idProducto
@@ -72,7 +70,7 @@ export const addP = HandControllersAsync(async (req, res) => {
 
   if (existente) {
     existente.createdAt = new Date();
-    req.flash("info", "El producto ya está en tu carrito");
+    req.flash("errors", "El producto ya está en tu carrito");
   } else {
     req.session.carrito.push({
       producto: producto.toJSON ? producto.toJSON() : producto,
@@ -86,13 +84,17 @@ export const addP = HandControllersAsync(async (req, res) => {
 });
 
 export const deleteP = HandControllersAsync(async (req, res) => {
-  if (!req.session.user) {
-    req.flash("errors", "No tienes permiso para ingresar a esta ruta");
-    return res.redirect("/login");
-  }
+  const { user } = req.session;
 
+  if (!user || user.role !== "client") {
+    req.flash("errors", "No tienes permisos para estar aquí");
+    return res.redirect("/");
+  }
   const { idProducto } = req.body;
 
+  const producto = await StoreRepository.ProductsRepository.findById(
+    idProducto
+  );
   const indice = req.session.carrito.findIndex(
     (item) => item.producto.id === parseInt(idProducto)
   );
@@ -108,5 +110,5 @@ export const deleteP = HandControllersAsync(async (req, res) => {
   req.session.save();
 
   req.flash("success", "Producto eliminado del carrito");
-  res.redirect("back");
+  res.redirect(`/client/store/home/${producto.comercioId}`);
 });

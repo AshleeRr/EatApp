@@ -3,77 +3,131 @@ import { HandError } from "../../utils/handlers/handlerError.js";
 import {
   DeliveryRepository,
   StoreRepository,
+  ClientRepository,
 } from "../../repositories/index.js";
 
-export const index = HandControllersAsync(async (req, res) => {
-  const { pedidoId } = req.params;
-  const pedido = await StoreRepository.OrderRepository.getOrderById(pedidoId);
+import formatear from "../../utils/helpers/dateFormat.js";
 
-  if (!pedido) {
+export const index = HandControllersAsync(async (req, res) => {
+  const { idPedido } = req.params;
+
+  const dataP = await StoreRepository.OrderRepository.getOrderById(idPedido);
+
+  if (!dataP) {
     HandError(404, "Pedido no encontrado");
   }
 
-  if (pedido.comercioId !== req.user.comercioId) {
-    HandError(403, "No tiene permisos para ver este pedido");
-  }
+  const pedido = dataP.dataValues;
 
-  return res.render("store/pedido/index", {
-    title: `Pedido #${pedidoId}`,
+  const fecha = formatear(pedido.fecha);
+
+  pedido.fecha = fecha;
+
+  const detalleData = await ClientRepository.OrderDetailsRepository.findAll({
+    where: { pedidoId: idPedido },
+  });
+
+  const detalles = detalleData.map((detalle) => detalle.dataValues);
+
+  let dataProducts = await StoreRepository.ProductsRepository.findAll();
+
+  const data = detalles.map((detalle) =>
+    dataProducts.find((a) => a.id === detalle.productoId)
+  );
+
+  const productos = data.map((a) => a.dataValues);
+
+  return res.render("storeViews/pedidos/index", {
+    title: `Pedido #${idPedido}`,
     user: req.user,
     pedido,
+    detalles,
+    productos,
+    delivery: pedido.deliveryId,
   });
 });
-
 export const assignDelivery = HandControllersAsync(async (req, res) => {
-  const { pedidoId } = req.params;
+  const { user } = req.session;
+  const pedidoId = req.params.id;
 
-  const pedido = await StoreRepository.OrderRepository.getOrderById(pedidoId);
+  try {
+    const pedido = await StoreRepository.OrderRepository.findById(pedidoId);
 
-  if (!pedido) HandError(404, "Pedido no encontrado");
+    if (!pedido) {
+      req.flash("errors", "Pedido no encontrado");
+      return res.redirect(`/store/pedido/index/${pedidoId}`);
+    }
 
-  if (pedido.comercioId !== req.user.comercioId)
-    HandError(403, "No tiene permisos para modificar este pedido");
+    const dataComer = await StoreRepository.StoreRepository.findOne({
+      where: { userId: user.id },
+    });
 
-  if (pedido.estado !== "pendiente")
-    HandError(400, "Solo se pueden asignar delivery a pedidos pendientes");
+    if (!dataComer) {
+      req.flash("errors", "Comercio no encontrado");
+      return res.redirect("/store/pedido/index/${pedidoId}");
+    }
 
-  if (pedido.deliveryId)
-    HandError(400, "Este pedido ya tiene un delivery asignado");
+    const comercio = dataComer.dataValues;
 
-  const deliveryDisponible = await DeliveryRepository.getAvailableDelivery();
+    if (pedido.comercioId !== comercio.id) {
+      req.flash("errors", "No tiene permisos para modificar este pedido");
+      return res.redirect(`/store/pedido/index/${pedidoId}`);
+    }
 
-  if (!deliveryDisponible)
-    HandError(
-      404,
-      "No hay delivery disponible en este momento. Intente más tarde."
-    );
+    if (pedido.estado !== "pendiente") {
+      req.flash(
+        "errors",
+        "Solo se pueden asignar delivery a pedidos pendientes"
+      );
+      return res.redirect(`/store/pedido/index/${pedidoId}`);
+    }
 
-  const transaction = await StoreRepository.OrderRepository.startTransaction();
+    if (pedido.deliveryId) {
+      req.flash("errors", "Este pedido ya tiene un delivery asignado");
+      return res.redirect(`/store/pedido/index/${pedidoId}`);
+    }
 
-  await StoreRepository.OrderRepository.update(
-    pedidoId,
-    { deliveryId: deliveryDisponible.id, estado: "en proceso" },
-    { transaction }
-  );
+    const disponible = await DeliveryRepository.getAvailableDelivery();
 
-  await DeliveryRepository.updateDeliveryStatus(
-    deliveryDisponible.id,
-    "ocupado",
-    { transaction }
-  );
+    if (!disponible) {
+      req.flash(
+        "errors",
+        "No se encontraron deliveries disponibles, intenta en un rato"
+      );
+      return res.redirect(`/store/pedido/index/${pedidoId}`);
+    }
 
-  const commit = await transaction.commit();
+    const transaction =
+      await StoreRepository.OrderRepository.startTransaction();
 
-  if (!commit)
-    HandError(500, "No se pudo asignar el delivery intentalo mas tarde");
+    try {
+      await StoreRepository.OrderRepository.update(
+        pedidoId,
+        { deliveryId: disponible.id, estado: "en proceso" },
+        { transaction }
+      );
 
-  const pedidoActualizado = await StoreRepository.OrderRepository.getOrderById(
-    pedidoId
-  );
-  req.flash(
-    "success",
-    `Delivery ${deliveryDisponible.nombre} ${deliveryDisponible.apellido} asignado exitosamente`
-  );
+      await DeliveryRepository.updateDeliveryStatus(disponible.id, "ocupado", {
+        transaction,
+      });
 
-  res.redirect("/store/pedido/index");
+      await transaction.commit();
+
+      req.flash(
+        "success",
+        `Delivery ${disponible.nombre} ${disponible.apellido} asignado exitosamente`
+      );
+
+      return res.redirect(`/store/pedido/index/${pedidoId}`);
+    } catch (transactionError) {
+      await transaction.rollback();
+      console.error("Transaction error:", transactionError);
+      req.flash("errors", "Hubo un error tratando de asignar el delivery");
+      return res.redirect(`/store/pedido/index/${pedidoId}`);
+    }
+  } catch (error) {
+    console.error("Error in assignDelivery:", error);
+    req.flash("errors", "Error interno del servidor");
+    return res.redirect(`/store/pedido/index/${pedidoId}`);
+  }
 });

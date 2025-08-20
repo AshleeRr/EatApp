@@ -42,8 +42,6 @@ class OrderDetailsRepository extends GenericRepository {
       ? itbisConfig.dataValues.value
       : itbisConfig.value || itbisConfig;
 
-    console.log("itbisPercent extraído:", porciento);
-
     const { subtotal, itbis, total } = await this.calcularFactura(
       productos,
       porciento

@@ -9,7 +9,7 @@ export const index = HandControllersAsync(async (req, res) => {
 
   if (!user || user.role !== "client") {
     req.flash("errors", "No tienes permisos para estar aquí");
-    return res.redirect("/login");
+    return res.redirect("/");
   }
   const data = await ClientRepository.clientRepository.findOne({
     where: { userId: user.id },
@@ -25,7 +25,6 @@ export const index = HandControllersAsync(async (req, res) => {
 
   if (!favoritos) HandError(404, "No tienes comercios favoritos agregados!");
 
-  console.log("favoritos :>> ", favoritos);
   res.render("clientViews/favorites/index", {
     user: cliente,
     title: "Comercios Favoritos",
@@ -39,7 +38,7 @@ export const addFavorite = HandControllersAsync(async (req, res) => {
 
   if (!user || user.role !== "client") {
     req.flash("errors", "No tienes permisos para estar aquí");
-    return res.redirect("/login");
+    return res.redirect("/");
   }
 
   const { userId, businessId } = req.body;
@@ -61,10 +60,12 @@ export const addFavorite = HandControllersAsync(async (req, res) => {
 });
 
 export const removeFavorite = HandControllersAsync(async (req, res) => {
-  if (!req.session.user) {
-    req.flash("errors", "No tienes permiso para ingresar a esta ruta");
-  }
+  const { user } = req.session;
 
+  if (!user || user.role !== "client") {
+    req.flash("errors", "No tienes permisos para estar aquí");
+    return res.redirect("/");
+  }
   const { userId, businessId } = req.body;
 
   const eliminado = await ClientRepository.clientRepository.deleteFavorite(

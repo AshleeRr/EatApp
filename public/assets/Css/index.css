@@ -6,17 +6,6 @@ body {
   overflow-x: hidden;
   font-family: "Poppins", sans-serif;
 }
-.store-body{
-
-  margin: 0;
-  padding: 0;
-  position: relative;
-  height: 100vh;
-  overflow-x: hidden;
-  font-family: "Poppins", sans-serif;
-
-}
-
 .btn-volver {
     color: white;
     margin: 10px;
@@ -25,7 +14,6 @@ body {
     background-color: #34406a;
 
 }
-
 .btn-volver:hover {
     color: white;
     background-color: rgb(220, 136, 46);
@@ -36,17 +24,6 @@ header {
   background-color: #fff;
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-
-.navbar-admin {
-    background-color: #FDBF50 !important;
-    color: white;
-}
-
-.navbar-store {
-    background-color:  #982b2b !important;
-    color: white;
 }
 
 h3 h4 {
@@ -71,14 +48,18 @@ ul li {
 ul li a {
     color:#2A2C41!important;
     text-decoration: none !important;
-    margin: 40px !important;
+    margin: 30px !important;
     font-weight: bold !important;
       
 }
 
-
 a {
-    text-decoration: none !important;
+  color: inherit;       
+  text-decoration: none; 
+}
+
+a:hover {
+  color: inherit;  
 }
 
 .seccion-lateral {
@@ -87,13 +68,60 @@ a {
     display: flex;
     justify-content: center;
 }
-
-
 input:focus,
 select:focus {
-    border-color: #982b2b !important;
-    box-shadow: 0 0 5px #9f3a1e!important;
+    border-color: #000000a5 !important;
+    box-shadow: 0 0 5px #00000090!important;
 }
+/*home*/
+
+.contenedor-home{
+  width: 300px;
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+/*Store*/
+.navbar-store {
+    background-color: #FDBF50 !important;
+    color: white;
+}
+
+/*client*/
+.navbar-client{
+      background-color:  #5d1a1a !important;
+    color: white;
+}
+.seccion-lateral-client {
+  background-color:#5d1a1a ;
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    justify-content: center;
+}
+
+.client-option{
+      margin: 15px !important;
+    font-weight: bold !important;
+}
+
+
+/* admin */
+.seccion-lateral-admin {
+  background-color: #2A2C41;
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    justify-content: center;
+}
+.navbar-admin {
+    background-color: #2A2C41 !important;
+    color: white;
+}
+
+
+
 
 /* Colores que podria usar como paleta */
 /* 

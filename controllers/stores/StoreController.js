@@ -4,6 +4,7 @@ import { HandError } from "../../utils/handlers/handlerError.js";
 
 //helper
 import { saveIMG } from "../../services/imgSaver.js";
+
 export const index = HandControllersAsync(async (req, res) => {
   const { user } = req.session;
 
@@ -11,30 +12,37 @@ export const index = HandControllersAsync(async (req, res) => {
     HandError(403, "No tienes permisos para acceder a esta ruta");
   }
 
-  const data = await StoreRepository.StoreRepository.getStoreByUserId(user.id);
+  const data = await StoreRepository.StoreRepository.findOne({
+    where: { userId: user.id },
+  });
 
   const store = data.dataValues;
 
-  const pedidos = await StoreRepository.OrderRepository.getAllOrders();
-
-  const Pendientes = await StoreRepository.StoreRepository.getPedidoByStore(
-    store.id,
-    "pendiente"
-  );
-  const Procesandose = await StoreRepository.StoreRepository.getPedidoByStore(
-    store.id,
-    "en proceso"
+  const pedidos = await StoreRepository.StoreRepository.getPedidoByStore(
+    user.id
   );
 
-  const Completados = await StoreRepository.StoreRepository.getPedidoByStore(
-    store.id,
-    "completado"
-  );
+  const Pendientes =
+    await StoreRepository.StoreRepository.getPedidoByStoreStatus(
+      user.id,
+      "pendiente"
+    );
+  const Procesandose =
+    await StoreRepository.StoreRepository.getPedidoByStoreStatus(
+      user.id,
+      "en proceso"
+    );
+
+  const Completados =
+    await StoreRepository.StoreRepository.getPedidoByStoreStatus(
+      user.id,
+      "completado"
+    );
 
   return res.render("storeViews/home", {
     title: "My store",
     user: req.user,
-    store,
+    store: store,
     hasPedidos: pedidos.length > 0 || 0,
     pedidos,
     Pendientes,
@@ -49,8 +57,9 @@ export const StorePerfil = HandControllersAsync(async (req, res) => {
   if (user.role !== "store") {
     HandError(403, "No tienes permisos para acceder a esta ruta");
   }
-
-  const data = await StoreRepository.StoreRepository.getStoreByUserId(user.id);
+  const data = await StoreRepository.StoreRepository.findOne({
+    where: { userId: user.id },
+  });
 
   const store = data.dataValues;
 

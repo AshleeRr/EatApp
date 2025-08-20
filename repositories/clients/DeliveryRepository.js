@@ -30,13 +30,10 @@ class DeliveryRepository extends GenericRepository {
     return await super.findOne({
       where: {
         estado: "disponible",
-        activo: true,
       },
       include: [
         {
           model: User,
-          as: "user",
-          attributes: ["nombre", "apellido", "telefono", "isActive"],
         },
       ],
       order: [["updatedAt", "ASC"]],

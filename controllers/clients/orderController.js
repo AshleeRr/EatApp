@@ -1,15 +1,16 @@
-import repo from "../../repositories/stores/index.js";
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
 
 import { ClientRepository, StoreRepository } from "../../repositories/index.js";
 
 export const GenerateFacture = HandControllersAsync(async (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/login");
+  const { user } = req.session;
+
+  if (!user || user.role !== "client") {
+    req.flash("errors", "No tienes permisos para estar aquí");
+    return res.redirect("/");
   }
 
-  const { user } = req.session.user;
   const carrito = req.session.carrito || [];
 
   if (carrito.length === 0)
@@ -18,96 +19,90 @@ export const GenerateFacture = HandControllersAsync(async (req, res) => {
       "No se puede generar la factura porque el carrito se encuentra vacio"
     );
 
-  const factura =
-    ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
-
-  const direcciones = await ClientRepository.clientRepository.getDirections(
-    user.id
+  const objetoFa = await ClientRepository.OrderDetailsRepository.GenerarFactura(
+    carrito
   );
 
-  res.render("clientsViews/order/select", {
+  const factura = objetoFa.factura;
+
+  const comercio = await StoreRepository.StoreRepository.findById(
+    factura.productos.comercioId
+  );
+
+  const data = await ClientRepository.clientRepository.getDirections(user.id);
+
+  const direcciones = data.map((d) => d.dataValues);
+
+  res.render("clientViews/order/index", {
     title: "Finalizar Compra",
     user,
     direcciones,
-    factura,
+    factura: factura,
+    hasCarrito: carrito.length > 0,
+    carrito,
+    comercio,
     hayDirecciones: direcciones.length > 0,
   });
 });
+export const procesarPedido = HandControllersAsync(async (req, res) => {
+  const { user } = req.session;
 
-export const selectDirection = HandControllersAsync(async (req, res) => {
-  const { direccionId } = req.body;
-  const { user } = req.session.user;
+  if (!user || user.role !== "client") {
+    req.flash("errors", "No tienes permisos para estar aquí");
+    return res.redirect("/");
+  }
+  const carrito = req.session.carrito || [];
+  const direccionId = Number(req.body.idDireccion);
 
-  const direcciones = await ClientRepository.clientRepository.getDirections(
-    user.id
+  const cliente = await ClientRepository.clientRepository.findOne({
+    where: { userId: user.id },
+  });
+
+  const factura = await ClientRepository.OrderDetailsRepository.GenerarFactura(
+    carrito
   );
 
-  const direccion = direcciones.filter((d) => d.id === direccionId);
-
-  req.session.checkout = {
-    direccion: direccion,
-  };
-
-  res.render("clientViews/order/create", {
-    title: "Método de Pago",
-    direccion: direccion,
-    carrito: req.session.carrito,
-    totales: await calcularTotalesCarrito(req.session.carrito),
-  });
-});
-
-export const procesarPedido = HandControllersAsync(async (req, res) => {
-  const { user } = req.session.user;
-  const carrito = req.session.carrito || [];
-  const checkoutData = req.session.checkout || {};
-
-  if (carrito.length === 0) HandError(400, "El carrito no puede estar vacio");
-  if (!checkoutData.direccion) HandError(400, "Debe seleccionar una direccion");
-
-  const factura =
-    ClientRepository.OrderDetailsRepository.GenerarFactura(carrito);
-
-  "factura :>> ", factura;
-
-  const { productos, subtotal, itbis, total } = factura;
+  const { productos, subtotal, itbis, total } = factura.factura;
 
   const pedido = await StoreRepository.OrderRepository.create({
-    clienteId: user.id,
-    comercioId: productos[0].comercioId,
-    direccionId: checkoutData.direccion.id,
-    estado,
     subtotal,
     total,
-    fecha: new Date(),
+    estado: "pendiente",
+    clienteId: cliente.id,
+    comercioId: carrito[0].producto.comercioId,
+    deliveryId: null,
+    direccionId,
   });
 
   for (const producto of productos) {
-    await ClientRepository.OrderDetailsRepository.create({
+    const detalle = await ClientRepository.OrderDetailsRepository.create({
       pedidoId: pedido.id,
       precio: producto.precio,
       subtotal: producto.total,
+      productoId: producto.id,
+      cantidad: 1,
     });
+    console.log("detalle del pedido :>> ", detalle);
   }
 
   req.session.carrito = [];
-  req.session.checkout = {};
+  req.session.save();
 
+  console.log("pedido :>> ", pedido);
   req.flash("success", "Esperando confirmacion");
-
-  res.redirect(`/order/confirmacion`, {
-    pedido: {
-      id: pedido.id,
-      total: pedido.total,
-    },
-    factura,
-  });
+  res.redirect(`/client/order/confirmation/${pedido.id}`);
 });
 
 export const confirmacion = HandControllersAsync(async (req, res) => {
-  const { orderId } = req.params;
-  const { user } = req.session.user;
+  const { user } = req.session;
 
-  const pedido = await StoreRepository.OrderRepository.findOne(orderId);
+  if (!user || user.role !== "client") {
+    req.flash("errors", "No tienes permisos para estar aquí");
+    return res.redirect("/");
+  }
+  const idPedido = req.params.id;
+
+  const pedido = await StoreRepository.OrderRepository.findById(idPedido);
 
   if (!pedido) {
     HandError("Pedido no encontrado", 404);

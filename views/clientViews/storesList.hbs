@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mt-5">
   <div class="col col-md-1">
     <a href="/client/storesList" class="btn mt-2"><img
         src="\assets\imgs\site\svg\arrow_back_ios_50dp_982B2B_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
@@ -6,7 +6,7 @@
   <div class="col col-md-11">
     <div class="row justify-content-center mb-3">
       <div class="col-md-6 col-lg-4 me-5">
-        <div class="row justify-content-center mb-4">
+        <div class="row justify-content-center mb-4 ">
           <div class="col-auto">
             <h4 class="text-center">What are you looking for?</h4>
           </div>
@@ -40,20 +40,12 @@
           style="width: 60px; height: 60px; object-fit: cover;">
         <div class="d-flex align-items-center ms-3 w-100">
           <h5 class="fw-semibold">{{this.name}}</h5>
-          {{!-- {{#if hasFavorites}}
-          <form action="/client/favorites/add/delete" method="POST">
-            <input type="hidden" name="userId" value="{{../user.id}}">
-            <input type="hidden" name="businessId" value="{{this.id}}">
-            <button type="submit" class="btn btn-danger"><i class="bi bi-heart"></i></button>
-          </form>
-          {{else}} --}}
           <form action="/client/favorites/add/favorite" method="POST">
             <input type="hidden" name="userId" value="{{../user.id}}">
             <input type="hidden" name="businessId" value="{{this.id}}">
             <button type="submit" class="btn"><img
                 src="\assets\imgs\site\svg\heart_plus_30dp_982B2B_FILL0_wght400_GRAD0_opsz24.svg" alt=""></button>
           </form>
-          {{!-- {{/if}} --}}
         </div>
       </div>
     </a>
