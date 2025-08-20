@@ -10,8 +10,9 @@ import {Op} from "sequelize";
 export async function GetIndex(req, res, next) {
   try {
     req.user = req.session.user;
+    const delivery = await context.Delivery.findOne({ where : {userId: req.user.id} });
     const orders = await context.Pedido.findAll({
-      where: { deliveryId: req.user.id },
+      where: { deliveryId: delivery.id },
       order: [["createdAt", "DESC"]],
       include: [
         { model: context.Comercio, as: "comercio" },
@@ -21,11 +22,7 @@ export async function GetIndex(req, res, next) {
 
     const ordersList = orders.map((o) => {
       const plain = o.get({ plain: true });
-      // sumar todas las cantidades de los detalles
-      plain.productsCount = plain.detalles.reduce(
-        (acc, d) => acc + d.cantidad, 
-        0
-      );
+      plain.productsCount = plain.detalles.length;
       return plain;
     });
 
@@ -45,11 +42,12 @@ export async function GetOrderDetails(req, res) {
   try {
     req.user = req.session.user;
     const pedidoId = req.params.id;
-
+    const delivery = await context.Delivery.findOne({ where : {userId: req.user.id} });
     const pedido = await context.Pedido.findOne({
-      where: { id: pedidoId, deliveryId: req.user.id }, 
+      where: { id: pedidoId, deliveryId: delivery.id}, 
       include: [
         { model: context.Comercio, as: "comercio" },
+        { model: context.Direccion, as: "direccion" },
         {
           model: context.DetallePedido,
           as: "detalles", 
@@ -129,6 +127,7 @@ export async function PostProfile(req, res, next){
       return res.redirect("/delivery/profile");
     }else{
       await context.User.update({
+        userName: UserName,
         email: Email
       },{where:{id: req.user.id}});
     }
@@ -150,13 +149,22 @@ export async function PostProfile(req, res, next){
 }
 
 export const completeOrder = HandControllersAsync(async (req, res) => {
+  console.log("ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+  console.log("id -------------------->>>>", req.session.user.id)
   const pedidoId = req.params.id;
 
   const pedido = await StoreRepository.OrderRepository.getOrderById(pedidoId);
 
   if (!pedido) HandError(404, "Pedido no encontrado");
+console.log("req.session.user:", req.session.user);
+console.log("req.user.id:", req.user?.id);
 
-  if (pedido.deliveryId !== req.user.deliveryId)
+  const delivery = await context.Delivery.findOne({ where : {userId: req.session.user.id} });
+  console.log("req.user.id:", req.user?.id);
+console.log("pedido.deliveryId:", pedido.deliveryId);
+console.log("delivery:", delivery);
+
+  if (pedido.deliveryId !== delivery.id)
     HandError(403, "No tiene permisos para completar este pedido");
 
   if (pedido.estado !== "en proceso")
@@ -186,9 +194,7 @@ export const completeOrder = HandControllersAsync(async (req, res) => {
 
   req.flash("success", "El pedido ha sido completado");
 
-  res.render("ruta/ruta del delivery", {
-    titutlo: "lo deje asi por que no se cual es la ruta del delivery",
-  });
+  res.redirect("/delivery/home");
 });
 
 export const unassignDelivery = HandControllersAsync(async (req, res) => {
