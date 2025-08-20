@@ -4,6 +4,7 @@ import { HandError } from "../../utils/handlers/handlerError.js";
 
 //helper
 import { saveIMG } from "../../services/imgSaver.js";
+import toTitleCase from "../../utils/helpers/changerCase.js";
 
 export const index = HandControllersAsync(async (req, res) => {
   const { user } = req.session;
@@ -21,6 +22,10 @@ export const index = HandControllersAsync(async (req, res) => {
   const pedidos = await StoreRepository.StoreRepository.getPedidoByStore(
     user.id
   );
+
+  for (let pedido of pedidos) {
+    pedido.estado = toTitleCase(pedido.estado);
+  }
 
   const Pendientes =
     await StoreRepository.StoreRepository.getPedidoByStoreStatus(

@@ -20,9 +20,10 @@
                 <tr>
                     <th style="background-color: #fdbf50; color: white; border: none;">Nombre</th>
                     <th style="background-color: #fdbf50; color: white; border: none;">Apellido</th>
-                    <th style="background-color: #fdbf50; color: white; border: none;">Usuario</th>
                     <th style="background-color: #fdbf50; color: white; border: none;">Cedula</th>
+                    <th style="background-color: #fdbf50; color: white; border: none;">Usuario</th>
                     <th style="background-color: #fdbf50; color: white; border: none;">Correo</th>
+                    <th style="background-color: #fdbf50; color: white; border: none;">Contraseña</th>
                     <th style="background-color: #fdbf50; color: white; border: none;">Estado</th>
                     <th style="background-color: #fdbf50; color: white; border: none;">Acciones</th>
                 </tr>
@@ -32,9 +33,11 @@
                 <tr style="border: none; consulta-row">
                     <td style="border: none; background: #f8fafc;">{{nombre}}</td>
                     <td style="border: none; background: #f8fafc;">{{apellido}}</td>
-                    <td style="border: none; background: #f8fafc;">{{usuario}}</td>
                     <td style="border: none; background: #f8fafc;">{{cedula}}</td>
+                    <td style="border: none; background: #f8fafc;">{{usuario}}</td>
                     <td style="border: none; background: #f8fafc;">{{correo}}</td>
+                    <td style="border: none; background: #f8fafc;">Hasheada</td>
+
                     {{#if user.isActive}}
                     <td style="border: none; background: #f8fafc;"><span class="badge bg-success me-2">Activo</span>
                     </td>

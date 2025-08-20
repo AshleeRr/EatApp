@@ -74,19 +74,6 @@ export const assignDelivery = HandControllersAsync(async (req, res) => {
       return res.redirect(`/store/pedido/index/${pedidoId}`);
     }
 
-    if (pedido.estado !== "pendiente") {
-      req.flash(
-        "errors",
-        "Solo se pueden asignar delivery a pedidos pendientes"
-      );
-      return res.redirect(`/store/pedido/index/${pedidoId}`);
-    }
-
-    if (pedido.deliveryId) {
-      req.flash("errors", "Este pedido ya tiene un delivery asignado");
-      return res.redirect(`/store/pedido/index/${pedidoId}`);
-    }
-
     const disponible = await DeliveryRepository.getAvailableDelivery();
 
     if (!disponible) {
@@ -115,7 +102,7 @@ export const assignDelivery = HandControllersAsync(async (req, res) => {
 
       req.flash(
         "success",
-        `Delivery ${disponible.nombre} ${disponible.apellido} asignado exitosamente`
+        `Delivery ${disponible.name} ${disponible.lastName} asignado exitosamente`
       );
 
       return res.redirect(`/store/pedido/index/${pedidoId}`);
