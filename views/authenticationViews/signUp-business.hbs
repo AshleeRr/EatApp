@@ -1,87 +1,97 @@
-{{#if hasBusinessTypes}}
-<div class="container d-flex justify-content-center align-items-start" style="min-height: 100vh; padding-top: 80px;">
+<div class="card shadow w-50 m-auto" style="border: none;">
+  <div class="card-body" style=" height: 750px;">
+    {{#if hasBusinessTypes}}
+    <div class="container d-flex justify-content-center align-items-start mt-3" style="min-height: 100vh; ">
 
-  <form class="w-100" style="max-width: 600px;" action="/user/signUp-business" method="POST" enctype="multipart/form-data">
-    <h2 class="text-center mb-4">Start Working With Us!</h2>
+      <form class="w-100" style="max-width: 600px;" action="/user/signUp-business" method="POST"
+        enctype="multipart/form-data">
+        <h2 class="text-center mb-4">Start Working With Us!</h2>
 
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label for="businessName" class="form-label">Business Name</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" class="form-control" id="businessName" name="BusinessName" placeholder="Enter your business name" required>
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <label for="businessName" class="form-label">Business Name</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" class="form-control" id="businessName" name="BusinessName"
+                placeholder="Enter your business name" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="photo" class="form-label">Business Logo</label>
+            <input type="file" class="form-control" id="photo" name="BusinessLogo" required="required">
+          </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <label for="photo" class="form-label">Business Logo</label>
-        <input type="file" class="form-control" id="photo" name="BusinessLogo" required="required">
-      </div>
-    </div>
 
-    <div class="mb-3">
-      <label for="phone" class="form-label">Phone Number</label>
-      <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
-        <input type="tel" class="form-control" id="phone" placeholder="18297512563" name="PhoneNumber" required="required">
-      </div>
-    </div>
+        <div class="mb-2">
+          <label for="phone" class="form-label">Phone Number</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+            <input type="tel" class="form-control" id="phone" placeholder="18297512563" name="PhoneNumber"
+              required="required">
+          </div>
+        </div>
 
 
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-        <input type="email" class="form-control" id="email" name="Email" placeholder="Enter your email" required="required">
-      </div>
-    </div>
-    
+        <div class="mb-2">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input type="email" class="form-control" id="email" name="Email" placeholder="Enter your email"
+              required="required">
+          </div>
+        </div>
 
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label for="opening" class="form-label">Opening Time</label>
-        <input type="time" class="form-control" id="opening" name="Opening" required="required">
-      </div>
-      <div class="col-md-6">
-        <label for="closing" class="form-label">Closing Time</label>
-        <input type="time" class="form-control" id="closing" name="Closing" required="required">
-      </div>
-    </div>
 
-    <div class="mb-4">
-      <label for="businessTypes" class="form-label">Business Type</label>
-      <select id="businessTypes" name="BusinessTypeId" class="form-select">
-      <option value="" disabled>Select yours</option>
-      {{#each businessTypeList}}
-        <option value="{{this.id}}" {{#if (eq this.id ../comercio.tipoComercioId)}}selected{{/if}}>{{this.nombre}}</option>
-      {{/each}}
-      </select>
-    </div>
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <label for="opening" class="form-label">Opening Time</label>
+            <input type="time" class="form-control" id="opening" name="Opening" required="required">
+          </div>
+          <div class="col-md-6">
+            <label for="closing" class="form-label">Closing Time</label>
+            <input type="time" class="form-control" id="closing" name="Closing" required="required">
+          </div>
+        </div>
 
-    <div class="mb-4">
-      <label for="password" class="form-label">Password</label>
-      <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-        <input type="password" class="form-control" id="password" name="Password"placeholder="Enter your password" required="required">
-      </div>
-    </div>
+        <div class="mb-2">
+          <label for="businessTypes" class="form-label">Business Type</label>
+          <select id="businessTypes" name="BusinessTypeId" class="form-select">
+            <option value="" disabled>Select yours</option>
+            {{#each businessTypeList}}
+            <option value="{{this.id}}" {{#if (eq this.id ../comercio.tipoComercioId)}}selected{{/if}}>{{this.nombre}}
+            </option>
+            {{/each}}
+          </select>
+        </div>
 
-    <div class="mb-4">
-      <label for="confirmPassword" class="form-label">Confirm Password</label>
-      <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-        <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword"placeholder="Confirm your password" required="required">
-      </div>
-    </div>
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+            <input type="password" class="form-control" id="password" name="Password" placeholder="Enter your password"
+              required="required">
+          </div>
+        </div>
 
-    <div class="d-flex justify-content-between gap-2 flex-wrap">
-      <a href="/" class="btn btn-outline-secondary flex-fill">
-        <i class="bi bi-box-arrow-left"></i> Go back to Login
-      </a>
-      <button type="submit" class="btn btn-dark flex-fill">
-        <i class="bi bi-person-check"></i> Register
-      </button>
+        <div class="mb-4">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+            <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword"
+              placeholder="Confirm your password" required="required">
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between gap-2 flex-wrap">
+          <a href="/" class="btn btn-outline-secondary flex-fill">
+            <i class="bi bi-box-arrow-left"></i> Go back to Login
+          </a>
+          <button type="submit" class="btn btn-dark flex-fill">
+            <i class="bi bi-person-check"></i> Register
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
+    {{/if}}
+  </div>
 </div>
-
-{{/if}}
