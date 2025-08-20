@@ -32,15 +32,11 @@ export async function GetStoresList(req, res, next) {
     if (!Type) {
       return res.redirect("/client/home");
     }
-    
-    if(BusinessFilter) result.nombre = {[Op.like]: `%${BusinessFilter}%`};
+
+    if (BusinessFilter) result.nombre = { [Op.like]: `%${BusinessFilter}%` };
 
     const businesses = await context.Comercio.findAll({
-      where: businesses,
-      include: [{
-        model: context.Usuario,
-        where: { active: true }
-      }]
+      where: result,
     });
 
     res.render("clientViews/storesList", {
@@ -52,8 +48,11 @@ export async function GetStoresList(req, res, next) {
     });
   } catch (error) {
     console.log(error);
-    req.flash("errors", "An error ocurred while trying to bring the businesses");
-    return res.render("/clientViews/home");
+    req.flash(
+      "errors",
+      "An error ocurred while trying to bring the businesses"
+    );
+    return res.render("clientViews/home");
   }
 }
 

@@ -1,23 +1,26 @@
 import context from "../../config/context/AppContext.js";
 import { HandControllersAsync } from "../../utils/handlers/handlerAsync.js";
 import { HandError } from "../../utils/handlers/handlerError.js";
+import path from "path";
 import {
   DeliveryRepository,
   StoreRepository,
 } from "../../repositories/index.js";
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 
 export async function GetIndex(req, res, next) {
   try {
     req.user = req.session.user;
-    const delivery = await context.Delivery.findOne({ where : {userId: req.user.id} });
+    const delivery = await context.Delivery.findOne({
+      where: { userId: req.user.id },
+    });
     const orders = await context.Pedido.findAll({
       where: { deliveryId: delivery.id },
       order: [["createdAt", "DESC"]],
       include: [
         { model: context.Comercio, as: "comercio" },
-        { model: context.DetallePedido, as: "detalles" }
-      ]
+        { model: context.DetallePedido, as: "detalles" },
+      ],
     });
 
     const ordersList = orders.map((o) => {
@@ -37,23 +40,22 @@ export async function GetIndex(req, res, next) {
   }
 }
 
-
 export async function GetOrderDetails(req, res) {
   try {
     req.user = req.session.user;
     const pedidoId = req.params.id;
-    const delivery = await context.Delivery.findOne({ where : {userId: req.user.id} });
+    const delivery = await context.Delivery.findOne({
+      where: { userId: req.user.id },
+    });
     const pedido = await context.Pedido.findOne({
-      where: { id: pedidoId, deliveryId: delivery.id}, 
+      where: { id: pedidoId, deliveryId: delivery.id },
       include: [
         { model: context.Comercio, as: "comercio" },
         { model: context.Direccion, as: "direccion" },
         {
           model: context.DetallePedido,
-          as: "detalles", 
-          include: [
-            { model: context.Producto, as: "producto" } 
-          ],
+          as: "detalles",
+          include: [{ model: context.Producto, as: "producto" }],
         },
       ],
     });
@@ -74,13 +76,17 @@ export async function GetOrderDetails(req, res) {
   }
 }
 
-export async function GetProfile(req, res, next){
-  try{
+export async function GetProfile(req, res, next) {
+  try {
     req.user = req.session.user;
-    const userCheck = await context.Delivery.findOne({ where : {userId: req.user.id} });
-    const userEmail = await context.User.findOne({ where : {id: req.user.id} });
+    const userCheck = await context.Delivery.findOne({
+      where: { userId: req.user.id },
+    });
+    const userEmail = await context.User.findOne({
+      where: { id: req.user.id },
+    });
 
-    if(!userCheck){
+    if (!userCheck) {
       return res.redirect("/delivery/home");
     }
 
@@ -89,59 +95,68 @@ export async function GetProfile(req, res, next){
     res.render("deliveryViews/profile", {
       uEmail,
       user,
-      "page-title": "My Account", 
+      "page-title": "My Account",
     });
-  }catch(error){
+  } catch (error) {
     console.log(error);
     req.flash("errors", "An error ocurred loading your profile");
     return res.redirect("/delivery/home");
-  }  
+  }
 }
 
-export async function PostProfile(req, res, next){
-  try{
+export async function PostProfile(req, res, next) {
+  try {
     req.user = req.session.user;
-    const { FirstName, LastName, UserName, Email, PhoneNumber} = req.body;
+    const { FirstName, LastName, UserName, Email, PhoneNumber } = req.body;
     const ProfilePhoto = req.file;
     let LogoPath = null;
 
-    const userCheck = await context.Delivery.findOne({ where : {userId: req.user.id} });
-
-    const existsUser = await context.User.findOne({where: {
-      [Op.and]: [{email: Email}, {id: {[Op.ne]: req.user.id}}] 
-      }
+    const userCheck = await context.Delivery.findOne({
+      where: { userId: req.user.id },
     });
 
-    if(!userCheck){
+    const existsUser = await context.User.findOne({
+      where: {
+        [Op.and]: [{ email: Email }, { id: { [Op.ne]: req.user.id } }],
+      },
+    });
+
+    if (!userCheck) {
       return res.redirect("/delivery/home");
     }
 
-    if(ProfilePhoto){
-      LogoPath = "\\" + path.relative("public", ProfilePhoto.path)
-    }else{
+    if (ProfilePhoto) {
+      LogoPath = "\\" + path.relative("public", ProfilePhoto.path);
+    } else {
       LogoPath = userCheck.ProfilePhoto;
     }
 
-    if(existsUser){
+    if (existsUser) {
       req.flash("errors", "This email is already taken");
       return res.redirect("/delivery/profile");
-    }else{
-      await context.User.update({
-        userName: UserName,
-        email: Email
-      },{where:{id: req.user.id}});
+    } else {
+      await context.User.update(
+        {
+          userName: UserName,
+          email: Email,
+        },
+        { where: { id: req.user.id } }
+      );
     }
-      await context.Delivery.update({
+    await context.Delivery.update(
+      {
         profilePhoto: LogoPath,
         name: FirstName,
         lastName: LastName,
         userName: UserName,
         phoneNumber: PhoneNumber,
-      },{where:{userId: req.user.id}});
+      },
+      { where: { userId: req.user.id } }
+    );
 
-      req.flash("success", "Your profile was updated successfully");
-      res.redirect("/delivery/home");
-  }catch(error){
+    req.flash("success", "Your profile was updated successfully");
+    res.redirect("/delivery/home");
+  } catch (error) {
     console.log(error);
     req.flash("errors", `An error ocurred update your profile ${error}`);
     return res.redirect("/delivery/home");
@@ -149,20 +164,22 @@ export async function PostProfile(req, res, next){
 }
 
 export const completeOrder = HandControllersAsync(async (req, res) => {
-  console.log("ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-  console.log("id -------------------->>>>", req.session.user.id)
+  console.log("ENTROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+  console.log("id -------------------->>>>", req.session.user.id);
   const pedidoId = req.params.id;
 
   const pedido = await StoreRepository.OrderRepository.getOrderById(pedidoId);
 
   if (!pedido) HandError(404, "Pedido no encontrado");
-console.log("req.session.user:", req.session.user);
-console.log("req.user.id:", req.user?.id);
-
-  const delivery = await context.Delivery.findOne({ where : {userId: req.session.user.id} });
+  console.log("req.session.user:", req.session.user);
   console.log("req.user.id:", req.user?.id);
-console.log("pedido.deliveryId:", pedido.deliveryId);
-console.log("delivery:", delivery);
+
+  const delivery = await context.Delivery.findOne({
+    where: { userId: req.session.user.id },
+  });
+  console.log("req.user.id:", req.user?.id);
+  console.log("pedido.deliveryId:", pedido.deliveryId);
+  console.log("delivery:", delivery);
 
   if (pedido.deliveryId !== delivery.id)
     HandError(403, "No tiene permisos para completar este pedido");
