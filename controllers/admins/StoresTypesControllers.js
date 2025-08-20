@@ -107,16 +107,21 @@ export const edit = HandControllersAsync(async (req, res) => {
     HandError(403, "No tienes permisos para acceder a esta ruta");
   }
   const { id } = req.params;
-  const { nombre, descripcion } = req.body;
+  const { name, description } = req.body;
   const logo = req.file;
 
+  console.log("id :>> ", id);
+  console.log("name :>> ", name);
+  console.log("description :>> ", description);
+  console.log("logo :>> ", logo);
   const icono = await saveIMG(logo);
 
   const edited = await admin.storesTypesRepository.update(id, {
-    nombre,
-    descripcion,
+    nombre: name,
+    descripcion: description,
     icono,
   });
+  console.log("edited :>> ", edited);
 
   if (!edited) HandError(500, "Error al editar el tipo de comercio");
 

@@ -18,14 +18,22 @@ export const index = HandControllersAsync(async (req, res) => {
   });
 
   const store = data.dataValues;
+  let productos = 0;
 
-  const pedidos = await StoreRepository.StoreRepository.getPedidoByStore(
-    user.id
-  );
+  for (let pedido of pedidos) {
+    const detalle = await StoreRepository.StoreRepository.findAll({
+      where: { pedidoId: pedido.id },
+    });
+    productos += detalle.length;
+  }
 
   for (let pedido of pedidos) {
     pedido.estado = toTitleCase(pedido.estado);
   }
+
+  const detalle = await StoreRepository.StoreRepository.findAll({
+    where: { pedidoId: pedidos.id },
+  });
 
   const Pendientes =
     await StoreRepository.StoreRepository.getPedidoByStoreStatus(
@@ -44,6 +52,7 @@ export const index = HandControllersAsync(async (req, res) => {
       "completado"
     );
 
+  console.log("pedidos :>> ", pedidos);
   return res.render("storeViews/home", {
     title: "My store",
     user: req.user,
@@ -52,6 +61,7 @@ export const index = HandControllersAsync(async (req, res) => {
     pedidos,
     Pendientes,
     Completados,
+    productos,
     Procesandose,
   });
 });
