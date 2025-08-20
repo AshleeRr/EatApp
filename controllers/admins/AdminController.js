@@ -155,20 +155,19 @@ export const edit = HandControllersAsync(async (req, res) => {
       errors: ["Las contraseñas no son las mismas"],
     });
   }
-
   const hashedPassword = await Hash(password);
 
   const edited = await admin.adminRepository.update(id, {
     nombre,
     apellido,
     cedula,
-    correo: usua.email,
-    usuario: usua.usuario,
+    correo,
+    usuario,
   });
   const usua = await admin.userRepository.update(edited.userId, {
     role: "admin",
-    userName: edited.edited,
-    email: edited.correo,
+    userName: usuario,
+    email: correo,
     isActive: true,
     password: hashedPassword,
   });
