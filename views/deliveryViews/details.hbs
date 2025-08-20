@@ -9,7 +9,10 @@
 
       <p><strong>Status:</strong> {{pedido.estado}}</p>
       <p><strong>Date:</strong> {{Format pedido.createdAt}}</p>
-      <p><strong>Address:</strong> {{pedido.direccionEntrega}}</p>
+      {{#if (eq pedido.estado "en proceso")}}
+        <p><strong>Address:</strong> {{pedido.direccion.nombre}}</p>
+        <p><strong> Addres Info:</strong> {{pedido.direccion.descripcion}}</p>
+      {{/if}}
 
       <h5 class="mt-4">Products</h5>
       <ul class="list-group">
@@ -30,11 +33,16 @@
       <h4 class="mt-3 text-end">Total: ${{pedido.total}}</h4>
 
       {{#if (eq pedido.estado "en proceso")}}
-        <a href="/delivery/orders/{{pedido.id}}/complete" 
-           class="btn btn-success w-100 mt-3">
-          Complete Order
-        </a>
+        <form action="/delivery/orders/{{pedido.id}}/complete" method="POST">
+          <input type="hidden" name="pedidoId" value="{{pedido.id}}">
+          <input type="hidden" name="deliveryId" value="{{req.user.id}}">
+          
+          <button type="submit" class="btn btn-dark w-100 mt-3">
+            <i class="bi bi-check-circle"></i> Completed
+          </button>
+        </form>
       {{/if}}
+
 
       <a href="/delivery/home" class="btn btn-outline-dark w-100 mt-2">
         Back

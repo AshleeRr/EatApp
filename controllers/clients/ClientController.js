@@ -2,6 +2,7 @@ import context from "../../config/context/AppContext.js";
 import { Op } from "sequelize";
 import path from "path";
 import ClientRepository from "../../repositories/clients/ClientRepository.js";
+
 export async function GetHome(req, res, next) {
   const typeFilter = req.query.typeFilter || "";
   const result = {};
@@ -33,13 +34,18 @@ export async function GetStoresList(req, res, next) {
     }
     
     if(BusinessFilter) result.nombre = {[Op.like]: `%${BusinessFilter}%`};
-    const businesses = await context.Comercio.findAll({where: result});
-    
+
+    const businesses = await context.Comercio.findAll({
+      where: businesses,
+      include: [{
+        model: context.Usuario,
+        where: { active: true }
+      }]
+    });
+
     res.render("clientViews/storesList", {
       "page-title": "Stores",
       user: cliente,
-      // favoritos,
-      // hasFavoritos: favoritos.length > 0,
       businessesList: businesses.map((b) => b.get({ plain: true })),
       hasBusinesses: businesses.length > 0,
       quantity: businesses.length,
@@ -113,6 +119,7 @@ export async function PostProfile(req, res, next) {
       await context.User.update(
         {
           email: Email,
+          userName: UserName,
         },
         { where: { id: req.user.id } }
       );

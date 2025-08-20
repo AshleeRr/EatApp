@@ -7,52 +7,41 @@
 {{#if hasOrders}}
 <div class="row justify-content-center gap-3">
   {{#each ordersList}}
-  <div class="card mb-3 shadow-sm" style="max-width: 700px;">
-    <div class="card-body">
-      <!-- Comercio -->
-      <div class="d-flex align-items-center mb-3">
-        <img src="{{this.comercio.logo}}" 
-             alt="{{this.comercio.name}} logo" 
-             class="rounded me-3" 
-             style="width: 60px; height: 60px; object-fit: cover;">
-        <div>
-          <h5 class="mb-0">{{this.comercio.name}}</h5>
-          <span class="badge {{#if (eq this.estado "en proceso")}}bg-warning text-dark{{else}}bg-success{{/if}}">
-            {{this.estado}}
-          </span>
+    <a href="/delivery/orders/{{this.id}}/details" 
+       class="text-decoration-none col-12 col-md-8">
+      <div class="card shadow-sm p-3 mb-3 h-100">
+        <!-- Header comercio -->
+        <div class="d-flex align-items-center mb-3">
+          <img src="{{this.comercio.logo}}" 
+               alt="{{this.comercio.name}} logo" 
+               class="rounded me-3" 
+               style="width: 60px; height: 60px; object-fit: cover;">
+          <div>
+            <h5 class="mb-0 text-dark">{{this.comercio.name}}</h5>
+            <span class="badge {{#if (eq this.estado "en proceso")}}bg-warning text-dark{{else}}bg-success{{/if}}">
+              {{this.estado}}
+            </span>
+          </div>
         </div>
-      </div>
 
-      <!-- Info del pedido -->
-      <ul class="list-group list-group-flush mb-3">
-        <li class="list-group-item d-flex justify-content-between">
-          <span>$Total:</span> <strong>${{this.total}}</strong>
-        </li>
-        <li class="list-group-item d-flex justify-content-between">
-          <span>Amount of Products:</span> <strong>{{productsCount}}</strong>
-        </li>
-        <li class="list-group-item d-flex justify-content-between">
-          <span>Date:</span> 
-          <strong>{{Format this.createdAt}}</strong>
-        </li>
-      </ul>
-
-      <!-- Botones -->
-      <div class="text-end">
-        {{#if (eq this.estado "en proceso")}}
-          <a href="/delivery/orders/{{this.id}}/complete" class="btn btn-primary btn-sm">
-            Complete Order
-          </a>
-        {{else}}
-          <a href="/delivery/orders/{{this.id}}/details" class="btn btn-secondary btn-sm">
-            Details
-          </a>
-        {{/if}}
+        <!-- Info del pedido -->
+        <ul class="list-group list-group-flush mb-2">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total:</span> <strong>${{this.total}}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Amount of Products:</span> <strong>{{productsCount}}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Date:</span> 
+            <strong>{{Format this.createdAt}}</strong>
+          </li>
+        </ul>
       </div>
-    </div>
-  </div>
+    </a>
   {{/each}}
 </div>
+
 {{else}}
 <div class="row d-flex justify-content-center">
   <div class="col-12 col-md-8 col-lg-6">

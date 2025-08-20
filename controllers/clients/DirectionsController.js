@@ -33,7 +33,6 @@ export async function PostCreateAdress(req, res) {
     req.user = req.session.user;
     const { Name, Description } = req.body;
 
-    //donde haya una direccion con ese nombre o desccripcion y mismo userid, que diga que edite y redireccione
     const existingAddress = await context.Direccion.findOne({
       where: {
         usuarioId: req.user.id,
@@ -106,7 +105,7 @@ export async function PostEditAdress(req, res) {
     });
 
     if(!directionResult){
-      req.flash("An error ocurred trying to access this direction"); //borrar dep
+      req.flash("An error ocurred trying to access this direction");
       return res.redirect(
         "/client/directions/home");
     }

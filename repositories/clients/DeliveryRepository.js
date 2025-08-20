@@ -42,14 +42,12 @@ class DeliveryRepository extends GenericRepository {
   updateDeliveryStatus = HandRepositoriesAsync(
     async (deliveryId, estado, options = {}) => {
       return await super.update(
-        { estado },
-        {
-          where: { id: deliveryId },
-          ...options,
-        }
-      );
-    }
-  );
+        deliveryId,   
+      { estado },   
+      options          
+    );
+  }
+);
   getAvailableDeliveries = HandRepositoriesAsync(async () => {
     return await super.findAll({
       where: {
