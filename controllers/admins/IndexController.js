@@ -72,7 +72,7 @@ export const ClientsList = HandControllersAsync(async (req, res) => {
     };
   });
 
-  return res.render(`adminViews/ClientList`, {
+  return res.render(`adminViews/clientList`, {
     title: "Client DashBoard",
     user,
     hasClients: clientes.length > 0,
