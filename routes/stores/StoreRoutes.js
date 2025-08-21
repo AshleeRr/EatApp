@@ -2,7 +2,7 @@ import {
   index,
   StorePerfil,
   actualizarPerfil,
-} from "../../controllers/Stores/StoreController.js";
+} from "../../controllers/stores/StoreController.js";
 
 import express from "express";
 import { saveStoreProfileImgs } from "../../utils/handlers/FileHandler.js";
