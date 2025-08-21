@@ -8,7 +8,7 @@ import { randomBytes } from "crypto";
 
 import { AdminRepository } from "../../repositories/index.js";
 export function GetLogIn(req, res, next) {
-  res.render("authenticationViews/login", {
+  res.render("AuthenticationViews/login", {
     "page-title": "Log In",
   });
 }
