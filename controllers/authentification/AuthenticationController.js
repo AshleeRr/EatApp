@@ -8,7 +8,7 @@ import { randomBytes } from "crypto";
 
 import { AdminRepository } from "../../repositories/index.js";
 export function GetLogIn(req, res, next) {
-  res.render("AuthenticationViews/login", {
+  res.render("authenticationViews/login", {
     "page-title": "Log In",
   });
 }
@@ -292,8 +292,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
                 <p><a href="${process.env.APP_URL}${
         process.env.PORT
       }/user/activate/${token}">Activate Account</a></p>
-      <img src="https://i.pinimg.com/736x/2f/f0/4a/2ff04a076d7d44d978f64b5321e424ed.jpg" alt="Zipy Logo" width="350px" height="200px">`
-      ,
+      <img src="https://i.pinimg.com/736x/2f/f0/4a/2ff04a076d7d44d978f64b5321e424ed.jpg" alt="Zipy Logo" width="350px" height="200px">`,
     });
     return res.redirect("/");
   } catch (error) {
