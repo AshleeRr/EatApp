@@ -8,7 +8,7 @@ import { randomBytes } from "crypto";
 
 import { AdminRepository } from "../../repositories/index.js";
 export function GetLogIn(req, res, next) {
-  res.render("AuthenticationViews/login", {
+  res.render("authenticationViews/login", {
     "page-title": "Log In",
   });
 }
@@ -133,7 +133,7 @@ export async function GetSignUpBusiness(req, res, next) {
     );
     return res.redirect("/");
   }
-  res.render("AuthenticationViews/signUp-business", {
+  res.render("authenticationViews/signUp-business", {
     "page-title": "Sign Up",
     businessTypeList: businessTypes,
     hasBusinessTypes: businessTypes.length > 0,
@@ -210,7 +210,7 @@ export async function PostSignUpBusiness(req, res, next) {
 }
 
 export function GetSignUpClient_Delivery(req, res, next) {
-  res.render("AuthenticationViews/signUp-client-delivery", {
+  res.render("authenticationViews/signUp-client-delivery", {
     "page-title": "Sign Up",
     // layout: "LogInLayout",
   });
@@ -303,7 +303,7 @@ export async function PostSignUpClient_Delivery(req, res, next) {
 }
 
 export function GetForgotPassword(req, res, next) {
-  res.render("AuthenticationViews/forgotPassword", {
+  res.render("authenticationViews/forgotPassword", {
     "page-title": "Forgot Password",
   });
 }
@@ -370,7 +370,7 @@ export async function GetResetPassword(req, res, next) {
       req.flash("errors", "There is no user with this token. Try again");
       return res.redirect("/user/forgotPassword");
     }
-    res.render("AuthenticationViews/resetPassword", {
+    res.render("authenticationViews/resetPassword", {
       "page-title": "Reset Password",
       passwordToken: token,
       userId: user.id,
@@ -511,7 +511,7 @@ export async function PostDisableAccount(req, res, next) {
 }
 */
 export function GetLogInWithoutAuth(req, res, next) {
-  res.render("AuthenticationViews/login", {
+  res.render("authenticationViews/login", {
     "page-title": "Log In",
   });
 }
