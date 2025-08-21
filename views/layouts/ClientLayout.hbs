@@ -17,51 +17,50 @@
 </head>
 
 <body class="body-client">
-  <header>
-    <nav class="navbar navbar-expand-lg bg-dark shadow navbar-client" data-bs-theme="dark">
-      <div class="container-fluid">
-        <h3 class="m-3">ZIPY <img src="\assets\imgs\site\svg\dining_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt="">
-        </h3>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-    </nav>
-  </header>
   <div class="row">
-    <div class="col-1 col-sm-1">
-      <section class="seccion-lateral-client shadow top-fixed">
+    <div class="col-1 col-sm-1 position-fixed">
+      <section class="seccion-lateral-client shadow top-fixed" style="height: 100%;">
         <ul class="navbar-nav nav-navbar sidebar">
           <li class="nav-item">
+            <a class="nav-link client-option" href="/client/home">
+              <h3 class="fw-bold" style="color: white;">ZIPY</h3>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link client-option" href="/client/home"><img
-                src="\assets\imgs\site\svg\home_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
+                src="\assets\imgs\site\svg\home_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""
+                class="img-hover"></a>
           </li>
           <li class="nav-item">
             <a class="nav-link client-option" href="/client/profile"><img
-                src="\assets\imgs\site\svg\account_circle_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
+                src="\assets\imgs\site\svg\account_circle_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""
+                class="img-hover"></a>
           </li>
           <li class="nav-item">
             <a class="nav-link client-option" href="/client/history"><img
-                src="\assets\imgs\site\svg\order_approve_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
+                src="\assets\imgs\site\svg\order_approve_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""
+                class="img-hover"></a>
           </li>
           <li class="nav-item">
             <a class="nav-link client-option" href="/client/directions/home"><img
-                src="\assets\imgs\site\svg\add_location_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
+                src="\assets\imgs\site\svg\add_location_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""
+                class="img-hover"></a>
           </li>
           <li class="nav-item">
             <a class="nav-link client-option" href="/client/favorites/home"><img
-                src="\assets\imgs\site\svg\favorite_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""></a>
+                src="\assets\imgs\site\svg\favorite_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""
+                class="img-hover"></a>
           </li>
           <li class="nav-item">
             <a class="nav-link client-option" href="/user/logout"> <img
-                src="\assets\imgs\site\svg\chip_extraction_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt="">{{#if
+                src="\assets\imgs\site\svg\chip_extraction_NaNdp_F3F3F3_FILL0_wght400_GRAD0_opsz48.svg" alt=""
+                class="img-hover">{{#if
               hasUser}}({{user.email}}){{/if}} </a>
           </li>
         </ul>
       </section>
     </div>
-    <div class="col-11 col-sm-11 " style="padding-right: 30px; ">
+    <div class="col-11 col-sm-11" style="margin-left: 110px;">
       {{{body}}}
     </div>
 
@@ -89,6 +88,9 @@
       {{/if}}
     </div>
   </div>
+  </div>
+
+
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script type="module" src="/assets/JavaScript/index.js"></script>

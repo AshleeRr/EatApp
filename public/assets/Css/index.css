@@ -21,11 +21,18 @@ body {
     background-color: rgb(220, 136, 46);
 }
 header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  background-color: #fff;
   z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn {
+  border: none !important;  
+}
+
+.btn:focus,
+.btn:active {
+  outline: none !important;  
 }
 
 h3 h4 {
@@ -53,6 +60,18 @@ ul li a {
     margin: 30px !important;
     font-weight: bold !important;
       
+}
+
+.img-hover, 
+.card-productos{
+	transition: 0.5s;
+}
+
+.img-hover:hover{
+	transform: scale(1.2);
+}
+.card-productos:hover{
+	transform: scale(1.01);
 }
 
 a {
@@ -103,22 +122,41 @@ select:focus {
 }
 
 /*client*/
-.navbar-client{
-      background-color:  #5d1a1a !important;
-    color: white;
-}
-.seccion-lateral-client {
-  background-color:#5d1a1a ;
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    justify-content: center;
-}
 
+@media (min-width: 1200px) {
+
+.seccion-lateral-client {
+  position: fixed;
+  width: 100;
+  margin-right: 120px;
+  background-color:#5d1a1a ;
+  display: flex;
+  justify-content: center;
+}
 .client-option{
       margin: 15px !important;
     font-weight: bold !important;
 }
+.contenedor-carrito{
+  position: fixed;
+  width: auto;
+  margin-left: 1200px;     
+}
+
+.contenedor-contenedor-carrito{
+   overflow-y: auto;
+   overflow-x: hidden;
+   width: auto;
+}
+.carrito-lista{
+  height: 600px;
+   margin-right: 10px;
+} 
+}
+.body-client{
+  background-color: rgba(227, 227, 227, 0.136);
+}
+
 
 /* admin */
 .seccion-lateral-admin {
@@ -127,6 +165,7 @@ select:focus {
     min-height: 100svh;
     display: flex;
     justify-content: center;
+    
 }
 .navbar-admin {
     background-color: #2A2C41 !important;
